@@ -201,6 +201,70 @@ function setLanguage(lang) {
 
 
 /* ══════════════════════════════════════════════════════════
+   MENU MOBILE — hamburger + pile de boutons pilule
+══════════════════════════════════════════════════════════ */
+
+function initHamburgerMenu() {
+  var btn     = document.getElementById('hamburger-btn');
+  var menu    = document.getElementById('mobile-menu');
+  var overlay = document.getElementById('mobile-menu-overlay');
+  var closeBtn = document.getElementById('mobile-menu-close');
+
+  if (!btn || !menu || !overlay || !closeBtn) return;
+
+  function openMenu() {
+    overlay.style.display = 'block';
+    menu.style.display    = 'flex';
+    overlay.offsetHeight; /* force reflow pour déclencher la transition */
+    menu.offsetHeight;
+    overlay.classList.add('active');
+    menu.classList.add('active');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeMenu() {
+    overlay.classList.remove('active');
+    menu.classList.remove('active');
+    btn.setAttribute('aria-expanded', 'false');
+    setTimeout(function() {
+      if (!menu.classList.contains('active')) {
+        overlay.style.display = 'none';
+        menu.style.display    = 'none';
+      }
+    }, 260);
+  }
+
+  btn.addEventListener('click', function() {
+    if (menu.classList.contains('active')) closeMenu();
+    else openMenu();
+  });
+
+  closeBtn.addEventListener('click', closeMenu);
+  overlay.addEventListener('click', closeMenu);
+
+  /* Liens de navigation : ferme le menu puis scroll */
+  menu.querySelectorAll('a.mobile-menu-btn').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      closeMenu();
+      var target = document.getElementById(link.getAttribute('href').slice(1));
+      if (target) {
+        setTimeout(function() {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }, 260);
+      }
+    });
+  });
+
+  /* Toggle de langue dans le menu (ne ferme pas le menu) */
+  document.getElementById('mobile-menu-lang').addEventListener('click', function(e) {
+    var option = e.target.closest('.lang-option');
+    if (option) setLanguage(option.dataset.lang);
+  });
+}
+
+
+/* ══════════════════════════════════════════════════════════
    INITIALISATION
 ══════════════════════════════════════════════════════════ */
 
@@ -228,6 +292,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* Mobile feed */
   buildMobileFeed();
+
+  /* Menu hamburger mobile */
+  initHamburgerMenu();
 
   /* Langue initiale */
   setLanguage(currentLang);

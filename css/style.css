@@ -620,6 +620,148 @@ img {
 
 
 /* ═══════════════════════════════════════════════════════════
+   HAMBURGER + MENU MOBILE
+   Visible uniquement sur mobile (<768px)
+═══════════════════════════════════════════════════════════ */
+
+/* Bouton déclencheur */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: var(--cream);
+  border-radius: 2px;
+}
+
+/* Overlay sombre */
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 199;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+}
+
+/* Pile de boutons */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease-out;
+  pointer-events: none;
+}
+
+.mobile-menu.active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: all;
+}
+
+/* Bouton pilule */
+.mobile-menu-btn {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-align: center;
+  padding: 14px 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 180px;
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu-btn:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Toggle de langue dans le menu */
+.mobile-menu-lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobile-menu-lang .lang-option {
+  color: var(--sage);
+  transition: color 0.2s ease;
+}
+
+.mobile-menu-lang .lang-option.active {
+  color: var(--cream);
+}
+
+.mobile-menu-lang .lang-sep {
+  color: var(--sage);
+  opacity: 0.4;
+  user-select: none;
+}
+
+/* Bouton fermeture */
+.mobile-menu-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  color: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu-close:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
    RESPONSIVE
 ═══════════════════════════════════════════════════════════ */
 
@@ -658,44 +800,25 @@ img {
   }
 }
 
-/* ── Mobile (< 768px) ───────────────────────────────────────
-   Une seule colonne de cartes                                */
+/* ── Mobile (<768px) ────────────────────────────────────────
+   Hamburger remplace la nav et le toggle de langue          */
 @media (max-width: 768px) {
+  /* Cartes : une seule colonne */
   .mobile-cards-grid {
     grid-template-columns: 1fr;
     gap: 24px;
   }
 
-  /* Nav encore plus compacte */
-  .main-nav {
-    gap: 0;
-    padding: 7px 4px;
-  }
+  /* Masquer nav et lang-toggle — intégrés dans le menu mobile */
+  .main-nav    { display: none; }
+  .lang-toggle { display: none; }
 
-  .main-nav a {
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    padding: 5px 10px;
-  }
-
-  .lang-toggle {
-    padding: 7px 12px;
-    font-size: 0.72rem;
-  }
+  /* Afficher le bouton hamburger */
+  .hamburger-btn { display: flex; }
 }
 
-/* ── Très petits écrans (< 480px) ──────────────────────────
-   Masquer la nav (hamburger menu — voir section 4)          */
+/* ── Très petits écrans (<480px) ───────────────────────────*/
 @media (max-width: 480px) {
-  .main-nav {
-    display: none;
-  }
-
-  .logo {
-    font-size: 1.3rem;
-  }
-
-  .mobile-group-title {
-    font-size: 1.3rem;
-  }
+  .logo { font-size: 1.3rem; }
+  .mobile-group-title { font-size: 1.3rem; }
 }

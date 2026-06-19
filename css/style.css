@@ -819,6 +819,50 @@ img {
 
   /* Afficher le bouton hamburger */
   .hamburger-btn { display: flex; }
+
+  /* ── Lightbox mobile : plein écran + swipe ─── */
+  .lightbox-arrow { display: none; }
+
+  .lightbox-content {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    justify-content: center;
+  }
+
+  .lightbox-img {
+    max-width: 100vw;
+    max-height: calc(100vh - 90px);
+    border-radius: 0;
+    transform: none;
+  }
+
+  .lightbox-overlay.active .lightbox-img { transform: none; }
+
+  .lightbox-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(13, 58, 53, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 14px 24px 40px;
+    text-align: left;
+    gap: 4px;
+    z-index: 1;
+  }
+
+  .lightbox-position {
+    display: flex;
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    gap: 7px;
+    z-index: 2;
+  }
 }
 
 /* ── Très petits écrans (<480px) ───────────────────────────*/
@@ -960,3 +1004,21 @@ img {
 /* Curseur pointer sur les images cliquables */
 .serie-grid-item img { cursor: pointer; }
 .mobile-card         { cursor: pointer; }
+
+/* Indicateur de position — mobile uniquement */
+.lightbox-position { display: none; }
+
+.lightbox-position-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sage);
+  opacity: 0.45;
+  transition: opacity 0.2s ease, background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.lightbox-position-dot.active {
+  opacity: 1;
+  background: var(--cream);
+}

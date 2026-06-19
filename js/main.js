@@ -163,6 +163,10 @@ function buildMobileFeed() {
       info.appendChild(cardTechnique);
 
       card.appendChild(info);
+
+      /* Lightbox au tap sur la carte mobile */
+      card.addEventListener('click', function() { openLightbox(work.src); });
+
       grid.appendChild(card);
     });
 
@@ -197,6 +201,100 @@ function setLanguage(lang) {
 
   /* Légende du hero (desktop) */
   updateCaption();
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════════════════════════ */
+
+var lightboxWorks = [];
+var lightboxIndex = 0;
+
+function findWorkBySrc(src) {
+  for (var i = 0; i < series.length; i++) {
+    for (var j = 0; j < series[i].works.length; j++) {
+      if (series[i].works[j].src === src) {
+        return { serieWorks: series[i].works, index: j };
+      }
+    }
+  }
+  return null;
+}
+
+function showLightboxImage(index) {
+  var work = lightboxWorks[index];
+  var t    = translations[currentLang];
+  document.getElementById('lightbox-img').src = work.src;
+  document.getElementById('lightbox-caption-title').textContent     = t[work.titleKey]     || '';
+  document.getElementById('lightbox-caption-technique').textContent = t[work.techniqueKey] || '';
+}
+
+function openLightbox(src) {
+  var result = findWorkBySrc(src);
+  if (!result) return;
+  lightboxWorks = result.serieWorks;
+  lightboxIndex = result.index;
+  showLightboxImage(lightboxIndex);
+  var overlay = document.getElementById('lightbox-overlay');
+  overlay.style.display = 'flex';
+  overlay.offsetHeight; /* force reflow */
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  var overlay = document.getElementById('lightbox-overlay');
+  overlay.classList.remove('active');
+  setTimeout(function() {
+    if (!overlay.classList.contains('active')) {
+      overlay.style.display  = 'none';
+      document.body.style.overflow = '';
+    }
+  }, 300);
+}
+
+function initLightbox() {
+  var overlay  = document.getElementById('lightbox-overlay');
+  var closeBtn = document.getElementById('lightbox-close');
+  var prevBtn  = document.getElementById('lightbox-prev');
+  var nextBtn  = document.getElementById('lightbox-next');
+  var content  = document.getElementById('lightbox-content');
+
+  if (!overlay) return;
+
+  /* Fermeture */
+  closeBtn.addEventListener('click', closeLightbox);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeLightbox();
+  });
+
+  /* Navigation dans la série */
+  prevBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    lightboxIndex = (lightboxIndex - 1 + lightboxWorks.length) % lightboxWorks.length;
+    showLightboxImage(lightboxIndex);
+  });
+  nextBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    lightboxIndex = (lightboxIndex + 1) % lightboxWorks.length;
+    showLightboxImage(lightboxIndex);
+  });
+
+  /* Touches clavier */
+  document.addEventListener('keydown', function(e) {
+    if (!overlay.classList.contains('active')) return;
+    if (e.key === 'Escape')      { closeLightbox(); }
+    if (e.key === 'ArrowLeft')   { e.preventDefault(); lightboxIndex = (lightboxIndex - 1 + lightboxWorks.length) % lightboxWorks.length; showLightboxImage(lightboxIndex); }
+    if (e.key === 'ArrowRight')  { e.preventDefault(); lightboxIndex = (lightboxIndex + 1) % lightboxWorks.length; showLightboxImage(lightboxIndex); }
+  });
+
+  /* Clic sur les images du grid desktop */
+  document.querySelectorAll('.serie-grid-item img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      openLightbox(img.getAttribute('src'));
+    });
+  });
 }
 
 
@@ -256,10 +354,11 @@ function initHamburgerMenu() {
     });
   });
 
-  /* Toggle de langue dans le menu (ne ferme pas le menu) */
-  document.getElementById('mobile-menu-lang').addEventListener('click', function(e) {
-    var option = e.target.closest('.lang-option');
-    if (option) setLanguage(option.dataset.lang);
+  /* Toggle de langue dans le menu — un listener par option pour fiabilité mobile */
+  document.querySelectorAll('#mobile-menu-lang .lang-option').forEach(function(option) {
+    option.addEventListener('click', function() {
+      setLanguage(option.dataset.lang);
+    });
   });
 }
 
@@ -278,8 +377,10 @@ document.addEventListener('DOMContentLoaded', function() {
   if (prevBtn) prevBtn.addEventListener('click', function() { goToWork(currentIndex - 1); });
   if (nextBtn) nextBtn.addEventListener('click', function() { goToWork(currentIndex + 1); });
 
-  /* Navigation clavier */
+  /* Navigation clavier hero (inactive quand la lightbox est ouverte) */
   document.addEventListener('keydown', function(e) {
+    var lb = document.getElementById('lightbox-overlay');
+    if (lb && lb.classList.contains('active')) return;
     if (e.key === 'ArrowLeft')  goToWork(currentIndex - 1);
     if (e.key === 'ArrowRight') goToWork(currentIndex + 1);
   });
@@ -295,6 +396,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* Menu hamburger mobile */
   initHamburgerMenu();
+
+  /* Lightbox */
+  initLightbox();
 
   /* Langue initiale */
   setLanguage(currentLang);

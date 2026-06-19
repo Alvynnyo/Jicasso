@@ -51,7 +51,7 @@ const translations = {
 
     // Confirmation
     contact_success_title: "Merci.",
-    contact_success_text:  "Votre message a bien été envoyé. Je vous répondrai bientôt.",
+    contact_success_text:  "Votre message est arrivé dans l'atelier. Je vous répondrai bientôt, le temps de poser les pinceaux.",
 
     // Erreur
     contact_error_title: "Oops.",
@@ -126,7 +126,7 @@ const translations = {
 
     // Confirmation
     contact_success_title: "Thank you.",
-    contact_success_text:  "Your message has been sent. I'll get back to you soon.",
+    contact_success_text:  "Your message has reached the studio. I will get back to you soon, just as soon as I set down my brushes.",
 
     // Error
     contact_error_title: "Oops.",

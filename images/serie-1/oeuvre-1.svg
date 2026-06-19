@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#8BA5A0"/>
+      <stop offset="55%" stop-color="#CCCFB8"/>
+      <stop offset="100%" stop-color="#E8DFD0"/>
+    </linearGradient>
+    <linearGradient id="land" x1="0" y1="0" x2="0.1" y2="1">
+      <stop offset="0%" stop-color="#3D7060"/>
+      <stop offset="100%" stop-color="#1A3D32"/>
+    </linearGradient>
+    <linearGradient id="mid" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2D5A4E"/>
+      <stop offset="50%" stop-color="#4A8070"/>
+      <stop offset="100%" stop-color="#2D5A4E"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#sky)"/>
+  <rect y="500" width="600" height="300" fill="url(#land)"/>
+  <ellipse cx="300" cy="500" rx="420" ry="55" fill="url(#mid)" opacity="0.9"/>
+  <ellipse cx="80" cy="510" rx="110" ry="35" fill="#276152" opacity="0.6"/>
+  <ellipse cx="520" cy="505" rx="130" ry="28" fill="#1F4C40" opacity="0.5"/>
+</svg>

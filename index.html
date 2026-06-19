@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indirah — Artiste Peintre</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       HEADER — fixed, transparent → deep gradient
+  ═══════════════════════════════════════════ -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+
+      <a href="#" class="logo">Indirah</a>
+
+      <nav class="main-nav" aria-label="Navigation principale">
+        <a href="#oeuvres" data-i18n="nav_oeuvres">Oeuvres</a>
+        <a href="#atelier" data-i18n="nav_atelier">Atelier</a>
+        <a href="#contact" data-i18n="nav_contact">Contact</a>
+      </nav>
+
+      <button class="lang-toggle" id="lang-toggle" aria-label="Changer de langue">
+        <span class="lang-option" data-lang="fr">FR</span>
+        <span class="lang-sep">/</span>
+        <span class="lang-option" data-lang="en">EN</span>
+      </button>
+
+    </div>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════════
+       HERO — viewer plein écran
+  ═══════════════════════════════════════════ -->
+  <section class="hero" id="oeuvres">
+    <div class="hero-stage">
+
+      <!-- Cadre + flèches -->
+      <div class="hero-frame-wrapper">
+        <button class="hero-arrow hero-arrow--prev" id="hero-prev" aria-label="Oeuvre précédente">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+               stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+        </button>
+
+        <div class="hero-frame" id="hero-frame">
+          <!-- Les <img> sont injectés par main.js -->
+        </div>
+
+        <button class="hero-arrow hero-arrow--next" id="hero-next" aria-label="Oeuvre suivante">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+               stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Compteur + légende (sous le cadre) -->
+      <div class="hero-meta">
+        <div class="hero-counter">
+          <span class="hero-counter-current" id="hero-count-current">01</span>
+          <span class="hero-counter-total" id="hero-count-total">/ 06</span>
+        </div>
+        <div class="hero-caption">
+          <span class="hero-caption-title" id="hero-caption-title"></span>
+          <span class="hero-caption-technique" id="hero-caption-technique"></span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Indication de défilement -->
+    <div class="hero-scroll">
+      <span data-i18n="hero_scroll">Défiler</span>
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+           stroke="currentColor" stroke-width="1.5"
+           stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       SÉRIE I — Paysages et lumière
+  ═══════════════════════════════════════════ -->
+  <section class="serie" id="atelier">
+    <div class="serie-divider" role="separator"></div>
+    <div class="serie-inner">
+
+      <div class="serie-info">
+        <h2 class="serie-title" data-i18n="serie1_title">Série I</h2>
+        <p class="serie-text" data-i18n="serie1_text">
+          Paysages et lumière. Une exploration des saisons et de leurs couleurs.
+        </p>
+        <a href="#" class="serie-link" data-i18n="serie1_link">Voir la série</a>
+      </div>
+
+      <div class="serie-grid">
+        <div class="serie-grid-item">
+          <img src="images/serie-1/oeuvre-1.svg" alt="" loading="lazy">
+        </div>
+        <div class="serie-grid-item">
+          <img src="images/serie-1/oeuvre-2.svg" alt="" loading="lazy">
+        </div>
+        <div class="serie-grid-item">
+          <img src="images/serie-1/oeuvre-3.svg" alt="" loading="lazy">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       SÉRIE II — Portraits et figures
+  ═══════════════════════════════════════════ -->
+  <section class="serie" id="serie-2">
+    <div class="serie-divider" role="separator"></div>
+    <div class="serie-inner">
+
+      <div class="serie-info">
+        <h2 class="serie-title" data-i18n="serie2_title">Série II</h2>
+        <p class="serie-text" data-i18n="serie2_text">
+          Portraits et figures. Le corps comme matière et comme ombre.
+        </p>
+        <a href="#" class="serie-link" data-i18n="serie2_link">Voir la série</a>
+      </div>
+
+      <div class="serie-grid">
+        <div class="serie-grid-item">
+          <img src="images/serie-2/oeuvre-1.svg" alt="" loading="lazy">
+        </div>
+        <div class="serie-grid-item">
+          <img src="images/serie-2/oeuvre-2.svg" alt="" loading="lazy">
+        </div>
+        <div class="serie-grid-item">
+          <img src="images/serie-2/oeuvre-3.svg" alt="" loading="lazy">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════
+       MOBILE FEED — généré par JS
+       Visible sur ≤ 1024px, remplace hero + séries
+  ═══════════════════════════════════════════ -->
+  <section class="mobile-feed" id="mobile-feed"></section>
+
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <a href="#" class="footer-logo">Indirah</a>
+      <nav class="footer-links" aria-label="Liens externes">
+        <a href="#" data-i18n="footer_instagram">Instagram</a>
+        <a href="#" data-i18n="footer_artsy">Artsy</a>
+        <a href="#" data-i18n="footer_contact">Contact</a>
+      </nav>
+      <p class="footer-copy" data-i18n="footer_copy">© 2024 Indirah. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+
+  <script src="js/translations.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

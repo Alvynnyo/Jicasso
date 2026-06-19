@@ -465,16 +465,17 @@ function initHamburgerMenu() {
   closeBtn.addEventListener('click', closeMenu);
   overlay.addEventListener('click', closeMenu);
 
-  /* Liens de navigation : ferme le menu puis scroll */
+  /* Liens de navigation : ferme le menu, puis scroll (ancre) ou navigue (page) */
   menu.querySelectorAll('a.mobile-menu-btn').forEach(function(link) {
     link.addEventListener('click', function(e) {
+      var href = link.getAttribute('href');
       e.preventDefault();
       closeMenu();
-      var target = document.getElementById(link.getAttribute('href').slice(1));
-      if (target) {
-        setTimeout(function() {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }, 260);
+      if (href && href.charAt(0) === '#') {
+        var target = document.getElementById(href.slice(1));
+        if (target) setTimeout(function() { target.scrollIntoView({ behavior: 'smooth' }); }, 260);
+      } else if (href) {
+        setTimeout(function() { window.location.href = href; }, 260);
       }
     });
   });

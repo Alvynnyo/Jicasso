@@ -23,11 +23,44 @@ const translations = {
     serie2_text:    "Portraits et figures. Le corps comme matière et comme ombre.",
     serie2_link:    "Voir la série",
 
+    // Navigation supplémentaire
+    nav_home: "Accueil",
+
     // Footer
     footer_instagram: "Instagram",
     footer_artsy:     "Artsy",
     footer_contact:   "Contact",
     footer_copy:      "© 2024 Indirah. Tous droits réservés.",
+
+    // Page de contact — questions
+    contact_q1:  "Comment puis-je vous appeler ?",
+    contact_q2:  "Où puis-je vous répondre ?",
+    contact_q3:  "Quel est votre projet ?",
+
+    // Placeholders
+    contact_ph1: "Votre nom",
+    contact_ph2: "votre@email.com",
+    contact_ph3: "Décrivez votre projet…",
+
+    // Boutons
+    contact_next:    "Suivant",
+    contact_back:    "Retour",
+    contact_send:    "Envoyer",
+    contact_sending: "Envoi…",
+    contact_retry:   "Réessayer",
+
+    // Confirmation
+    contact_success_title: "Merci.",
+    contact_success_text:  "Votre message a bien été envoyé. Je vous répondrai bientôt.",
+
+    // Erreur
+    contact_error_title: "Oops.",
+    contact_error_text:  "Une erreur est survenue. Réessayez ou écrivez-moi directement à",
+
+    // Validation
+    contact_err_empty: "Ce champ est requis.",
+    contact_err_email: "L’adresse e-mail n’est pas valide.",
+    contact_err_min:   "Votre message doit contenir au moins 10 caractères.",
 
     // Oeuvres individuelles — titre et technique
     // Série I
@@ -65,11 +98,44 @@ const translations = {
     serie2_text:    "Portraits and figures. The body as matter and as shadow.",
     serie2_link:    "View series",
 
+    // Additional navigation
+    nav_home: "Home",
+
     // Footer
     footer_instagram: "Instagram",
     footer_artsy:     "Artsy",
     footer_contact:   "Contact",
     footer_copy:      "© 2024 Indirah. All rights reserved.",
+
+    // Contact page — questions
+    contact_q1:  "How may I call you?",
+    contact_q2:  "Where can I reach you?",
+    contact_q3:  "What's your project?",
+
+    // Placeholders
+    contact_ph1: "Your name",
+    contact_ph2: "your@email.com",
+    contact_ph3: "Tell me about your project…",
+
+    // Buttons
+    contact_next:    "Next",
+    contact_back:    "Back",
+    contact_send:    "Send",
+    contact_sending: "Sending…",
+    contact_retry:   "Try again",
+
+    // Confirmation
+    contact_success_title: "Thank you.",
+    contact_success_text:  "Your message has been sent. I'll get back to you soon.",
+
+    // Error
+    contact_error_title: "Oops.",
+    contact_error_text:  "Something went wrong. Try again or write to me directly at",
+
+    // Validation
+    contact_err_empty: "This field is required.",
+    contact_err_email: "Please enter a valid email address.",
+    contact_err_min:   "Your message must be at least 10 characters long.",
 
     // Individual works — title and technique
     // Series I

@@ -7,7 +7,7 @@
    (créez un compte, récupérez la clé, collez-la ici).
 ═══════════════════════════════════════════════════════════ */
 
-var WEB3FORMS_KEY = 'TA_CLE_API_WEB3FORMS';
+var WEB3FORMS_KEY = '05a7ad8e-a472-45fb-94b6-7551e1bdc112';
 
 var currentStep = 1;
 var currentLang = localStorage.getItem('indirah-lang') || 'fr';

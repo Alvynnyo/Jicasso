@@ -20,9 +20,9 @@ var series = [
     titleKey: 'serie1_title',
     textKey:  'serie1_text',
     works: [
-      { src: 'images/serie-1/oeuvre-1.svg', titleKey: 'work1_title', techniqueKey: 'work1_technique' },
-      { src: 'images/serie-1/oeuvre-2.svg', titleKey: 'work2_title', techniqueKey: 'work2_technique' },
-      { src: 'images/serie-1/oeuvre-3.svg', titleKey: 'work3_title', techniqueKey: 'work3_technique' },
+      { src: 'images/serie-1/maria.png', titleKey: 'work1_title', techniqueKey: 'work1_technique' },
+      { src: 'images/serie-1/Mory.png', titleKey: 'work2_title', techniqueKey: 'work2_technique' },
+      { src: 'images/serie-1/StepOut.png', titleKey: 'work3_title', techniqueKey: 'work3_technique' },
     ]
   },
   {

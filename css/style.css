@@ -85,8 +85,14 @@ img {
   position: relative;
 }
 
-/* Logo texte */
-.logo {
+/* Marque — avatar réduit + nom */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.brand-name {
   font-family: var(--font-display);
   font-size: 1.55rem;
   font-weight: 300;
@@ -94,7 +100,62 @@ img {
   color: var(--cream);
   transition: opacity var(--ease);
 }
-.logo:hover { opacity: 0.75; }
+
+.brand:hover .brand-name { opacity: 0.75; }
+
+/* ═══════════════════════════════════════════════════════════
+   AVATAR — composant réutilisable (header + hero mobile)
+═══════════════════════════════════════════════════════════ */
+.avatar-container {
+  position: relative;
+  width: 108px;
+  height: 108px;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--cream);
+  box-shadow: 0 0 0 2.5px var(--deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Variante réduite — header desktop + mobile */
+.avatar-container.avatar-small {
+  width: 34px;
+  height: 34px;
+}
+
+.avatar-container.avatar-small .avatar-badge {
+  width: 11px;
+  height: 11px;
+  bottom: -1px;
+  right: -1px;
+  box-shadow: 0 0 0 1.5px var(--deep);
+}
+
 
 /* Navigation centree — pilule glassmorphism */
 .main-nav {
@@ -514,13 +575,123 @@ img {
 
 
 /* ═══════════════════════════════════════════════════════════
+   HERO MOBILE — plein écran, entre le livre 3D et le feed
+   Visible sur ≤ 1024px
+═══════════════════════════════════════════════════════════ */
+.mobile-hero {
+  display: none;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 1024px) {
+  .mobile-hero { display: flex; }
+}
+
+.mobile-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/moryspotlight.png');
+  background-size: cover;
+  background-position: center center;
+  animation: kenBurns 22s ease-in-out infinite alternate;
+}
+
+.mobile-hero-veil {
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 58, 53, 0.3);
+  pointer-events: none;
+}
+
+.mobile-hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.mobile-hero-content.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mobile-hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 10vw, 4.2rem);
+  font-weight: 300;
+  color: var(--cream);
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.mobile-hero-subtitle {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--sage);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Indicateur de scroll */
+.mobile-hero-scroll {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.3s;
+  white-space: nowrap;
+}
+
+.mobile-hero-scroll.is-visible {
+  opacity: 1;
+}
+
+.mobile-hero-scroll-text {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sage);
+  user-select: none;
+}
+
+.mobile-hero-scroll-arrow {
+  color: var(--sage);
+  animation: scroll-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(5px); }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
    MOBILE FEED
    Visible sur tablette + mobile (≤ 1024px)
    Remplace hero + séries sur ces écrans
 ═══════════════════════════════════════════════════════════ */
 .mobile-feed {
   display: none;
-  padding: 96px 0 80px;
+  padding: 64px 0 80px;
 }
 
 /* Premier groupe : pas de séparateur */
@@ -877,7 +1048,7 @@ img {
 
 /* ── Très petits écrans (<480px) ───────────────────────────*/
 @media (max-width: 480px) {
-  .logo { font-size: 1.3rem; }
+  .brand-name { font-size: 1.3rem; }
   .mobile-group-title { font-size: 1.3rem; }
 }
 

@@ -446,28 +446,33 @@ function initBookIntro() {
   var scene     = document.getElementById('book-scene');
   var floater   = document.getElementById('book-floater');
   var coverWrap = document.getElementById('book-cover-wrap');
+  var mhContent = document.getElementById('mobile-hero-content');
+  var mhScroll  = document.getElementById('mobile-hero-scroll');
   if (!intro || !scene || !floater || !coverWrap) return;
 
-  /* Si le CSS cache déjà l'overlay (desktop), rien à faire */
-  if (window.getComputedStyle(intro).display === 'none') return;
+  /* Sur tablette/desktop l'overlay livre n'est pas visible — animer le hero directement */
+  if (window.getComputedStyle(intro).display === 'none') {
+    if (mhContent) {
+      setTimeout(function() {
+        mhContent.classList.add('is-visible');
+        if (mhScroll) mhScroll.classList.add('is-visible');
+      }, 300);
+    }
+    return;
+  }
 
   function openBook() {
     scene.removeEventListener('click', openBook);
 
-    /* Arrêt de la lévitation pendant l'ouverture */
     floater.style.animation = 'none';
-
-    /* Rotation de la couverture */
     coverWrap.classList.add('is-open');
 
-    /* Début du fondu de l'overlay */
-    setTimeout(function() {
-      intro.classList.add('is-opening');
-    }, 380);
+    setTimeout(function() { intro.classList.add('is-opening'); }, 380);
 
-    /* Masquage final via style inline (priorité absolue sur le CSS) */
     setTimeout(function() {
       intro.style.display = 'none';
+      if (mhContent) mhContent.classList.add('is-visible');
+      if (mhScroll) mhScroll.classList.add('is-visible');
     }, 950);
   }
 

@@ -21,7 +21,7 @@ var series = [
     textKey:  'serie1_text',
     works: [
       { src: 'images/serie-1/maria.png', titleKey: 'work1_title', techniqueKey: 'work1_technique' },
-      { src: 'images/serie-1/mory.png', titleKey: 'work2_title', techniqueKey: 'work2_technique' },
+      { src: 'images/serie-1/moryupdate.png', titleKey: 'work2_title', techniqueKey: 'work2_technique' },
       { src: 'images/serie-1/stepout.png', titleKey: 'work3_title', techniqueKey: 'work3_technique' },
     ]
   },
@@ -490,6 +490,49 @@ function initHamburgerMenu() {
 
 
 /* ══════════════════════════════════════════════════════════
+   BOOK INTRO — overlay mobile, ouverture au tap/clic
+══════════════════════════════════════════════════════════ */
+
+function initBookIntro() {
+  if (window.innerWidth >= 768) return;
+  if (sessionStorage.getItem('indirah-book-opened')) return;
+
+  var intro     = document.getElementById('book-intro');
+  var scene     = document.getElementById('book-scene');
+  var floater   = document.getElementById('book-floater');
+  var coverWrap = document.getElementById('book-cover-wrap');
+  if (!intro || !scene || !floater || !coverWrap) return;
+
+  intro.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  function openBook() {
+    scene.removeEventListener('click', openBook);
+
+    /* Arrêt de la lévitation pendant l'ouverture */
+    floater.style.animation = 'none';
+
+    /* Rotation de la couverture */
+    coverWrap.classList.add('is-open');
+
+    /* Début du fondu de l'overlay (0.38s après le clic) */
+    setTimeout(function() {
+      intro.classList.add('is-opening');
+    }, 380);
+
+    /* Masquage final et nettoyage */
+    setTimeout(function() {
+      intro.classList.remove('active');
+      document.body.style.overflow = '';
+      sessionStorage.setItem('indirah-book-opened', '1');
+    }, 950);
+  }
+
+  scene.addEventListener('click', openBook);
+}
+
+
+/* ══════════════════════════════════════════════════════════
    INITIALISATION
 ══════════════════════════════════════════════════════════ */
 
@@ -516,6 +559,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var option = e.target.closest('.lang-option');
     if (option) setLanguage(option.dataset.lang);
   });
+
+  /* Book intro mobile */
+  initBookIntro();
 
   /* Mobile feed */
   buildMobileFeed();

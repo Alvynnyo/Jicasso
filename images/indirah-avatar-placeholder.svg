@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
-  <!-- IMAGE A REMPLACER : photo de profil d'Indirah -->
-  <circle cx="100" cy="100" r="100" fill="#276152"/>
-  <circle cx="100" cy="76" r="34" fill="#FBF6F0"/>
-  <path d="M38,200 Q38,136 100,136 Q162,136 162,200 Z" fill="#FBF6F0"/>
-</svg>

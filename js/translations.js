@@ -13,6 +13,9 @@ const translations = {
     // Hero
     hero_scroll:    "Défiler",
 
+    // Intro livre
+    book_tagline:   "Racontez-moi votre histoire, et je la peins. Remplissons ce livre ensemble.",
+
     // Série I — Paysages et lumière
     serie1_title:   "Série I",
     serie1_text:    "Paysages et lumière. Une exploration des saisons et de leurs couleurs.",
@@ -87,6 +90,9 @@ const translations = {
 
     // Hero
     hero_scroll:    "Scroll",
+
+    // Book intro
+    book_tagline:   "Tell me your story, and I'll paint it. Let's fill this book together.",
 
     // Series I — Landscapes and light
     serie1_title:   "Series I",

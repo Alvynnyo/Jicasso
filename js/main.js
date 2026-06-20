@@ -500,8 +500,8 @@ function initBookIntro() {
   var coverWrap = document.getElementById('book-cover-wrap');
   if (!intro || !scene || !floater || !coverWrap) return;
 
-  intro.classList.add('active');
-  document.body.style.overflow = 'hidden';
+  /* Si le CSS cache déjà l'overlay (desktop), rien à faire */
+  if (window.getComputedStyle(intro).display === 'none') return;
 
   function openBook() {
     scene.removeEventListener('click', openBook);
@@ -512,15 +512,14 @@ function initBookIntro() {
     /* Rotation de la couverture */
     coverWrap.classList.add('is-open');
 
-    /* Début du fondu de l'overlay (0.38s après le clic) */
+    /* Début du fondu de l'overlay */
     setTimeout(function() {
       intro.classList.add('is-opening');
     }, 380);
 
-    /* Masquage final et nettoyage */
+    /* Masquage final via style inline (priorité absolue sur le CSS) */
     setTimeout(function() {
-      intro.classList.remove('active');
-      document.body.style.overflow = '';
+      intro.style.display = 'none';
     }, 950);
   }
 

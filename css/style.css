@@ -520,9 +520,9 @@ img {
   transition: opacity 0.5s ease;
 }
 
-/* Activé uniquement sur mobile — le JS ajoute .active sans vérification de largeur */
+/* Affiché directement sur mobile — pas de classe JS nécessaire */
 @media (max-width: 767px) {
-  .book-intro.active {
+  .book-intro {
     display: flex;
   }
 }

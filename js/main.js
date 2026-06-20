@@ -2,16 +2,16 @@
  * Indirah — main.js
  *
  * Gère :
- *  - le viewer hero desktop (navigation, cross-fade, compteur, légende)
  *  - le flux mobile de cartes (mobile-feed)
  *  - la bascule de langue FR/EN (setLanguage, localStorage)
+ *  - la lightbox
+ *  - l'intro livre 3D (mobile)
  *
  * Dépend de js/translations.js chargé avant ce fichier.
  */
 
 /* ── Données ──────────────────────────────────────────────────
    Source unique : le tableau `series`.
-   heroWorks (viewer desktop) est dérivé automatiquement.
    Pour ajouter une oeuvre : ajouter un objet dans works[],
    et les clés correspondantes dans translations.js.
 ─────────────────────────────────────────────────────────────── */
@@ -36,58 +36,8 @@ var series = [
   }
 ];
 
-/* Liste plate pour le viewer desktop */
-var heroWorks = series.reduce(function(acc, s) { return acc.concat(s.works); }, []);
-
 /* ── État ─────────────────────────────────────────────────── */
-var currentLang  = localStorage.getItem('indirah-lang') || 'fr';
-var currentIndex = 0;
-
-
-/* ══════════════════════════════════════════════════════════
-   HERO — viewer desktop
-══════════════════════════════════════════════════════════ */
-
-function buildHeroImages() {
-  var frame = document.getElementById('hero-frame');
-  if (!frame) return;
-
-  heroWorks.forEach(function(work, i) {
-    var img = document.createElement('img');
-    img.src = work.src;
-    img.alt = '';
-    img.setAttribute('draggable', 'false');
-    if (i === 0) img.classList.add('active');
-    frame.appendChild(img);
-  });
-
-  document.getElementById('hero-count-total').textContent =
-    '/ ' + String(heroWorks.length).padStart(2, '0');
-}
-
-function goToWork(targetIndex) {
-  var images = document.querySelectorAll('#hero-frame img');
-  if (!images.length) return;
-
-  images[currentIndex].classList.remove('active');
-  currentIndex = ((targetIndex % heroWorks.length) + heroWorks.length) % heroWorks.length;
-  images[currentIndex].classList.add('active');
-
-  document.getElementById('hero-count-current').textContent =
-    String(currentIndex + 1).padStart(2, '0');
-
-  updateCaption();
-}
-
-function updateCaption() {
-  var work = heroWorks[currentIndex];
-  var t    = translations[currentLang];
-
-  var titleEl     = document.getElementById('hero-caption-title');
-  var techniqueEl = document.getElementById('hero-caption-technique');
-  if (titleEl)     titleEl.textContent     = t[work.titleKey]     || '';
-  if (techniqueEl) techniqueEl.textContent = t[work.techniqueKey] || '';
-}
+var currentLang = localStorage.getItem('indirah-lang') || 'fr';
 
 
 /* ══════════════════════════════════════════════════════════
@@ -199,8 +149,6 @@ function setLanguage(lang) {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
 
-  /* Légende du hero (desktop) */
-  updateCaption();
 }
 
 
@@ -532,22 +480,6 @@ function initBookIntro() {
 ══════════════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', function() {
-
-  /* Hero desktop */
-  buildHeroImages();
-
-  var prevBtn = document.getElementById('hero-prev');
-  var nextBtn = document.getElementById('hero-next');
-  if (prevBtn) prevBtn.addEventListener('click', function() { goToWork(currentIndex - 1); });
-  if (nextBtn) nextBtn.addEventListener('click', function() { goToWork(currentIndex + 1); });
-
-  /* Navigation clavier hero (inactive quand la lightbox est ouverte) */
-  document.addEventListener('keydown', function(e) {
-    var lb = document.getElementById('lightbox-overlay');
-    if (lb && lb.classList.contains('active')) return;
-    if (e.key === 'ArrowLeft')  goToWork(currentIndex - 1);
-    if (e.key === 'ArrowRight') goToWork(currentIndex + 1);
-  });
 
   /* Bascule de langue */
   document.getElementById('lang-toggle').addEventListener('click', function(e) {

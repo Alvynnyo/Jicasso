@@ -494,7 +494,6 @@ function initHamburgerMenu() {
 ══════════════════════════════════════════════════════════ */
 
 function initBookIntro() {
-  if (window.innerWidth >= 768) return;
   var intro     = document.getElementById('book-intro');
   var scene     = document.getElementById('book-scene');
   var floater   = document.getElementById('book-floater');

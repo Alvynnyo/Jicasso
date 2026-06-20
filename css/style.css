@@ -520,8 +520,11 @@ img {
   transition: opacity 0.5s ease;
 }
 
-.book-intro.active {
-  display: flex;
+/* Activé uniquement sur mobile — le JS ajoute .active sans vérification de largeur */
+@media (max-width: 767px) {
+  .book-intro.active {
+    display: flex;
+  }
 }
 
 .book-intro.is-opening {

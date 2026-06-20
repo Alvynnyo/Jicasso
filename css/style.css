@@ -598,6 +598,7 @@ img {
   background-size: cover;
   background-position: center center;
   animation: kenBurns 22s ease-in-out infinite alternate;
+  filter: brightness(1.15) saturate(1.1) contrast(1.05);
 }
 
 .mobile-hero-veil {

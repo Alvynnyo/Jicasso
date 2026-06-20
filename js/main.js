@@ -495,8 +495,6 @@ function initHamburgerMenu() {
 
 function initBookIntro() {
   if (window.innerWidth >= 768) return;
-  if (sessionStorage.getItem('indirah-book-opened')) return;
-
   var intro     = document.getElementById('book-intro');
   var scene     = document.getElementById('book-scene');
   var floater   = document.getElementById('book-floater');
@@ -524,7 +522,6 @@ function initBookIntro() {
     setTimeout(function() {
       intro.classList.remove('active');
       document.body.style.overflow = '';
-      sessionStorage.setItem('indirah-book-opened', '1');
     }, 950);
   }
 

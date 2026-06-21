@@ -28,7 +28,7 @@ function setLanguage(lang) {
 /* ── Données séquence ─────────────────────────────────────── */
 var seriesVideos = {
   serie1: {
-    videoSrc:     'images/gardien.mp4',
+    videoSrc:     'videos/gardien.mp4',
     introTextKey: 'seq_intro_text',
     outroTextKey: 'seq_outro_text',
     paintings: [

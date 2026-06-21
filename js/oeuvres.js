@@ -42,9 +42,10 @@ var seriesVideos = {
 
 
 /* ── État séquence ────────────────────────────────────────── */
-var seqCurrentSerieKey = null;
-var seqAborted = false;
-var seqTimers  = [];
+var seqCurrentSerieKey    = null;
+var seqAborted            = false;
+var seqTimers             = [];
+var seqVideoEndedHandler  = null;
 
 
 /* ── Helpers séquence ─────────────────────────────────────── */
@@ -323,8 +324,9 @@ function initVideoPlayer() {
   /* ── Affichage/masquage des contrôles ── */
   var isMobile = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
   if (isMobile) {
-    playerContainer.classList.add('controls-always');
-    playerVideo.addEventListener('click', showPlayerControls);
+    playerContainer.addEventListener('touchstart', function() {
+      showPlayerControls();
+    }, { passive: true });
   } else {
     playerContainer.addEventListener('mousemove',  showPlayerControls);
     playerContainer.addEventListener('mouseenter', showPlayerControls);
@@ -354,11 +356,15 @@ function runSeqVideo(serie) {
   source.src = serie.videoSrc;
   video.load();
 
-  function onEnded() {
-    video.removeEventListener('ended', onEnded);
-    if (!seqAborted) runSeqIntroText(serie);
+  if (seqVideoEndedHandler) {
+    video.removeEventListener('ended', seqVideoEndedHandler);
   }
-  video.addEventListener('ended', onEnded);
+  seqVideoEndedHandler = function() {
+    video.removeEventListener('ended', seqVideoEndedHandler);
+    seqVideoEndedHandler = null;
+    if (!seqAborted) runSeqIntroText(serie);
+  };
+  video.addEventListener('ended', seqVideoEndedHandler);
 
   var p = video.play();
   if (p && typeof p.catch === 'function') {
@@ -402,25 +408,45 @@ function runSeqPainting(serie, index) {
   var inner    = document.getElementById('seq-painting-inner');
   var img      = document.getElementById('seq-painting-img');
 
-  /* Cut instantané entre tableaux */
-  inner.style.transition = 'none';
-  inner.classList.remove('is-visible');
-  img.src = '';
-  inner.offsetHeight;
-  inner.style.transition = '';
+  function revealPainting() {
+    if (seqAborted) return;
 
-  img.src = painting.src;
-  document.getElementById('seq-painting-title').textContent     = t[painting.titleKey]     || '';
-  document.getElementById('seq-painting-technique').textContent = t[painting.techniqueKey] || '';
-  document.getElementById('seq-painting-label').textContent     = t['seq_painting_label']  || 'RECHERCHE';
-  document.getElementById('seq-painting-reward').textContent    = t['seq_painting_reward'] || 'RÉCOMPENSE : INESTIMABLE';
+    img.src = painting.src;
+    document.getElementById('seq-painting-title').textContent     = t[painting.titleKey]     || '';
+    document.getElementById('seq-painting-technique').textContent = t[painting.techniqueKey] || '';
+    document.getElementById('seq-painting-label').textContent     = t['seq_painting_label']  || 'RECHERCHE';
+    document.getElementById('seq-painting-reward').textContent    = t['seq_painting_reward'] || 'RÉCOMPENSE : INESTIMABLE';
 
-  inner.offsetHeight;
-  inner.classList.add('is-visible');
+    inner.style.transition = 'none';
+    inner.classList.remove('is-visible');
+    inner.offsetHeight;
+    inner.style.transition = '';
+    inner.offsetHeight;
+    inner.classList.add('is-visible');
 
-  seqWait(2600, function() {
-    runSeqPainting(serie, index + 1);
-  });
+    /* À 2200 ms : fade-out, puis passe au tableau suivant à 2600 ms */
+    seqWait(2200, function() {
+      inner.classList.remove('is-visible');
+      /* Préchargement du tableau suivant pendant les 400 ms de sortie */
+      var next = serie.paintings[index + 1];
+      if (next) { new Image().src = next.src; }
+      seqWait(400, function() {
+        runSeqPainting(serie, index + 1);
+      });
+    });
+  }
+
+  /* Préchargement de l'image courante avant le reveal */
+  var preloader = new Image();
+  preloader.src = painting.src;
+  if (typeof preloader.decode === 'function') {
+    preloader.decode().then(revealPainting).catch(revealPainting);
+  } else if (preloader.complete) {
+    revealPainting();
+  } else {
+    preloader.onload  = revealPainting;
+    preloader.onerror = revealPainting;
+  }
 }
 
 function runSeqOutro(serie) {
@@ -468,6 +494,12 @@ function closeSequence() {
   var video  = document.getElementById('seq-video');
   var source = video.querySelector('source');
   video.pause();
+
+  if (seqVideoEndedHandler) {
+    video.removeEventListener('ended', seqVideoEndedHandler);
+    seqVideoEndedHandler = null;
+  }
+
   source.src = '';
 
   /* Reset états visuels */

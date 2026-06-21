@@ -218,8 +218,7 @@
   pointer-events: none;
 }
 
-.video-player-container.controls-visible .video-controls,
-.video-player-container.controls-always .video-controls {
+.video-player-container.controls-visible .video-controls {
   opacity: 1;
   pointer-events: auto;
 }
@@ -494,6 +493,14 @@
   transform: scale(1);
 }
 
+.seq-painting-left {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Label "RECHERCHE" */
 .seq-painting-label {
   flex: 0 0 auto;
@@ -659,5 +666,35 @@
   .seq-painting-reward {
     font-size: 0.6rem;
     letter-spacing: 0.2em;
+  }
+}
+
+
+/* ── Painting step — two-column layout on wide screens ── */
+@media (min-width: 600px) {
+  .seq-painting-inner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .seq-painting-meta {
+    align-items: flex-start;
+    text-align: left;
+    max-width: 220px;
+  }
+}
+
+/* ── Painting step — compact image on narrow mobile ── */
+@media (max-width: 599px) {
+  .seq-painting-inner {
+    padding: 8px 12px;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .seq-painting-img {
+    height: clamp(70px, 22vw, 100px);
   }
 }

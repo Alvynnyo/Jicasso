@@ -128,7 +128,7 @@ function showPlayerControls() {
   if (!playerVideo.paused && !playerVideo.ended && !playerSettingsOpen) {
     playerHideTimer = setTimeout(function() {
       playerContainer.classList.remove('controls-visible');
-    }, 3000);
+    }, 1500);
   }
 }
 
@@ -467,7 +467,7 @@ function runSeqOutro(serie) {
   textEl.classList.add('is-revealed');
 
   seqWait(1400, function() { sig.classList.add('is-visible'); });
-  seqWait(2200, function() { replay.classList.add('is-visible'); });
+  seqWait(3800, function() { replay.classList.add('is-visible'); });
 }
 
 

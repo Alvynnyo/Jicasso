@@ -506,18 +506,14 @@
   margin: 0;
 }
 
-/* Cadre glassmorphism autour de l'image */
+/* Cadre glassmorphism autour de l'image — s'adapte à la taille réelle de l'image */
 .seq-painting-frame {
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 auto;
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* Voile de verre subtil */
@@ -547,9 +543,9 @@
 
 .seq-painting-img {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  height: clamp(130px, 34vw, 220px);
+  width: auto;
+  max-width: 85vw;
   position: relative;
   z-index: 0;
 }

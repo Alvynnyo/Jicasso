@@ -33,9 +33,9 @@ var seriesVideos = {
     introTextKey: 'seq_intro_text',
     outroTextKey: 'seq_outro_text',
     paintings: [
-      { src: 'images/serie-1/maria.png',      titleKey: 'work1_title', techniqueKey: 'work1_technique' },
-      { src: 'images/serie-1/moryupdate.png', titleKey: 'work2_title', techniqueKey: 'work2_technique' },
-      { src: 'images/serie-1/stepout.png',    titleKey: 'work3_title', techniqueKey: 'work3_technique' }
+      { src: 'images/mariaspotlight.png',  titleKey: 'work1_title', techniqueKey: 'work1_technique' },
+      { src: 'images/moryspotlight.png',   titleKey: 'work2_title', techniqueKey: 'work2_technique' },
+      { src: 'images/stepoutspotlight.png',titleKey: 'work3_title', techniqueKey: 'work3_technique' }
     ]
   }
 };

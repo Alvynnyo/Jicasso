@@ -113,7 +113,7 @@
   ═══════════════════════════════════════════ -->
   <div class="seq-overlay" id="seq-overlay">
 
-    <!-- Bouton fermeture — visible à tout moment -->
+    <!-- Fermeture — sur l'overlay (hors du cadre centré) -->
     <button class="seq-close" id="seq-close" aria-label="Fermer">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
            stroke="currentColor" stroke-width="1.5"
@@ -123,39 +123,81 @@
       </svg>
     </button>
 
-    <!-- Étape 1 : Vidéo du gardien -->
-    <div class="seq-step seq-step--video" id="seq-step-video">
-      <video class="seq-video" id="seq-video" muted playsinline>
-        <source src="" type="video/mp4">
-      </video>
-    </div>
+    <!-- Cadre centré style "YouTube" — contient toutes les étapes -->
+    <div class="seq-frame" id="seq-frame">
 
-    <!-- Étape 2 : Texte "Mais, où sont-elles ?" -->
-    <div class="seq-step seq-step--dark" id="seq-step-intro-text">
-      <p class="seq-blur-text" id="seq-intro-text"></p>
-    </div>
+      <!-- Étape 1 : Lecteur vidéo personnalisé -->
+      <div class="seq-step seq-step--video" id="seq-step-video">
+        <div class="video-player-container" id="video-player-container">
 
-    <!-- Étapes 3-5 : Reveal des tableaux -->
-    <div class="seq-step seq-step--painting" id="seq-step-painting">
-      <div class="seq-painting-inner" id="seq-painting-inner">
-        <p class="seq-painting-label" id="seq-painting-label">RECHERCHE</p>
-        <img class="seq-painting-img" id="seq-painting-img" src="" alt="">
-        <div class="seq-painting-meta">
-          <p class="seq-painting-title" id="seq-painting-title"></p>
-          <p class="seq-painting-technique" id="seq-painting-technique"></p>
-          <p class="seq-painting-reward" id="seq-painting-reward">RÉCOMPENSE : INESTIMABLE</p>
+          <video class="video-player-element" id="seq-video" muted playsinline>
+            <source src="" type="video/mp4">
+          </video>
+
+          <!-- Contrôles glassmorphism -->
+          <div class="video-controls" id="video-controls">
+            <div class="video-progress-bar" id="video-progress-bar">
+              <div class="video-progress-fill" id="video-progress-fill"></div>
+            </div>
+            <div class="video-controls-row">
+
+              <div class="video-controls-left">
+                <button class="video-btn video-play-pause" id="video-play-pause" aria-label="Lecture"></button>
+                <button class="video-btn video-volume-btn" id="video-volume-btn" aria-label="Volume"></button>
+                <input type="range" class="video-volume-slider" id="video-volume-slider"
+                       min="0" max="1" step="0.05" value="1">
+                <span class="video-time" id="video-time">0:00 / 0:00</span>
+              </div>
+
+              <div class="video-controls-right">
+                <div class="video-settings-wrap" id="video-settings-wrap">
+                  <div class="video-settings-menu" id="video-settings-menu" hidden>
+                    <button class="video-speed-btn active" data-speed="1">1×</button>
+                    <button class="video-speed-btn" data-speed="1.5">1.5×</button>
+                    <button class="video-speed-btn" data-speed="0.5">0.5×</button>
+                    <button class="video-speed-btn" data-speed="2">2×</button>
+                  </div>
+                  <button class="video-btn video-settings-btn" id="video-settings-btn" aria-label="Vitesse"></button>
+                </div>
+                <button class="video-btn video-fullscreen-btn" id="video-fullscreen-btn" aria-label="Plein écran"></button>
+              </div>
+
+            </div>
+          </div>
+
         </div>
       </div>
-    </div>
 
-    <!-- Étape 6 : Punchline finale -->
-    <div class="seq-step seq-step--dark seq-step--outro" id="seq-step-outro">
-      <p class="seq-blur-text seq-outro-text" id="seq-outro-text"></p>
-      <p class="seq-signature" id="seq-signature">Indirah</p>
-      <button class="seq-replay" id="seq-replay" data-i18n="seq_replay">Revoir</button>
-    </div>
+      <!-- Étape 2 : "Mais, où sont-elles ?" -->
+      <div class="seq-step seq-step--dark" id="seq-step-intro-text">
+        <p class="seq-blur-text" id="seq-intro-text"></p>
+      </div>
 
-  </div>
+      <!-- Étapes 3-5 : Reveal des tableaux (style musée) -->
+      <div class="seq-step seq-step--painting" id="seq-step-painting">
+        <div class="seq-painting-inner" id="seq-painting-inner">
+          <p class="seq-painting-label" id="seq-painting-label">RECHERCHE</p>
+          <div class="seq-painting-frame">
+            <img class="seq-painting-img" id="seq-painting-img" src="" alt="">
+          </div>
+          <div class="seq-painting-meta">
+            <p class="seq-painting-title" id="seq-painting-title"></p>
+            <p class="seq-painting-technique" id="seq-painting-technique"></p>
+            <p class="seq-painting-reward" id="seq-painting-reward">RÉCOMPENSE : INESTIMABLE</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Étape 6 : Punchline finale -->
+      <div class="seq-step seq-step--dark seq-step--outro" id="seq-step-outro">
+        <p class="seq-blur-text seq-outro-text" id="seq-outro-text"></p>
+        <p class="seq-signature" id="seq-signature">Indirah</p>
+        <button class="seq-replay" id="seq-replay" data-i18n="seq_replay">Revoir</button>
+      </div>
+
+    </div><!-- /.seq-frame -->
+
+  </div><!-- /.seq-overlay -->
 
 
   <!-- Overlay sombre derrière le menu mobile -->

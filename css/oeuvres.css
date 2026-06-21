@@ -1,0 +1,394 @@
+/* ═══════════════════════════════════════════════════════════
+   OEUVRES — styles spécifiques à oeuvres.html
+   Complète css/style.css sans le modifier.
+═══════════════════════════════════════════════════════════ */
+
+/* ── Lien courant dans la nav ── */
+.main-nav a.nav-current {
+  color: var(--cream);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+
+/* ── Page principale ── */
+.oeuvres-main {
+  padding-top: 130px;
+  min-height: calc(100vh - 180px);
+}
+
+
+/* ── Section série ── */
+.ov-serie {
+  padding: 0 48px 100px;
+}
+
+.ov-serie-divider {
+  height: 1px;
+  background: var(--sage);
+  opacity: 0.18;
+  margin-bottom: 80px;
+}
+
+/* Pas de séparateur sur la première section */
+.ov-serie:first-child .ov-serie-divider {
+  display: none;
+}
+
+.ov-serie-inner {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.ov-serie-info {
+  position: sticky;
+  top: 120px;
+}
+
+
+/* ── Carte vidéo ── */
+.serie-video-card {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--forest);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.serie-video-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+.play-btn svg {
+  margin-left: 3px; /* compensation optique triangle */
+}
+
+@media (hover: hover) {
+  .serie-video-card:hover img {
+    transform: scale(1.04);
+  }
+  .serie-video-card:hover .play-btn {
+    background: rgba(255, 255, 255, 0.28);
+  }
+}
+
+.serie-video-card:active img {
+  transform: scale(1.04);
+}
+.serie-video-card:active .play-btn {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   SÉQUENCE OVERLAY
+═══════════════════════════════════════════════════════════ */
+
+.seq-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  overflow: hidden;
+}
+
+.seq-overlay.active {
+  display: block;
+}
+
+/* Bouton fermeture — toujours en haut à droite */
+.seq-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FBF6F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .seq-close:hover {
+    background: rgba(255, 255, 255, 0.24);
+  }
+}
+
+/* Adaptation sur fond clair (étape tableau) */
+.seq-overlay[data-step="painting"] .seq-close {
+  background: rgba(0, 0, 0, 0.07);
+  border-color: rgba(0, 0, 0, 0.14);
+  color: #0D3A35;
+}
+
+@media (hover: hover) {
+  .seq-overlay[data-step="painting"] .seq-close:hover {
+    background: rgba(0, 0, 0, 0.14);
+  }
+}
+
+
+/* ── Étapes génériques ── */
+.seq-step {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.seq-step.active {
+  display: flex;
+}
+
+
+/* ── Étape vidéo ── */
+.seq-step--video {
+  background: #000;
+}
+
+.seq-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* ── Étapes fond sombre (intro text + outro) ── */
+.seq-step--dark {
+  background: #000;
+}
+
+
+/* ── Texte blur reveal ── */
+.seq-blur-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.75rem, 4.5vw, 2.4rem);
+  color: #FBF6F0;
+  text-align: center;
+  line-height: 1.45;
+  max-width: 560px;
+  padding: 0 32px;
+  margin: 0;
+  filter: blur(20px);
+  opacity: 0;
+  transition: filter 0.8s ease, opacity 0.8s ease;
+}
+
+.seq-blur-text.is-revealed {
+  filter: blur(0);
+  opacity: 1;
+}
+
+/* La classe is-fading doit apparaître APRÈS is-revealed pour l'override */
+.seq-blur-text.is-fading {
+  filter: blur(10px);
+  opacity: 0;
+  transition: filter 0.35s ease, opacity 0.35s ease;
+}
+
+
+/* ── Étape outro (punchline) ── */
+.seq-step--outro {
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.seq-outro-text {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+}
+
+.seq-signature {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 300;
+  color: #B1B7AB;
+  letter-spacing: 0.12em;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.seq-signature.is-visible {
+  opacity: 1;
+}
+
+.seq-replay {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #FBF6F0;
+  padding: 13px 36px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  margin-top: 10px;
+  opacity: 0;
+  transition: opacity 0.4s ease, background 0.2s ease;
+}
+
+.seq-replay.is-visible {
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .seq-replay:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+
+/* ── Étape tableaux ── */
+.seq-step--painting {
+  background: #FBF6F0;
+}
+
+.seq-painting-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: min(78vw, 440px);
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.seq-painting-inner.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.seq-painting-label {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #0D3A35;
+  margin: 0;
+}
+
+.seq-painting-img {
+  width: 100%;
+  max-height: 48vh;
+  object-fit: contain;
+  border: 1px solid #0D3A35;
+  display: block;
+}
+
+.seq-painting-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.seq-painting-title {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 1rem;
+  color: #0D3A35;
+  margin: 0;
+}
+
+.seq-painting-technique {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: #276152;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.seq-painting-reward {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #0D3A35;
+  margin: 6px 0 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .oeuvres-main {
+    padding-top: 110px;
+  }
+
+  .ov-serie {
+    padding: 0 24px 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .oeuvres-main {
+    padding-top: 96px;
+  }
+
+  .ov-serie {
+    padding: 0 16px 64px;
+  }
+
+  .ov-serie-divider {
+    margin-bottom: 44px;
+  }
+
+  .ov-serie-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .ov-serie-info {
+    position: static;
+  }
+
+  .play-btn {
+    width: 54px;
+    height: 54px;
+  }
+}

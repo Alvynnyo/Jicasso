@@ -16,6 +16,13 @@ const translations = {
     // Intro livre
     book_tagline:   "Racontez-moi votre histoire, et je la peins. Remplissons ce livre ensemble.",
 
+    // Séquence "Une nuit au musée" (oeuvres.html)
+    seq_intro_text:     "Mais, où sont-elles ?",
+    seq_painting_label: "RECHERCHE",
+    seq_painting_reward: "RÉCOMPENSE : INESTIMABLE",
+    seq_outro_text:     "Pourquoi pas sur votre mur ...",
+    seq_replay:         "Revoir",
+
     // Série I — Paysages et lumière
     serie1_title:   "Série I",
     serie1_text:    "Paysages et lumière. Une exploration des saisons et de leurs couleurs.",
@@ -93,6 +100,13 @@ const translations = {
 
     // Book intro
     book_tagline:   "Tell me your story, and I'll paint it. Let's fill this book together.",
+
+    // Sequence "A night at the museum" (oeuvres.html)
+    seq_intro_text:     "But, where are they?",
+    seq_painting_label: "WANTED",
+    seq_painting_reward: "REWARD: PRICELESS",
+    seq_outro_text:     "Why not on your wall...",
+    seq_replay:         "Watch again",
 
     // Series I — Landscapes and light
     serie1_title:   "Series I",

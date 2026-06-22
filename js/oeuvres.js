@@ -20,25 +20,36 @@ function setLanguage(lang) {
     if (text !== undefined) el.textContent = text;
   });
 
+  document.querySelectorAll('[data-i18n-alt-title]').forEach(function(el) {
+    var title = translations[lang][el.dataset.i18nAltTitle] || '';
+    var tech  = translations[lang][el.dataset.i18nAltTechnique] || '';
+    var label = title + (tech ? ', ' + tech.toLowerCase() : '');
+    if (el.tagName === 'IMG') el.alt = label;
+    else el.setAttribute('aria-label', label);
+  });
+
   document.querySelectorAll('.lang-option').forEach(function(btn) {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
 }
 
 
-/* ── Données séquence ─────────────────────────────────────── */
-var seriesVideos = {
-  serie1: {
-    videoSrc:     'videos/gardien.mp4',
-    introTextKey: 'seq_intro_text',
-    outroTextKey: 'seq_outro_text',
-    paintings: [
-      { src: 'images/mariaspotlight.webp',       titleKey: 'work1_title', techniqueKey: 'work1_technique' },
-      { src: 'images/moryspotlight-reveal.webp',  titleKey: 'work2_title', techniqueKey: 'work2_technique' },
-      { src: 'images/stepoutspotlight.webp',      titleKey: 'work3_title', techniqueKey: 'work3_technique' }
-    ]
-  }
-};
+/* ── Données séquence — dérivées de js/oeuvres-data.js ───── */
+var seriesVideos = {};
+Object.keys(oeuvresData).forEach(function(key) {
+  var sd = oeuvresData[key];
+  if (!sd.videoSrc) return;
+  seriesVideos[key] = {
+    videoSrc:     sd.videoSrc,
+    introTextKey: sd.introTextKey,
+    outroTextKey: sd.outroTextKey,
+    paintings:    sd.works
+      .filter(function(w) { return !!w.srcSpotlight; })
+      .map(function(w) {
+        return { src: w.srcSpotlight, titleKey: w.titleKey, techniqueKey: w.techniqueKey };
+      })
+  };
+});
 
 
 /* ── État séquence ────────────────────────────────────────── */
@@ -421,6 +432,7 @@ function runSeqPainting(serie, index) {
     if (seqAborted) return;
 
     img.src = painting.src;
+    img.alt = (t[painting.titleKey] || '') + (t[painting.techniqueKey] ? ', ' + t[painting.techniqueKey].toLowerCase() : '');
     document.getElementById('seq-painting-title').textContent     = t[painting.titleKey]     || '';
     document.getElementById('seq-painting-technique').textContent = t[painting.techniqueKey] || '';
     document.getElementById('seq-painting-label').textContent     = t['seq_painting_label']  || 'RECHERCHE';

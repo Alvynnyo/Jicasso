@@ -10,31 +10,12 @@
  * Dépend de js/translations.js chargé avant ce fichier.
  */
 
-/* ── Données ──────────────────────────────────────────────────
-   Source unique : le tableau `series`.
-   Pour ajouter une oeuvre : ajouter un objet dans works[],
-   et les clés correspondantes dans translations.js.
+/* ── Données — dérivées de js/oeuvres-data.js ────────────────
+   Pour ajouter une œuvre : modifier oeuvres-data.js uniquement.
 ─────────────────────────────────────────────────────────────── */
-var series = [
-  {
-    titleKey: 'serie1_title',
-    textKey:  'serie1_text',
-    works: [
-      { src: 'images/serie-1/maria.webp', titleKey: 'work1_title', techniqueKey: 'work1_technique' },
-      { src: 'images/serie-1/moryupdate.webp', titleKey: 'work2_title', techniqueKey: 'work2_technique' },
-      { src: 'images/serie-1/stepout.webp', titleKey: 'work3_title', techniqueKey: 'work3_technique' },
-    ]
-  },
-  {
-    titleKey: 'serie2_title',
-    textKey:  'serie2_text',
-    works: [
-      { src: 'images/serie-2/oeuvre-1.svg', titleKey: 'work4_title', techniqueKey: 'work4_technique' },
-      { src: 'images/serie-2/oeuvre-2.svg', titleKey: 'work5_title', techniqueKey: 'work5_technique' },
-      { src: 'images/serie-2/oeuvre-3.svg', titleKey: 'work6_title', techniqueKey: 'work6_technique' },
-    ]
-  }
-];
+var series = Object.keys(oeuvresData).map(function(key) {
+  return oeuvresData[key];
+});
 
 /* ── État ─────────────────────────────────────────────────── */
 var currentLang      = localStorage.getItem('indirah-lang') || 'fr';
@@ -100,7 +81,9 @@ function buildMobileFeed() {
 
       var img = document.createElement('img');
       img.src = work.src;
-      img.alt = '';
+      img.alt = (t[work.titleKey] || '') + (t[work.techniqueKey] ? ', ' + t[work.techniqueKey].toLowerCase() : '');
+      img.dataset.i18nAltTitle     = work.titleKey;
+      img.dataset.i18nAltTechnique = work.techniqueKey;
       img.setAttribute('loading', 'lazy');
       imgWrap.appendChild(img);
       card.appendChild(imgWrap);
@@ -146,6 +129,49 @@ function buildMobileFeed() {
 
 
 /* ══════════════════════════════════════════════════════════
+   GALERIE DESKTOP — grilles générées depuis oeuvresData
+══════════════════════════════════════════════════════════ */
+
+function buildDesktopGrids() {
+  var t = translations[currentLang];
+
+  document.querySelectorAll('.serie-grid[data-serie]').forEach(function(grid) {
+    var key = grid.dataset.serie;
+    var sd  = oeuvresData[key];
+    if (!sd) return;
+
+    grid.innerHTML = '';
+
+    sd.works.forEach(function(work) {
+      var item = document.createElement('div');
+      item.className = 'serie-grid-item';
+
+      var btn = document.createElement('button');
+      btn.className = 'serie-grid-btn';
+      btn.dataset.i18nAltTitle     = work.titleKey;
+      btn.dataset.i18nAltTechnique = work.techniqueKey;
+
+      var img = document.createElement('img');
+      img.src = work.src;
+      img.setAttribute('loading', 'lazy');
+      img.dataset.i18nAltTitle     = work.titleKey;
+      img.dataset.i18nAltTechnique = work.techniqueKey;
+
+      var title = t[work.titleKey] || '';
+      var tech  = t[work.techniqueKey] || '';
+      var label = title + (tech ? ', ' + tech.toLowerCase() : '');
+      img.alt = label;
+      btn.setAttribute('aria-label', label);
+
+      btn.appendChild(img);
+      item.appendChild(btn);
+      grid.appendChild(item);
+    });
+  });
+}
+
+
+/* ══════════════════════════════════════════════════════════
    LANGUE
 ══════════════════════════════════════════════════════════ */
 
@@ -161,6 +187,15 @@ function setLanguage(lang) {
     var key  = el.dataset.i18n;
     var text = translations[lang][key];
     if (text !== undefined) el.textContent = text;
+  });
+
+  /* Attributs alt et aria-label localisés */
+  document.querySelectorAll('[data-i18n-alt-title]').forEach(function(el) {
+    var title = translations[lang][el.dataset.i18nAltTitle] || '';
+    var tech  = translations[lang][el.dataset.i18nAltTechnique] || '';
+    var label = title + (tech ? ', ' + tech.toLowerCase() : '');
+    if (el.tagName === 'IMG') el.alt = label;
+    else el.setAttribute('aria-label', label);
   });
 
   /* Bouton de langue */
@@ -488,20 +523,11 @@ function initBookIntro() {
   var scene     = document.getElementById('book-scene');
   var floater   = document.getElementById('book-floater');
   var coverWrap = document.getElementById('book-cover-wrap');
-  var mhContent = document.getElementById('mobile-hero-content');
   var mhScroll  = document.getElementById('mobile-hero-scroll');
   if (!intro || !scene || !floater || !coverWrap) return;
 
-  /* Sur tablette/desktop l'overlay livre n'est pas visible — animer le hero directement */
-  if (window.getComputedStyle(intro).display === 'none') {
-    if (mhContent) {
-      setTimeout(function() {
-        mhContent.classList.add('is-visible');
-        if (mhScroll) mhScroll.classList.add('is-visible');
-      }, 300);
-    }
-    return;
-  }
+  /* Sur tablette/desktop l'overlay livre n'est pas visible */
+  if (window.getComputedStyle(intro).display === 'none') return;
 
   /* Rendre la scène accessible au clavier */
   scene.setAttribute('tabindex', '0');
@@ -519,7 +545,6 @@ function initBookIntro() {
 
     setTimeout(function() {
       intro.style.display = 'none';
-      if (mhContent) mhContent.classList.add('is-visible');
       if (mhScroll) mhScroll.classList.add('is-visible');
     }, 950);
   }
@@ -558,6 +583,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* Book intro mobile */
   initBookIntro();
+
+  /* Desktop series grids */
+  buildDesktopGrids();
 
   /* Mobile feed */
   buildMobileFeed();

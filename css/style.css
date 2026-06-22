@@ -240,7 +240,7 @@ img {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('../images/moryspotlight.png');
+  background-image: url('../images/moryspotlight.webp');
   background-size: cover;
   background-position: center center;
   z-index: 0;
@@ -325,6 +325,15 @@ img {
   border-color: var(--cream);
 }
 
+.serie-link--disabled,
+.serie-link--disabled:hover {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+  color: var(--sage);
+  border-color: var(--forest);
+}
+
 /* Grille 3 colonnes */
 .serie-grid {
   display: grid;
@@ -337,6 +346,18 @@ img {
   border-radius: 3px;
   overflow: hidden;
   background: var(--forest);
+}
+
+.serie-grid-btn {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.serie-grid-btn:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: -3px;
 }
 
 .serie-grid-item img {
@@ -393,6 +414,14 @@ img {
   transition: color var(--ease);
 }
 .footer-links a:hover { color: var(--cream); }
+
+.footer-link--disabled,
+.footer-link--disabled:hover {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+  color: var(--sage);
+}
 
 .footer-copy {
   font-family: var(--font-body);
@@ -615,7 +644,7 @@ img {
 .mobile-hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('../images/moryspotlight.png');
+  background-image: url('../images/moryspotlight.webp');
   background-size: cover;
   background-position: center center;
   animation: kenBurns 22s ease-in-out infinite alternate;
@@ -1203,9 +1232,21 @@ img {
 .lightbox-arrow--prev { left: 24px; }
 .lightbox-arrow--next { right: 24px; }
 
-/* Curseur pointer sur les images cliquables */
-.serie-grid-item img { cursor: pointer; }
-.mobile-card         { cursor: pointer; }
+/* Curseur pointer sur les éléments cliquables */
+.serie-grid-btn { cursor: pointer; }
+.mobile-card    { cursor: pointer; }
+
+/* Focus clavier visible */
+.mobile-card:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 2px;
+}
+
+.book-scene:focus-visible {
+  outline: 2px solid rgba(251, 246, 240, 0.5);
+  outline-offset: 12px;
+  border-radius: 4px;
+}
 
 /* Indicateur de position — mobile uniquement */
 .lightbox-position { display: none; }

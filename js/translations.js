@@ -6,6 +6,7 @@
 const translations = {
   fr: {
     // Navigation
+    nav_accueil:    "Accueil",
     nav_oeuvres:    "Oeuvres",
     nav_atelier:    "Atelier",
     nav_contact:    "Contact",
@@ -91,6 +92,7 @@ const translations = {
 
   en: {
     // Navigation
+    nav_accueil:    "Home",
     nav_oeuvres:    "Works",
     nav_atelier:    "Studio",
     nav_contact:    "Contact",

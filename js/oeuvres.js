@@ -33,9 +33,9 @@ var seriesVideos = {
     introTextKey: 'seq_intro_text',
     outroTextKey: 'seq_outro_text',
     paintings: [
-      { src: 'images/mariaspotlight.png',  titleKey: 'work1_title', techniqueKey: 'work1_technique' },
-      { src: 'images/moryspotlight.png',   titleKey: 'work2_title', techniqueKey: 'work2_technique' },
-      { src: 'images/stepoutspotlight.png',titleKey: 'work3_title', techniqueKey: 'work3_technique' }
+      { src: 'images/mariaspotlight.webp',       titleKey: 'work1_title', techniqueKey: 'work1_technique' },
+      { src: 'images/moryspotlight-reveal.webp',  titleKey: 'work2_title', techniqueKey: 'work2_technique' },
+      { src: 'images/stepoutspotlight.webp',      titleKey: 'work3_title', techniqueKey: 'work3_technique' }
     ]
   }
 };
@@ -46,9 +46,18 @@ var seqCurrentSerieKey    = null;
 var seqAborted            = false;
 var seqTimers             = [];
 var seqVideoEndedHandler  = null;
+var seqTriggerEl          = null;
 
 
 /* ── Helpers séquence ─────────────────────────────────────── */
+
+function getFocusable(container) {
+  return Array.from(container.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )).filter(function(el) {
+    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+  });
+}
 
 function seqWait(ms, fn) {
   var t = setTimeout(function() {
@@ -473,16 +482,22 @@ function runSeqOutro(serie) {
 
 /* ── Contrôles overlay ────────────────────────────────────── */
 
-function openSequence(serieKey) {
+function openSequence(serieKey, trigger) {
   var serie = seriesVideos[serieKey];
   if (!serie) return;
 
   seqCurrentSerieKey = serieKey;
   seqAborted = false;
   clearSeqTimers();
+  seqTriggerEl = trigger || null;
 
   document.getElementById('seq-overlay').classList.add('active');
   document.body.style.overflow = 'hidden';
+
+  setTimeout(function() {
+    var closeBtn = document.getElementById('seq-close');
+    if (closeBtn) closeBtn.focus();
+  }, 50);
 
   runSeqVideo(serie);
 }
@@ -523,6 +538,11 @@ function closeSequence() {
   if (document.fullscreenElement) {
     document.exitFullscreen().catch(function() {});
   }
+
+  /* Restaurer le focus sur l'élément déclencheur */
+  var trigger = seqTriggerEl;
+  seqTriggerEl = null;
+  if (trigger) trigger.focus();
 }
 
 function replaySequence() {
@@ -619,11 +639,32 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  /* Clic sur une carte vidéo → lancer la séquence */
+  /* Clic et clavier sur une carte vidéo → lancer la séquence */
   document.querySelectorAll('[data-serie]').forEach(function(card) {
     card.addEventListener('click', function() {
-      openSequence(card.dataset.serie);
+      openSequence(card.dataset.serie, card);
     });
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openSequence(card.dataset.serie, card);
+      }
+    });
+  });
+
+  /* Piège de focus dans l'overlay séquence */
+  var seqOverlay = document.getElementById('seq-overlay');
+  seqOverlay.addEventListener('keydown', function(e) {
+    if (!seqOverlay.classList.contains('active') || e.key !== 'Tab') return;
+    var focusable = getFocusable(seqOverlay);
+    if (!focusable.length) return;
+    var first = focusable[0];
+    var last  = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
   });
 
   /* Fermeture */

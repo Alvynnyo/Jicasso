@@ -11,7 +11,7 @@
 
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body id="top">
 
   <!-- ═══════════════════════════════════════════
        HEADER — fixed, transparent → deep gradient
@@ -22,7 +22,10 @@
       <a href="#" class="brand">
         <div class="avatar-container avatar-small">
           <div class="avatar">
-            <img src="images/indirahicon.png" alt="" class="avatar-image">
+            <picture>
+                <source srcset="images/indirahicon-small.webp" type="image/webp">
+                <img src="images/indirahicon-small.png" alt="" class="avatar-image">
+              </picture>
           </div>
           <div class="avatar-badge">
             <svg viewBox="0 0 24 24" width="7" height="7" fill="none"
@@ -36,6 +39,7 @@
       </a>
 
       <nav class="main-nav" aria-label="Navigation principale">
+        <a href="index.html" data-i18n="nav_accueil" class="nav-current">Accueil</a>
         <a href="oeuvres.html" data-i18n="nav_oeuvres">Oeuvres</a>
         <a href="#atelier" data-i18n="nav_atelier">Atelier</a>
         <a href="contact.html" data-i18n="nav_contact">Contact</a>
@@ -79,18 +83,24 @@
         <p class="serie-text" data-i18n="serie1_text">
           Paysages et lumière. Une exploration des saisons et de leurs couleurs.
         </p>
-        <a href="#" class="serie-link" data-i18n="serie1_link">Voir la série</a>
+        <a class="serie-link serie-link--disabled" data-i18n="serie1_link">Voir la série</a>
       </div>
 
       <div class="serie-grid">
         <div class="serie-grid-item">
-          <img src="images/serie-1/maria.png" alt="" loading="lazy">
+          <button class="serie-grid-btn" aria-label="Sans titre I — Huile sur toile">
+            <img src="images/serie-1/maria.webp" alt="" loading="lazy">
+          </button>
         </div>
         <div class="serie-grid-item">
-          <img src="images/serie-1/moryupdate.png" alt="" loading="lazy">
+          <button class="serie-grid-btn" aria-label="Sans titre II — Huile sur toile">
+            <img src="images/serie-1/moryupdate.webp" alt="" loading="lazy">
+          </button>
         </div>
         <div class="serie-grid-item">
-          <img src="images/serie-1/stepout.png" alt="" loading="lazy">
+          <button class="serie-grid-btn" aria-label="Sans titre III — Acrylique sur lin">
+            <img src="images/serie-1/stepout.webp" alt="" loading="lazy">
+          </button>
         </div>
       </div>
 
@@ -110,7 +120,7 @@
         <p class="serie-text" data-i18n="serie2_text">
           Portraits et figures. Le corps comme matière et comme ombre.
         </p>
-        <a href="#" class="serie-link" data-i18n="serie2_link">Voir la série</a>
+        <a class="serie-link serie-link--disabled" data-i18n="serie2_link">Voir la série</a>
       </div>
 
       <div class="serie-grid">
@@ -159,10 +169,10 @@
   ═══════════════════════════════════════════ -->
   <footer class="site-footer" id="contact">
     <div class="footer-inner">
-      <a href="#" class="footer-logo">Indirah</a>
+      <a href="#top" class="footer-logo">Indirah</a>
       <nav class="footer-links" aria-label="Liens externes">
-        <a href="#" data-i18n="footer_instagram">Instagram</a>
-        <a href="#" data-i18n="footer_artsy">Artsy</a>
+        <a class="footer-link--disabled" data-i18n="footer_instagram">Instagram</a>
+        <a class="footer-link--disabled" data-i18n="footer_artsy">Artsy</a>
         <a href="contact.html" data-i18n="footer_contact">Contact</a>
       </nav>
       <p class="footer-copy" data-i18n="footer_copy">© 2024 Indirah. Tous droits réservés.</p>
@@ -171,7 +181,7 @@
 
 
   <!-- Intro livre 3D — mobile uniquement, géré par JS -->
-  <div class="book-intro" id="book-intro">
+  <div class="book-intro" id="book-intro" role="dialog" aria-modal="true" aria-label="Introduction">
     <div class="book-scene" id="book-scene">
       <div class="book-floater" id="book-floater">
         <div class="book-3d">
@@ -194,7 +204,7 @@
   </div>
 
   <!-- Lightbox plein écran -->
-  <div class="lightbox-overlay" id="lightbox-overlay">
+  <div class="lightbox-overlay" id="lightbox-overlay" role="dialog" aria-modal="true" aria-labelledby="lightbox-caption-title">
     <button class="lightbox-close" id="lightbox-close" aria-label="Fermer">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
            stroke="currentColor" stroke-width="1.5"

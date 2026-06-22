@@ -20,9 +20,9 @@ var series = [
     titleKey: 'serie1_title',
     textKey:  'serie1_text',
     works: [
-      { src: 'images/serie-1/maria.png', titleKey: 'work1_title', techniqueKey: 'work1_technique' },
-      { src: 'images/serie-1/moryupdate.png', titleKey: 'work2_title', techniqueKey: 'work2_technique' },
-      { src: 'images/serie-1/stepout.png', titleKey: 'work3_title', techniqueKey: 'work3_technique' },
+      { src: 'images/serie-1/maria.webp', titleKey: 'work1_title', techniqueKey: 'work1_technique' },
+      { src: 'images/serie-1/moryupdate.webp', titleKey: 'work2_title', techniqueKey: 'work2_technique' },
+      { src: 'images/serie-1/stepout.webp', titleKey: 'work3_title', techniqueKey: 'work3_technique' },
     ]
   },
   {
@@ -37,7 +37,16 @@ var series = [
 ];
 
 /* ── État ─────────────────────────────────────────────────── */
-var currentLang = localStorage.getItem('indirah-lang') || 'fr';
+var currentLang      = localStorage.getItem('indirah-lang') || 'fr';
+var lightboxTrigger  = null;
+
+function getFocusable(container) {
+  return Array.from(container.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )).filter(function(el) {
+    return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+  });
+}
 
 
 /* ══════════════════════════════════════════════════════════
@@ -114,8 +123,18 @@ function buildMobileFeed() {
 
       card.appendChild(info);
 
-      /* Lightbox au tap sur la carte mobile */
-      card.addEventListener('click', function() { openLightbox(work.src); });
+      /* Accessibilité clavier */
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+
+      /* Lightbox au tap/clic/clavier sur la carte mobile */
+      card.addEventListener('click', function() { openLightbox(work.src, card); });
+      card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(work.src, card);
+        }
+      });
 
       grid.appendChild(card);
     });
@@ -190,30 +209,38 @@ function showLightboxImage(index) {
   updatePositionDots();
 }
 
-function openLightbox(src) {
+function openLightbox(src, trigger) {
   var result = findWorkBySrc(src);
   if (!result) return;
   lightboxWorks = result.serieWorks;
   lightboxIndex = result.index;
   showLightboxImage(lightboxIndex);
+  lightboxTrigger = trigger || null;
   var overlay = document.getElementById('lightbox-overlay');
   var img     = document.getElementById('lightbox-img');
   if (img) { img.style.transform = ''; img.style.transition = ''; }
   overlay.style.display = 'flex';
-  overlay.offsetHeight; /* force reflow */
+  overlay.offsetHeight;
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
+  setTimeout(function() {
+    var closeBtn = document.getElementById('lightbox-close');
+    if (closeBtn) closeBtn.focus();
+  }, 50);
 }
 
 function closeLightbox() {
   var overlay = document.getElementById('lightbox-overlay');
   overlay.classList.remove('active');
+  var trigger = lightboxTrigger;
+  lightboxTrigger = null;
   setTimeout(function() {
     if (!overlay.classList.contains('active')) {
       overlay.style.display = 'none';
       document.body.style.overflow = '';
       var img = document.getElementById('lightbox-img');
       if (img) { img.style.transform = ''; img.style.transition = ''; }
+      if (trigger) trigger.focus();
     }
   }, 300);
 }
@@ -253,11 +280,26 @@ function initLightbox() {
     if (e.key === 'ArrowRight')  { e.preventDefault(); lightboxIndex = (lightboxIndex + 1) % lightboxWorks.length; showLightboxImage(lightboxIndex); }
   });
 
-  /* Clic sur les images du grid desktop */
-  document.querySelectorAll('.serie-grid-item img').forEach(function(img) {
-    img.addEventListener('click', function() {
-      openLightbox(img.getAttribute('src'));
+  /* Clic (et clavier) sur les boutons du grid desktop */
+  document.querySelectorAll('.serie-grid-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var img = btn.querySelector('img');
+      if (img) openLightbox(img.getAttribute('src'), btn);
     });
+  });
+
+  /* Piège de focus dans la lightbox */
+  overlay.addEventListener('keydown', function(e) {
+    if (!overlay.classList.contains('active') || e.key !== 'Tab') return;
+    var focusable = getFocusable(overlay);
+    if (!focusable.length) return;
+    var first = focusable[0];
+    var last  = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
   });
 
   /* Swipe mobile */
@@ -461,8 +503,14 @@ function initBookIntro() {
     return;
   }
 
+  /* Rendre la scène accessible au clavier */
+  scene.setAttribute('tabindex', '0');
+  scene.setAttribute('role', 'button');
+  scene.setAttribute('aria-label', 'Ouvrir le portfolio');
+
   function openBook() {
     scene.removeEventListener('click', openBook);
+    scene.removeEventListener('keydown', onBookKeydown);
 
     floater.style.animation = 'none';
     coverWrap.classList.add('is-open');
@@ -476,7 +524,23 @@ function initBookIntro() {
     }, 950);
   }
 
+  function onBookKeydown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openBook();
+    }
+    /* Piège de focus : Tab reste dans l'overlay livre */
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      scene.focus();
+    }
+  }
+
   scene.addEventListener('click', openBook);
+  scene.addEventListener('keydown', onBookKeydown);
+
+  /* Mettre le focus sur la scène dès que l'intro est visible */
+  setTimeout(function() { scene.focus(); }, 200);
 }
 
 

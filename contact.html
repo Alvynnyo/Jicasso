@@ -23,7 +23,10 @@
       <a href="index.html" class="brand">
         <div class="avatar-container avatar-small">
           <div class="avatar">
-            <img src="images/indirahicon.png" alt="" class="avatar-image">
+            <picture>
+                <source srcset="images/indirahicon-small.webp" type="image/webp">
+                <img src="images/indirahicon-small.png" alt="" class="avatar-image">
+              </picture>
           </div>
           <div class="avatar-badge">
             <svg viewBox="0 0 24 24" width="7" height="7" fill="none"
@@ -37,6 +40,7 @@
       </a>
 
       <nav class="main-nav" aria-label="Navigation principale">
+        <a href="index.html" data-i18n="nav_accueil">Accueil</a>
         <a href="oeuvres.html" data-i18n="nav_oeuvres">Oeuvres</a>
         <a href="index.html#atelier" data-i18n="nav_atelier">Atelier</a>
         <a href="contact.html" data-i18n="nav_contact" class="nav-current">Contact</a>

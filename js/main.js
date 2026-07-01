@@ -530,6 +530,13 @@ function initBookIntro() {
   /* Sur tablette/desktop l'overlay livre n'est pas visible */
   if (window.getComputedStyle(intro).display === 'none') return;
 
+  /* Intro déjà vue dans cette session : sauter directement au contenu */
+  if (sessionStorage.getItem('introSeen')) {
+    intro.style.display = 'none';
+    if (mhScroll) mhScroll.classList.add('is-visible');
+    return;
+  }
+
   /* Rendre la scène accessible au clavier */
   scene.setAttribute('tabindex', '0');
   scene.setAttribute('role', 'button');
@@ -538,6 +545,8 @@ function initBookIntro() {
   function openBook() {
     scene.removeEventListener('click', openBook);
     scene.removeEventListener('keydown', onBookKeydown);
+
+    sessionStorage.setItem('introSeen', 'true');
 
     floater.style.animation = 'none';
     coverWrap.classList.add('is-open');

@@ -194,6 +194,8 @@ function setLanguage(lang) {
   if (btnSend && !btnSend.disabled) {
     btnSend.textContent = translations[lang].contact_send;
   }
+
+  window.dispatchEvent(new CustomEvent('indirah:languagechange'));
 }
 
 

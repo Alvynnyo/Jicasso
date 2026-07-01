@@ -203,6 +203,7 @@ function setLanguage(lang) {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
 
+  window.dispatchEvent(new CustomEvent('indirah:languagechange'));
 }
 
 

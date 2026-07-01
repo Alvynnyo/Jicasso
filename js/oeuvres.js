@@ -31,6 +31,8 @@ function setLanguage(lang) {
   document.querySelectorAll('.lang-option').forEach(function(btn) {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
+
+  window.dispatchEvent(new CustomEvent('indirah:languagechange'));
 }
 
 

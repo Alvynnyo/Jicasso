@@ -329,17 +329,39 @@ function initVideoPlayer() {
     fsBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       var frame = document.getElementById('seq-frame') || playerContainer;
-      if (!document.fullscreenElement) {
-        frame.requestFullscreen().catch(function() {});
+
+      var requestFS = frame.requestFullscreen
+        || frame.webkitRequestFullscreen
+        || frame.mozRequestFullScreen
+        || null;
+
+      var exitFS = document.exitFullscreen
+        || document.webkitExitFullscreen
+        || document.mozCancelFullScreen
+        || null;
+
+      if (!requestFS) {
+        fsBtn.style.display = 'none';
+        showPlayerControls();
+        return;
+      }
+
+      var isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || null;
+      if (!isFullscreen) {
+        requestFS.call(frame).catch(function() {});
       } else {
-        document.exitFullscreen().catch(function() {});
+        if (exitFS) exitFS.call(document).catch(function() {});
       }
       showPlayerControls();
     });
   }
-  document.addEventListener('fullscreenchange', function() {
-    if (fsBtn) fsBtn.innerHTML = document.fullscreenElement ? ICONS.exitFs : ICONS.fullscreen;
-  });
+
+  function onFullscreenChange() {
+    var isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || null;
+    if (fsBtn) fsBtn.innerHTML = isFullscreen ? ICONS.exitFs : ICONS.fullscreen;
+  }
+  document.addEventListener('fullscreenchange', onFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 
   /* ── Affichage/masquage des contrôles ── */
   var isMobile = ('ontouchstart' in window || navigator.maxTouchPoints > 0);
@@ -547,9 +569,9 @@ function closeSequence() {
   document.body.style.overflow = '';
 
   /* Sortir du plein écran si actif */
-  if (document.fullscreenElement) {
-    document.exitFullscreen().catch(function() {});
-  }
+  var _isFs  = document.fullscreenElement || document.webkitFullscreenElement || null;
+  var _exitFs = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || null;
+  if (_isFs && _exitFs) _exitFs.call(document).catch(function() {});
 
   /* Restaurer le focus sur l'élément déclencheur */
   var trigger = seqTriggerEl;

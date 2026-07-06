@@ -1,11 +1,10 @@
-/**
+﻿/**
  * Indirah — main.js
  *
  * Gère :
  *  - le flux mobile de cartes (mobile-feed)
  *  - la bascule de langue FR/EN (setLanguage, localStorage)
  *  - la lightbox
- *  - l'intro livre 3D (mobile)
  *
  * Dépend de js/translations.js chargé avant ce fichier.
  */
@@ -516,70 +515,6 @@ function initHamburgerMenu() {
 
 
 /* ══════════════════════════════════════════════════════════
-   BOOK INTRO — overlay mobile, ouverture au tap/clic
-══════════════════════════════════════════════════════════ */
-
-function initBookIntro() {
-  var intro     = document.getElementById('book-intro');
-  var scene     = document.getElementById('book-scene');
-  var floater   = document.getElementById('book-floater');
-  var coverWrap = document.getElementById('book-cover-wrap');
-  var mhScroll  = document.getElementById('mobile-hero-scroll');
-  if (!intro || !scene || !floater || !coverWrap) return;
-
-  /* Sur tablette/desktop l'overlay livre n'est pas visible */
-  if (window.getComputedStyle(intro).display === 'none') return;
-
-  /* Intro déjà vue dans cette session : sauter directement au contenu */
-  if (sessionStorage.getItem('introSeen')) {
-    intro.style.display = 'none';
-    if (mhScroll) mhScroll.classList.add('is-visible');
-    return;
-  }
-
-  /* Rendre la scène accessible au clavier */
-  scene.setAttribute('tabindex', '0');
-  scene.setAttribute('role', 'button');
-  scene.setAttribute('aria-label', 'Ouvrir le portfolio');
-
-  function openBook() {
-    scene.removeEventListener('click', openBook);
-    scene.removeEventListener('keydown', onBookKeydown);
-
-    sessionStorage.setItem('introSeen', 'true');
-
-    floater.style.animation = 'none';
-    coverWrap.classList.add('is-open');
-
-    setTimeout(function() { intro.classList.add('is-opening'); }, 380);
-
-    setTimeout(function() {
-      intro.style.display = 'none';
-      if (mhScroll) mhScroll.classList.add('is-visible');
-    }, 950);
-  }
-
-  function onBookKeydown(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openBook();
-    }
-    /* Piège de focus : Tab reste dans l'overlay livre */
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      scene.focus();
-    }
-  }
-
-  scene.addEventListener('click', openBook);
-  scene.addEventListener('keydown', onBookKeydown);
-
-  /* Mettre le focus sur la scène dès que l'intro est visible */
-  setTimeout(function() { scene.focus(); }, 200);
-}
-
-
-/* ══════════════════════════════════════════════════════════
    INITIALISATION
 ══════════════════════════════════════════════════════════ */
 
@@ -591,8 +526,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (option) setLanguage(option.dataset.lang);
   });
 
-  /* Book intro mobile */
-  initBookIntro();
 
   /* Desktop series grids */
   buildDesktopGrids();

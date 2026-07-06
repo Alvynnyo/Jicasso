@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════
    INDIRAH — Portfolio stylesheet
    Variables → Reset → Base → Header → Hero → Séries → Footer → Responsive
 ═══════════════════════════════════════════════════════════ */
@@ -432,269 +432,106 @@ img {
 }
 
 
-/* ═══════════════════════════════════════════════════════════
-   BOOK INTRO — overlay plein écran, mobile uniquement
-   Remplace le système blur-and-reveal
-═══════════════════════════════════════════════════════════ */
-
-.book-intro {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 3000;
-  background: #081f1c;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  transition: opacity 0.5s ease;
-}
-
-/* Affiché directement sur mobile — pas de classe JS nécessaire */
-@media (max-width: 767px) {
-  .book-intro {
-    display: flex;
-  }
-}
-
-.book-intro.is-opening {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Scène 3D — conteneur de perspective */
-.book-scene {
-  perspective: 1100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 44px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Wrapper pour la lévitation — n'affecte que translateY */
-.book-floater {
-  animation: book-float 3.4s 0.85s ease-in-out infinite;
-}
-
-@keyframes book-float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-10px); }
-}
-
-/* Livre 3D — tilt trois-quarts + apparition */
-.book-3d {
-  width: 210px;
-  height: 290px;
-  position: relative;
-  transform-style: preserve-3d;
-  opacity: 0;
-  animation: book-appear 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
-}
-
-@keyframes book-appear {
-  from { opacity: 0; transform: rotateX(4deg) rotateY(-22deg) scale(0.9); }
-  to   { opacity: 1; transform: rotateX(4deg) rotateY(-22deg) scale(1); }
-}
-
-/* Tranche — épaisseur des pages, côté droit */
-.book-spine {
-  position: absolute;
-  top: 0;
-  left: 100%;
-  width: 22px;
-  height: 100%;
-  background: linear-gradient(to right, #04100e 0%, #0a2926 65%, #0e3430 100%);
-  transform-origin: left center;
-  transform: rotateY(90deg);
-  backface-visibility: hidden;
-}
-
-/* Couverture — pivote sur son axe gauche à l'ouverture */
-.book-cover-wrap {
-  position: absolute;
-  inset: 0;
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.book-cover-wrap.is-open {
-  transform: rotateY(-120deg);
-}
-
-/* Face avant */
-.book-cover {
-  position: absolute;
-  inset: 0;
-  background: #0D3A35;
-  border-radius: 2px 4px 4px 2px;
-  box-shadow:
-    4px 8px 32px rgba(0, 0, 0, 0.65),
-    inset -1px 0 0 rgba(255, 255, 255, 0.04);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backface-visibility: hidden;
-}
-
-/* Reflet — ligne fine sur le bord gauche */
-.book-cover::before {
-  content: '';
-  position: absolute;
-  top: 6%;
-  left: 0;
-  width: 2px;
-  height: 88%;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0)    0%,
-    rgba(255, 255, 255, 0.22) 20%,
-    rgba(255, 255, 255, 0.28) 50%,
-    rgba(255, 255, 255, 0.12) 80%,
-    rgba(255, 255, 255, 0)    100%
-  );
-  border-radius: 1px;
-}
-
-/* Texte sur la couverture */
-.book-cover-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 0 20px;
-}
-
-.book-name {
-  font-family: var(--font-display);
-  font-size: clamp(2.8rem, 13vw, 4rem);
-  font-weight: 300;
-  color: #FBF6F0;
-  letter-spacing: 0.14em;
-  line-height: 1;
-  text-align: center;
-}
-
-.book-subtitle-cover {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(0.75rem, 3vw, 0.95rem);
-  color: #B1B7AB;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-}
-
-/* Indication d'interaction sous le livre */
-/* Groupe texte sous le livre — tagline + hint */
-.book-caption {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-
-.book-tagline {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: 0.85rem;
-  color: #B1B7AB;
-  text-align: center;
-  line-height: 1.65;
-  letter-spacing: 0.04em;
-  margin: 0;
-  max-width: 240px;
-  user-select: none;
-}
-
-.book-hint {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-size: 0.72rem;
-  color: #B1B7AB;
-  letter-spacing: 0.1em;
-  margin: 0;
-  user-select: none;
-  animation: hint-pulse 2.2s ease-in-out infinite;
-}
-
-@keyframes hint-pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.42; }
-}
-
-
-/* ═══════════════════════════════════════════════════════════
-   HERO MOBILE — plein écran, entre le livre 3D et le feed
-   Visible sur ≤ 1024px
-═══════════════════════════════════════════════════════════ */
-.mobile-hero {
-  display: none;
-  height: 100vh;
-  position: relative;
+/* Home */
+.home-page {
+  min-height: 100svh;
   overflow: hidden;
+}
+
+.home-screen {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
   align-items: center;
   justify-content: center;
+  padding: 96px 24px 118px;
+  background: var(--deep); /* repli si l'image ne se charge pas */
+  overflow: hidden;
 }
 
-@media (max-width: 1024px) {
-  .mobile-hero { display: flex; }
-}
-
-.mobile-hero-bg {
+/* Tableau en fond plein écran (full-bleed, sans cadre) */
+.home-bg {
   position: absolute;
   inset: 0;
-  background-image: url('../images/moryspotlight.webp');
-  background-size: cover;
-  background-position: center center;
-  animation: kenBurns 22s ease-in-out infinite alternate;
-  filter: brightness(1.15) saturate(1.1) contrast(1.05);
+  z-index: 0;
 }
 
-.mobile-hero-veil {
+.home-bg-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Voile de lisibilité par-dessus l'image (assombrit haut et bas) */
+.home-veil {
   position: absolute;
   inset: 0;
-  background: rgba(13, 58, 53, 0.3);
-  pointer-events: none;
-}
-
-/* Indicateur de scroll */
-.mobile-hero-scroll {
-  position: absolute;
-  bottom: 36px;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.6s ease 0.3s;
-  white-space: nowrap;
+  background:
+    linear-gradient(180deg,
+      rgba(7, 30, 28, 0.60) 0%,
+      rgba(7, 30, 28, 0.18) 30%,
+      rgba(7, 30, 28, 0.28) 60%,
+      rgba(7, 30, 28, 0.80) 100%),
+    radial-gradient(circle at 50% 46%, rgba(0, 0, 0, 0) 42%, rgba(7, 30, 28, 0.34) 100%);
 }
 
-.mobile-hero-scroll.is-visible {
-  opacity: 1;
+.home-title-block {
+  position: relative;
+  z-index: 2;
+  text-align: center;
 }
 
-.mobile-hero-scroll-text {
-  font-family: var(--font-body);
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
+.home-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.8rem, 9vw, 8rem);
+  font-weight: 300;
+  line-height: 0.9;
+  color: var(--cream);
+  letter-spacing: 0.08em;
+}
+
+.home-subtitle {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--sage);
-  user-select: none;
 }
 
-.mobile-hero-scroll-arrow {
-  color: var(--sage);
-  animation: scroll-bounce 1.8s ease-in-out infinite;
+.home-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  padding: 18px 24px 20px;
+  border-top: 1px solid rgba(177, 183, 171, 0.1);
+  background: linear-gradient(to top, rgba(7, 30, 28, 0.92), rgba(7, 30, 28, 0));
 }
 
-@keyframes scroll-bounce {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(5px); }
+.home-footer .footer-inner {
+  gap: 10px;
+}
+
+.home-footer .footer-links {
+  gap: 22px;
+}
+
+/* Cadrage mobile : biaise légèrement vers le haut pour garder le sujet
+   du tableau (visages) dans le champ sur écran étroit. */
+@media (max-width: 640px) {
+  .home-bg-img { object-position: 50% 34%; }
+}
+
+.works-main {
+  padding-top: 128px;
+}
+
+.works-first-serie .serie-divider {
+  margin-bottom: 80px;
 }
 
 
@@ -1002,6 +839,42 @@ img {
 /* ── Mobile (<768px) ────────────────────────────────────────
    Hamburger remplace la nav et le toggle de langue          */
 @media (max-width: 768px) {
+  .site-header {
+    padding: 14px 18px 18px;
+  }
+
+  .home-screen {
+    padding: 88px 18px 112px;
+  }
+
+  .home-title {
+    font-size: clamp(3.1rem, 18vw, 6.2rem);
+    letter-spacing: 0.06em;
+  }
+
+  .home-subtitle {
+    font-size: 0.74rem;
+    letter-spacing: 0.2em;
+  }
+
+  .home-footer {
+    padding: 12px 18px calc(14px + env(safe-area-inset-bottom));
+  }
+
+  .home-footer .footer-logo {
+    font-size: 1.1rem;
+  }
+
+  .home-footer .footer-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px 18px;
+  }
+
+  .home-footer .footer-copy {
+    font-size: 0.64rem;
+  }
+
   /* Cartes : une seule colonne */
   .mobile-cards-grid {
     grid-template-columns: 1fr;
@@ -1064,6 +937,50 @@ img {
 @media (max-width: 480px) {
   .brand-name { font-size: 1.3rem; }
   .mobile-group-title { font-size: 1.3rem; }
+}
+
+@media (max-width: 480px), (max-height: 560px) {
+  .home-screen {
+    padding-bottom: 84px;
+  }
+
+  .home-footer {
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .home-footer .footer-inner {
+    gap: 0;
+  }
+
+  .home-footer .footer-links,
+  .home-footer .footer-copy {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-header {
+    padding: 12px 14px 16px;
+  }
+
+  .brand-name {
+    font-size: 1.12rem;
+    letter-spacing: 0.1em;
+  }
+
+  .avatar-container.avatar-small {
+    width: 30px;
+    height: 30px;
+  }
+
+  .hamburger-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mobile-menu {
+    top: 64px;
+  }
 }
 
 
@@ -1206,11 +1123,6 @@ img {
   outline-offset: 2px;
 }
 
-.book-scene:focus-visible {
-  outline: 2px solid rgba(251, 246, 240, 0.5);
-  outline-offset: 12px;
-  border-radius: 4px;
-}
 
 /* Indicateur de position — mobile uniquement */
 .lightbox-position { display: none; }

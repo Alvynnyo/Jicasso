@@ -1,0 +1,360 @@
+/* ════════════════════════════════════════════════════════════════
+   GALLERY — parcours d'accueil (scrollytelling « une nuit au musée »)
+   Chargé uniquement sur index.html, après style.css.
+   Chaque œuvre occupe une « salle » plein écran ; un spotlight
+   s'allume à l'entrée dans le viewport (classe .is-lit posée par
+   js/gallery.js via GSAP ScrollTrigger, avec repli IntersectionObserver).
+════════════════════════════════════════════════════════════════ */
+
+:root {
+  --room-bg: #0D3A35;
+}
+
+/* Fond « salle » : teinte pilotée par gallery.js, transition douce
+   pour passer d'une salle à l'autre sans rupture. */
+body.parcours {
+  background-color: var(--room-bg);
+  transition: background-color 0.9s ease;
+  overflow-x: hidden;
+}
+
+.gallery {
+  position: relative;
+  width: 100%;
+}
+
+/* ── Salle générique ───────────────────────────────────────────── */
+.room {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 96px 24px 72px;
+  text-align: center;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SALLE 0 — ENTRÉE
+════════════════════════════════════════════════════════════════ */
+.room--entry .room-entry-inner {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1.1s ease, transform 1.1s ease;
+}
+.room--entry.is-lit .room-entry-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mise en page éditoriale (inspiration Max Mara « Jacket Circle ») :
+   mot-repère en petites capitales, titre en deux temps (italique moyen
+   + capitales très grandes), puis un paragraphe italique de description. */
+.entry-eyebrow {
+  margin: 0 0 clamp(20px, 4vw, 34px);
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-size: clamp(0.72rem, 1.4vw, 0.82rem);
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  text-indent: 0.42em; /* compense l'interlettrage pour rester centré */
+  color: var(--sage, #9FB5AD);
+}
+
+.entry-title {
+  margin: 0;
+  color: var(--cream, #FBF6F0);
+}
+.entry-title-lead {
+  display: block;
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.7rem, 5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+}
+.entry-title-main {
+  display: block;
+  margin-top: clamp(2px, 0.6vw, 8px);
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 13vw, 9rem);
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.entry-desc {
+  margin: clamp(24px, 4vw, 38px) auto 0;
+  max-width: 32rem;
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-style: italic;
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  line-height: 1.65;
+  color: rgba(251, 246, 240, 0.82);
+}
+
+/* Indicateur de défilement */
+.scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: calc(28px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--cream, #FBF6F0);
+  opacity: 0.7;
+  text-decoration: none;
+  animation: cue-bob 2.4s ease-in-out infinite;
+}
+.scroll-cue-text {
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+}
+@keyframes cue-bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(7px); }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SALLES D'ŒUVRES — tableau + spotlight
+════════════════════════════════════════════════════════════════ */
+.room-art-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: min(620px, 88vw);
+}
+
+/* Halo de spotlight derrière le tableau */
+.room-art-stage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  height: 150%;
+  transform: translate(-50%, -50%) scale(0.85);
+  background: radial-gradient(circle at 50% 42%,
+              rgba(255, 244, 225, 0.30) 0%,
+              rgba(255, 244, 225, 0.10) 32%,
+              rgba(255, 244, 225, 0) 62%);
+  opacity: 0;
+  transition: opacity 1.2s ease, transform 1.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.room--art.is-lit .room-art-stage::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.room-art-frame {
+  position: relative;
+  z-index: 1;
+  display: block;
+  max-width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.room-art-img {
+  display: block;
+  max-width: min(560px, 84vw);
+  max-height: 70vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  /* État « lumière éteinte » — spotlight non allumé */
+  opacity: 0.4;
+  filter: brightness(0.6);
+  transform: scale(1.05);
+  transition: opacity 1s ease, filter 1s ease, transform 1.4s ease;
+}
+.room--art.is-lit .room-art-img {
+  opacity: 1;
+  filter: brightness(1);
+  transform: scale(1);
+}
+
+/* Cartel (titre + technique) — apparaît en décalé après l'œuvre */
+.room-art-caption {
+  margin-top: 26px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+}
+.room--art.is-lit .room-art-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+.room-art-title {
+  margin: 0;
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1.5rem, 3.4vw, 2.1rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--cream, #FBF6F0);
+}
+.room-art-technique {
+  margin: 6px 0 0;
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: var(--sage, #9FB5AD);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   SALLE FINALE — fin de visite
+════════════════════════════════════════════════════════════════ */
+.room--final .room-final-inner {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+  max-width: 640px;
+}
+.room--final.is-lit .room-final-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+.room-final-title {
+  margin: 0;
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  color: var(--cream, #FBF6F0);
+}
+.room-final-text {
+  margin: 16px 0 0;
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+  color: var(--sage, #9FB5AD);
+}
+
+.room-final-cta {
+  margin: 40px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+.room-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 13px 30px;
+  border-radius: 30px;
+  border: 1px solid var(--cream, #FBF6F0);
+  background: var(--cream, #FBF6F0);
+  color: #0D3A35;
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+.room-btn:hover { transform: translateY(-2px); opacity: 0.92; }
+.room-btn--ghost {
+  background: transparent;
+  color: var(--cream, #FBF6F0);
+}
+.room-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.room-btn:focus-visible {
+  outline: 2px solid rgba(251, 246, 240, 0.9);
+  outline-offset: 3px;
+}
+
+.room-final-sign {
+  margin: 46px 0 0;
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-size: 1.4rem;
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  color: rgba(251, 246, 240, 0.55);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE
+════════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .room {
+    padding: 84px 18px 64px;
+    overflow: hidden;
+  }
+  .entry-eyebrow {
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+  }
+  .entry-title-main {
+    font-size: clamp(3rem, 18vw, 5.2rem);
+    letter-spacing: 0.02em;
+  }
+  .entry-desc {
+    max-width: min(28rem, calc(100vw - 36px));
+  }
+  .room-art-img { max-height: 60vh; max-width: 88vw; }
+  .room-art-caption { margin-top: 20px; }
+}
+
+@media (max-width: 360px) {
+  .room {
+    padding-right: 16px;
+    padding-left: 16px;
+    overflow: hidden;
+  }
+  .entry-title-lead {
+    font-size: clamp(1.45rem, 8vw, 2.2rem);
+  }
+  .entry-title-main {
+    font-size: clamp(2.75rem, 17vw, 4.6rem);
+    letter-spacing: 0.01em;
+  }
+  .entry-desc {
+    font-size: 0.96rem;
+    line-height: 1.55;
+  }
+  .room-final-cta {
+    gap: 10px;
+  }
+  .room-btn {
+    width: 100%;
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOUVEMENT RÉDUIT — pas de zoom ni d'atténuation, tout reste lisible
+════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  body.parcours { transition: none; }
+  .scroll-cue { animation: none; }
+  .room-entry-inner,
+  .room-final-inner,
+  .room-art-caption,
+  .room-art-stage::before { transition: none; }
+  .room-art-img {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
+}

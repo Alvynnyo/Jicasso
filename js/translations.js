@@ -8,14 +8,25 @@ const translations = {
     // Navigation
     nav_accueil:    "Accueil",
     nav_oeuvres:    "Oeuvres",
-    nav_atelier:    "Atelier",
+    nav_musee:      "Musee",
     nav_contact:    "Contact",
 
     // Hero
     hero_scroll:    "Défiler",
 
-    // Intro livre
-    book_tagline:   "Racontez-moi votre histoire, et je la peins. Remplissons ce livre ensemble.",
+    // Accueil — parcours de galerie (scrollytelling)
+    home_subtitle:     "Peinture",
+    home_scroll:       "Défiler",
+    home_enter_hint:   "La visite commence",
+    home_final_title:  "Chaque toile a son histoire.",
+    home_final_text:   "La suite vous appartient.",
+    home_cta_oeuvres:  "Voir les oeuvres",
+    home_cta_contact:  "La contacter",
+
+    // Musée — écran d'introduction (mise en page éditoriale)
+    musee_intro_line1: "Bienvenue au",
+    musee_intro_line2: "Musée",
+    musee_intro_desc:  "Parcourez les œuvres d'Indirah comme les salles d'un musée. Chaque toile s'illumine à votre approche — laissez-vous porter.",
 
     // Séquence "Une nuit au musée" (oeuvres.html)
     seq_intro_text:     "Mais, où sont-elles ?",
@@ -94,14 +105,25 @@ const translations = {
     // Navigation
     nav_accueil:    "Home",
     nav_oeuvres:    "Works",
-    nav_atelier:    "Studio",
+    nav_musee:      "Museum",
     nav_contact:    "Contact",
 
     // Hero
     hero_scroll:    "Scroll",
 
-    // Book intro
-    book_tagline:   "Tell me your story, and I'll paint it. Let's fill this book together.",
+    // Home — gallery tour (scrollytelling)
+    home_subtitle:     "Painting",
+    home_scroll:       "Scroll",
+    home_enter_hint:   "The tour begins",
+    home_final_title:  "Every canvas has its story.",
+    home_final_text:   "The rest is up to you.",
+    home_cta_oeuvres:  "See the works",
+    home_cta_contact:  "Get in touch",
+
+    // Museum — intro screen (editorial layout)
+    musee_intro_line1: "Welcome to the",
+    musee_intro_line2: "Museum",
+    musee_intro_desc:  "Wander through Indirah's works like the rooms of a museum. Each canvas lights up as you approach — let yourself drift.",
 
     // Sequence "A night at the museum" (oeuvres.html)
     seq_intro_text:     "But, where are they?",

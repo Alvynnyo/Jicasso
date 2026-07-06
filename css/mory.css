@@ -1,0 +1,527 @@
+/* ════════════════════════════════════════════════════════════════
+   MORY — guide de musée interactif (chatbot scripté)
+   Chargé sur les 3 pages via <link>, après style.css.
+   Palette : teal profond du site, glassmorphism cohérent.
+════════════════════════════════════════════════════════════════ */
+
+/* ── Conteneur fixe (coin inférieur droit) ─────────────────────── */
+.mory {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 480; /* sous lightbox (500) & séquence (2000) : Mory se masque */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: min(320px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  opacity: 0;
+  transform: translateY(24px);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.mory.is-ready {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Masqué quand un overlay plein écran est ouvert */
+.mory.is-suppressed {
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none !important;
+}
+.mory.is-suppressed * { pointer-events: none !important; }
+
+/* ── Figure de Mory ────────────────────────────────────────────── */
+.mory-figure {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: mory-float 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.mory-figure:focus-visible {
+  outline: 2px solid rgba(251, 246, 240, 0.9);
+  outline-offset: 4px;
+  border-radius: 18px;
+}
+
+.mory-img {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  opacity: 0;
+  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.22));
+  transition: opacity 0.3s ease, filter 0.2s ease;
+  user-select: none;
+  pointer-events: none;
+}
+.mory-img.is-active { opacity: 1; }
+
+.mory-figure:hover .mory-img,
+.mory-figure:focus-visible .mory-img {
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.3));
+}
+
+@keyframes mory-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+/* ── Bouton « réduire » (vers la pastille) ─────────────────────── */
+.mory-min {
+  position: absolute;
+  right: 6px;
+  top: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(13, 58, 53, 0.9);
+  color: #FBF6F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+.mory:hover .mory-min,
+.mory-figure:focus-visible ~ .mory-min,
+.mory-min:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+.mory-min:hover { background: rgba(13, 58, 53, 1); }
+
+/* Masquer le bouton réduire quand le panneau est ouvert, réduit,
+   ou pendant l'affichage de la bulle d'accueil */
+.mory.is-open .mory-min,
+.mory.is-collapsed .mory-min,
+.mory.has-greeting .mory-min { display: none; }
+
+/* ── État réduit : pastille discrète ───────────────────────────── */
+.mory.is-collapsed { width: 48px; }
+
+.mory.is-collapsed .mory-figure {
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  background: rgba(13, 58, 53, 0.9);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+  animation: none;
+}
+.mory.is-collapsed .mory-img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: none;
+}
+.mory.is-collapsed .mory-greeting,
+.mory.is-collapsed .mory-panel { display: none; }
+
+/* ════════════════════════════════════════════════════════════════
+   BULLE D'ACCUEIL
+════════════════════════════════════════════════════════════════ */
+.mory-greeting {
+  position: relative;
+  max-width: 240px;
+  margin: 0 6px 12px 0;
+  padding: 13px 34px 13px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  background: rgba(13, 58, 53, 0.9);
+  color: #FBF6F0;
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-size: 14px;
+  font-style: italic;
+  line-height: 1.4;
+  text-align: left;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.9) translateY(8px);
+  transform-origin: right bottom;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+.mory.has-greeting .mory-greeting {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+.mory:not(.has-greeting) .mory-greeting { display: none; }
+
+.mory-greeting::after {
+  content: "";
+  position: absolute;
+  right: 34px;
+  bottom: -8px;
+  width: 14px;
+  height: 14px;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(13, 58, 53, 0.9);
+  transform: rotate(45deg);
+}
+.mory-greeting-text { margin: 0; }
+
+.mory-greeting-close {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #FBF6F0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.2s ease;
+}
+.mory-greeting-close:hover,
+.mory-greeting-close:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  outline: none;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PANNEAU DE CONVERSATION (style messagerie, glassmorphism)
+════════════════════════════════════════════════════════════════ */
+.mory-panel {
+  display: none;
+  flex-direction: column;
+  width: 320px;
+  max-width: calc(100vw - 24px);
+  max-height: min(460px, calc(100svh - 160px));
+  margin: 0 0 14px 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  background: rgba(13, 58, 53, 0.92);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+  overflow: hidden;
+  transform-origin: right bottom;
+  pointer-events: auto;
+}
+.mory.is-open .mory-panel {
+  display: flex;
+  animation: mory-panel-in 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes mory-panel-in {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* En-tête */
+.mory-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+.mory-panel-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+.mory-panel-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.mory-panel-title {
+  flex: 1;
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  color: #FBF6F0;
+}
+.mory-panel-close {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #FBF6F0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+.mory-panel-close:hover,
+.mory-panel-close:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  outline: none;
+}
+
+/* Zone de messages (défilement interne) */
+.mory-messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 14px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+.mory-messages::-webkit-scrollbar { width: 6px; }
+.mory-messages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+/* Rangée de message */
+.mory-msg { display: flex; }
+.mory-msg--mory { justify-content: flex-start; }
+.mory-msg--user { justify-content: flex-end; }
+
+.mory-msg--in { animation: mory-msg-in 0.32s ease both; }
+@keyframes mory-msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Bulle de chat */
+.mory-chat {
+  max-width: 84%;
+  padding: 10px 13px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom-left-radius: 5px;
+}
+.mory-chat--user {
+  background: rgba(94, 163, 148, 0.28);
+  border-color: rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 14px;
+}
+
+.mory-chat-text {
+  margin: 0;
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-size: 14px;
+  line-height: 1.5;
+  color: #FBF6F0;
+}
+
+.mory-chat-img {
+  display: block;
+  width: 100%;
+  max-height: 168px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 9px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mory-chat-title {
+  margin: 0 0 6px;
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #FBF6F0;
+  line-height: 1.25;
+}
+.mory-chat-subtitle {
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 12.5px;
+  color: #B9D2CA;
+}
+
+/* Indicateur « en train d'écrire » */
+.mory-typing {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 12px 14px;
+}
+.mory-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(251, 246, 240, 0.7);
+  animation: mory-blink 1.1s infinite ease-in-out both;
+}
+.mory-dot:nth-child(2) { animation-delay: 0.18s; }
+.mory-dot:nth-child(3) { animation-delay: 0.36s; }
+@keyframes mory-blink {
+  0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+  40%           { opacity: 1;    transform: translateY(-3px); }
+}
+
+/* Zone de boutons de questions */
+.mory-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 14px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+.mory-opt {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #FBF6F0;
+  font-family: var(--font-body, 'EB Garamond', Georgia, serif);
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+.mory-opt:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+.mory-opt:active { transform: scale(0.97); }
+.mory-opt:focus-visible {
+  outline: 2px solid rgba(251, 246, 240, 0.8);
+  outline-offset: 2px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE
+════════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .mory {
+    right: max(10px, env(safe-area-inset-right));
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    width: min(300px, calc(100vw - 36px));
+    max-width: calc(100vw - 36px);
+  }
+  .mory-figure,
+  .mory-img {
+    width: 82px;
+    height: 82px;
+  }
+  .mory-min { opacity: 1; transform: scale(1); } /* pas de hover au tactile */
+  .mory.is-collapsed { width: 44px; }
+  .mory.is-collapsed .mory-figure { width: 42px; height: 42px; }
+
+  .mory-panel {
+    width: calc(100vw - 48px);
+    max-width: calc(100vw - 48px);
+    max-height: min(62svh, 390px);
+    margin-bottom: 10px;
+    border-radius: 16px;
+  }
+  .mory-greeting {
+    max-width: min(72vw, 220px);
+    margin-right: 4px;
+    padding: 12px 32px 12px 14px;
+    font-size: 12.5px;
+  }
+  .mory-panel-head { padding: 10px 12px; }
+  .mory-messages {
+    padding: 12px 12px 6px;
+    gap: 8px;
+  }
+  .mory-options {
+    gap: 7px;
+    padding: 9px 12px 12px;
+  }
+  .mory-opt {
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mory {
+    width: calc(100vw - 36px);
+    max-width: calc(100vw - 36px);
+  }
+  .mory-figure,
+  .mory-img {
+    width: 76px;
+    height: 76px;
+  }
+  .mory-panel {
+    width: calc(100vw - 36px);
+    max-width: calc(100vw - 36px);
+    max-height: min(58svh, 330px);
+  }
+  .mory-chat { max-width: 90%; }
+  .mory-options {
+    max-height: 128px;
+    overflow-y: auto;
+  }
+  .mory-opt { min-height: 36px; }
+}
+
+@media (max-height: 560px) {
+  .mory-figure,
+  .mory-img {
+    width: 72px;
+    height: 72px;
+  }
+  .mory-panel { max-height: calc(100svh - 150px); }
+  .mory-greeting {
+    max-width: min(70vw, 210px);
+    font-size: 12px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOUVEMENT RÉDUIT
+════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .mory,
+  .mory-img,
+  .mory-greeting,
+  .mory-panel-close,
+  .mory-opt,
+  .mory-min { transition: none; }
+  .mory-figure { animation: none; }
+  .mory.is-open .mory-panel { animation: none; }
+  .mory-msg--in { animation: none; }
+  .mory-dot { animation: none; }
+}

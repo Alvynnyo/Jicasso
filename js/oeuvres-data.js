@@ -19,7 +19,18 @@ var oeuvresData = {
         src:          'images/serie-1/maria.webp',
         srcSpotlight: 'images/mariaspotlight.webp',
         titleKey:     'work1_title',
-        techniqueKey: 'work1_technique'
+        techniqueKey: 'work1_technique',
+        /* Descriptions racontées par Mory. Remplacer par les vrais textes d'Indirah. */
+        description: {
+          fr: "Description à venir pour cette œuvre.",
+          en: "Description coming soon for this work."
+        },
+        /* Commentaire de Mory quand l'œuvre entre à l'écran (parcours accueil).
+           Placeholder — à remplacer par le vrai texte d'Indirah. */
+        moryComment: {
+          fr: "Commençons par celle-ci. Laissez la lumière venir à vous.",
+          en: "Let's begin with this one. Let the light come to you."
+        }
       },
       {
         id:           'work2',
@@ -28,14 +39,30 @@ var oeuvresData = {
         src:          'images/serie-1/moryupdate.webp',
         srcSpotlight: 'images/moryspotlight-reveal.webp',
         titleKey:     'work2_title',
-        techniqueKey: 'work2_technique'
+        techniqueKey: 'work2_technique',
+        description: {
+          fr: "Description à venir pour cette œuvre.",
+          en: "Description coming soon for this work."
+        },
+        moryComment: {
+          fr: "Approchez-vous. Les détails se révèlent de près.",
+          en: "Step closer. The details reveal themselves up close."
+        }
       },
       {
         id:           'work3',
         src:          'images/serie-1/stepout.webp',
         srcSpotlight: 'images/stepoutspotlight.webp',
         titleKey:     'work3_title',
-        techniqueKey: 'work3_technique'
+        techniqueKey: 'work3_technique',
+        description: {
+          fr: "Description à venir pour cette œuvre.",
+          en: "Description coming soon for this work."
+        },
+        moryComment: {
+          fr: "Celle-ci a du mouvement. Suivez-le du regard.",
+          en: "This one has movement. Follow it with your eyes."
+        }
       }
     ]
   },
@@ -53,21 +80,45 @@ var oeuvresData = {
         src:          'images/serie-2/oeuvre-1.svg',
         srcSpotlight: null,
         titleKey:     'work4_title',
-        techniqueKey: 'work4_technique'
+        techniqueKey: 'work4_technique',
+        description: {
+          fr: "Description à venir pour cette œuvre.",
+          en: "Description coming soon for this work."
+        },
+        moryComment: {
+          fr: "Un visage, une présence. Prenez le temps.",
+          en: "A face, a presence. Take your time."
+        }
       },
       {
         id:           'work5',
         src:          'images/serie-2/oeuvre-2.svg',
         srcSpotlight: null,
         titleKey:     'work5_title',
-        techniqueKey: 'work5_technique'
+        techniqueKey: 'work5_technique',
+        description: {
+          fr: "Description à venir pour cette œuvre.",
+          en: "Description coming soon for this work."
+        },
+        moryComment: {
+          fr: "La matière raconte autant que la forme.",
+          en: "The material tells as much as the form."
+        }
       },
       {
         id:           'work6',
         src:          'images/serie-2/oeuvre-3.svg',
         srcSpotlight: null,
         titleKey:     'work6_title',
-        techniqueKey: 'work6_technique'
+        techniqueKey: 'work6_technique',
+        description: {
+          fr: "Description à venir pour cette œuvre.",
+          en: "Description coming soon for this work."
+        },
+        moryComment: {
+          fr: "Et pour finir cette salle… respirez.",
+          en: "And to end this room… breathe."
+        }
       }
     ]
   }

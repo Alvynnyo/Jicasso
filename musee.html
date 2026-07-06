@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Indirah - Artiste Peintre</title>
+  <title>Musee - Indirah</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/gallery.css">
   <link rel="stylesheet" href="css/mory.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 </head>
-<body id="top" class="home-page">
+<body id="top" class="parcours">
 
   <header class="site-header" id="site-header">
     <div class="header-inner">
@@ -39,9 +40,9 @@
       </a>
 
       <nav class="main-nav" aria-label="Navigation principale">
-        <a href="index.html" data-i18n="nav_accueil" class="nav-current">Accueil</a>
+        <a href="index.html" data-i18n="nav_accueil">Accueil</a>
         <a href="oeuvres.html" data-i18n="nav_oeuvres">Oeuvres</a>
-        <a href="musee.html" data-i18n="nav_musee">Musee</a>
+        <a href="musee.html" data-i18n="nav_musee" class="nav-current">Musee</a>
         <a href="contact.html" data-i18n="nav_contact">Contact</a>
       </nav>
 
@@ -60,28 +61,32 @@
     </div>
   </header>
 
-  <main class="home-screen" aria-label="Accueil">
-    <div class="home-bg" aria-hidden="true">
-      <img src="images/moryspotlight.webp" alt="" class="home-bg-img">
-    </div>
-    <div class="home-veil" aria-hidden="true"></div>
-    <div class="home-title-block">
-      <h1 class="home-title" id="home-title">Indirah</h1>
-      <p class="home-subtitle" data-i18n="home_subtitle">Peinture</p>
-    </div>
-  </main>
+  <main class="gallery" id="gallery" aria-label="Parcours de galerie">
 
-  <footer class="site-footer home-footer">
-    <div class="footer-inner">
-      <a href="index.html" class="footer-logo">Indirah</a>
-      <nav class="footer-links" aria-label="Liens externes">
-        <a href="oeuvres.html" data-i18n="nav_oeuvres">Oeuvres</a>
-        <a href="musee.html" data-i18n="nav_musee">Musee</a>
-        <a href="contact.html" data-i18n="footer_contact">Contact</a>
-      </nav>
-      <p class="footer-copy" data-i18n="footer_copy">© 2024 Indirah. Tous droits reserves.</p>
-    </div>
-  </footer>
+    <section class="room room--entry is-lit" id="room-entry">
+      <div class="room-entry-inner">
+        <p class="entry-eyebrow">Indirah</p>
+        <h1 class="entry-title">
+          <span class="entry-title-lead" data-i18n="musee_intro_line1">Bienvenue au</span>
+          <span class="entry-title-main" data-i18n="musee_intro_line2">Musée</span>
+        </h1>
+        <p class="entry-desc" data-i18n="musee_intro_desc">Parcourez les œuvres d'Indirah comme les salles d'un musée. Chaque toile s'illumine à votre approche — laissez-vous porter.</p>
+      </div>
+    </section>
+
+    <section class="room room--final" id="room-final">
+      <div class="room-final-inner">
+        <h2 class="room-final-title" data-i18n="home_final_title">Chaque toile a son histoire.</h2>
+        <p class="room-final-text" data-i18n="home_final_text">La suite vous appartient.</p>
+        <div class="room-final-cta">
+          <a href="oeuvres.html" class="room-btn" data-i18n="home_cta_oeuvres">Voir les oeuvres</a>
+          <a href="contact.html" class="room-btn room-btn--ghost" data-i18n="home_cta_contact">La contacter</a>
+        </div>
+        <p class="room-final-sign">Indirah</p>
+      </div>
+    </section>
+
+  </main>
 
   <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
 
@@ -105,16 +110,12 @@
     </button>
   </nav>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="js/oeuvres-data.js"></script>
   <script src="js/translations.js"></script>
-  <script>
-    window.MORY_GREETING_KEY = 'mory_greeted_home';
-    window.MORY_GREETING = {
-      fr: "Je suis Mory, le guide du musee. Je reste pret a vous accompagner.",
-      en: "I'm Mory, the museum guide. I'm ready to accompany you."
-    };
-  </script>
   <script src="js/main.js"></script>
+  <script src="js/gallery.js"></script>
   <script src="js/mory.js"></script>
 </body>
 </html>

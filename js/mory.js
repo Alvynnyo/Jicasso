@@ -59,7 +59,7 @@
     nodes: {
       artiste: {
         expression: 'mascotte-joue',
-        image: 'images/artiste.webp',
+        image: 'images/portrait-artiste.webp',
         message: {
           fr: "Indirah est artiste peintre. Elle aime dire : « Peindre, c'est raconter ce que les mots ne savent pas dire. Chaque toile est une conversation entre ma main et mon silence. »",
           en: "Indirah is a visual artist. She likes to say: “Painting is telling what words cannot say. Each canvas is a conversation between my hand and my silence.”"
@@ -72,7 +72,7 @@
 
       vision: {
         expression: 'mascotte-montre',
-        image: 'images/vision.webp',
+        image: 'images/mains-pinceau.webp',
         message: {
           fr: "Sa vision ? « Je peins des figures, des émotions, des histoires qui me traversent. Mon travail est un pont entre ce qu'on voit et ce qu'on ressent. »",
           en: "Her vision? “I paint figures, emotions, stories that move through me. My work is a bridge between what we see and what we feel.”"

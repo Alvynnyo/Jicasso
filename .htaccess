@@ -1,0 +1,25 @@
+# ═══════════════════════════════════════════════════════════════
+# Apache — redirections & routes propres
+# Ce fichier n'a d'effet que sur un hébergement Apache avec
+# mod_rewrite activé. Placer à la racine du site.
+# ═══════════════════════════════════════════════════════════════
+
+# Empêche Apache de deviner les extensions (évite les conflits avec les
+# règles ci-dessous).
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # ── Ancienne page "Atelier" (supprimée) -> Oeuvres (301 permanent) ──
+  RewriteRule ^atelier(?:\.html)?/?$ /oeuvres [R=301,L]
+
+  # ── Routes propres : servir "/oeuvres" depuis "oeuvres.html" ──
+  # On ne réécrit que si la cible .html existe et que l'URL demandée
+  # n'est pas déjà un fichier/dossier réel (css, js, images… servis tels
+  # quels, et les liens internes en ".html" fonctionnent directement).
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
+</IfModule>

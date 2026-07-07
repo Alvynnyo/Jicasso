@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/atelier", "destination": "/oeuvres", "permanent": true },
+    { "source": "/atelier.html", "destination": "/oeuvres", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/oeuvres", "destination": "/oeuvres.html" },
+    { "source": "/musee", "destination": "/musee.html" },
+    { "source": "/contact", "destination": "/contact.html" }
+  ]
+}

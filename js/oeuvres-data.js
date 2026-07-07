@@ -13,7 +13,7 @@ var oeuvresData = {
       {
         id:           'work1',
         src:          'images/serie-1/maria.webp',
-        srcSpotlight: 'images/mariaspotlight.webp',
+        srcSpotlight: 'images/serie-1/maria-spotlight.webp',
         titleKey:     'work1_title',
         techniqueKey: 'work1_technique',
         /* Descriptions racontées par Mory. Remplacer par les vrais textes d'Indirah. */
@@ -32,8 +32,8 @@ var oeuvresData = {
         id:           'work2',
         /* src        : version courante de l'œuvre (galerie, mobile)          */
         /* srcSpotlight : version musée pour la séquence reveal (oeuvres.html) */
-        src:          'images/serie-1/moryupdate.webp',
-        srcSpotlight: 'images/moryspotlight-reveal.webp',
+        src:          'images/serie-1/mory.webp',
+        srcSpotlight: 'images/serie-1/mory-spotlight.webp',
         titleKey:     'work2_title',
         techniqueKey: 'work2_technique',
         description: {
@@ -48,7 +48,7 @@ var oeuvresData = {
       {
         id:           'work3',
         src:          'images/serie-1/stepout.webp',
-        srcSpotlight: 'images/stepoutspotlight.webp',
+        srcSpotlight: 'images/serie-1/stepout-spotlight.webp',
         titleKey:     'work3_title',
         techniqueKey: 'work3_technique',
         description: {

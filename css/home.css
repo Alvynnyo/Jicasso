@@ -15,7 +15,7 @@
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('../images/moryspotlight.webp');
+  background-image: url('../images/hero-mory-galerie.webp');
   background-size: cover;
   background-position: center center;
   z-index: 0;

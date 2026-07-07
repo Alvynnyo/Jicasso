@@ -1,0 +1,14 @@
+# ═══════════════════════════════════════════════════════════════
+# Netlify — redirections & routes propres
+# Ce fichier n'a d'effet que si le site est hébergé sur Netlify.
+# Placer à la racine du site publié (déjà à la racine du repo ici).
+# ═══════════════════════════════════════════════════════════════
+
+# Ancienne page "Atelier" (supprimée, remplacée par Oeuvres) -> Oeuvres
+/atelier        /oeuvres   301
+/atelier.html   /oeuvres   301
+
+# Routes propres (/oeuvres, /musee, /contact) :
+# Netlify sert automatiquement "oeuvres.html" pour une requête "/oeuvres",
+# aucune règle supplémentaire n'est nécessaire. Les liens internes en
+# ".html" continuent de fonctionner tels quels.

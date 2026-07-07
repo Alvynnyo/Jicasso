@@ -93,12 +93,12 @@ const translations = {
     work3_title:     "Sans titre III",
     work3_technique: "Acrylique sur lin",
     // Série II
-    work4_title:     "Sans titre IV",
-    work4_technique: "Huile sur toile",
-    work5_title:     "Sans titre V",
-    work5_technique: "Technique mixte",
-    work6_title:     "Sans titre VI",
-    work6_technique: "Huile sur toile",
+    work4_title:     "À venir",
+    work4_technique: "",
+    work5_title:     "À venir",
+    work5_technique: "",
+    work6_title:     "À venir",
+    work6_technique: "",
   },
 
   en: {
@@ -190,11 +190,11 @@ const translations = {
     work3_title:     "Untitled III",
     work3_technique: "Acrylic on linen",
     // Series II
-    work4_title:     "Untitled IV",
-    work4_technique: "Oil on canvas",
-    work5_title:     "Untitled V",
-    work5_technique: "Mixed media",
-    work6_title:     "Untitled VI",
-    work6_technique: "Oil on canvas",
+    work4_title:     "Coming soon",
+    work4_technique: "",
+    work5_title:     "Coming soon",
+    work5_technique: "",
+    work6_title:     "Coming soon",
+    work6_technique: "",
   }
 };

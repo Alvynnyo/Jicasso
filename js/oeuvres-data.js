@@ -77,7 +77,7 @@ var oeuvresData = {
     works: [
       {
         id:           'work4',
-        src:          'images/serie-2/oeuvre-1.svg',
+        src:          'images/serie-2/vide.webp', /* placeholder — œuvre à venir */
         srcSpotlight: null,
         titleKey:     'work4_title',
         techniqueKey: 'work4_technique',
@@ -86,13 +86,13 @@ var oeuvresData = {
           en: "Description coming soon for this work."
         },
         moryComment: {
-          fr: "Un visage, une présence. Prenez le temps.",
-          en: "A face, a presence. Take your time."
+          fr: "Cette œuvre vous sera bientôt dévoilée.",
+          en: "This piece will be revealed soon."
         }
       },
       {
         id:           'work5',
-        src:          'images/serie-2/oeuvre-2.svg',
+        src:          'images/serie-2/vide.webp', /* placeholder — œuvre à venir */
         srcSpotlight: null,
         titleKey:     'work5_title',
         techniqueKey: 'work5_technique',
@@ -101,13 +101,13 @@ var oeuvresData = {
           en: "Description coming soon for this work."
         },
         moryComment: {
-          fr: "La matière raconte autant que la forme.",
-          en: "The material tells as much as the form."
+          fr: "Cette œuvre vous sera bientôt dévoilée.",
+          en: "This piece will be revealed soon."
         }
       },
       {
         id:           'work6',
-        src:          'images/serie-2/oeuvre-3.svg',
+        src:          'images/serie-2/vide.webp', /* placeholder — œuvre à venir */
         srcSpotlight: null,
         titleKey:     'work6_title',
         techniqueKey: 'work6_technique',
@@ -116,8 +116,8 @@ var oeuvresData = {
           en: "Description coming soon for this work."
         },
         moryComment: {
-          fr: "Et pour finir cette salle… respirez.",
-          en: "And to end this room… breathe."
+          fr: "Cette œuvre vous sera bientôt dévoilée.",
+          en: "This piece will be revealed soon."
         }
       }
     ]

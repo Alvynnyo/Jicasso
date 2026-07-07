@@ -1,3 +1,4 @@
+/* ═══════════════════════════════════════════════════════════
    SÉRIES
 ═══════════════════════════════════════════════════════════ */
 .serie {
@@ -436,6 +437,9 @@
 }
 
 .lightbox-position-dot.active {
+  opacity: 1;
+  background: var(--cream);
+}
 
 /* Responsive works */
 @media (max-width: 1024px) {

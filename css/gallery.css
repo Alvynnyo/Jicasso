@@ -50,6 +50,29 @@ body.parcours {
   transform: translateY(0);
 }
 
+/* Fond statique de l'écran d'intro Musée : image « journal » bien cadrée.
+   AUCUN effet (pas de zoom, pas de filtre vintage, pas de grain, pas de
+   transition) — l'image reste telle quelle, seulement redimensionnée.
+   Un voile teal semi-transparent est superposé uniquement pour garder
+   le titre / le mot-repère / le paragraphe / la bulle de Mory lisibles. */
+.room--entry {
+  background-color: var(--deep, #0D3A35); /* repli si l'image ne charge pas */
+  background-image:
+    linear-gradient(180deg,
+      rgba(13, 58, 53, 0.55) 0%,
+      rgba(13, 58, 53, 0.50) 45%,
+      rgba(13, 58, 53, 0.62) 100%),
+    url('../images/journal.png');
+  background-repeat: no-repeat;
+  background-size: cover;              /* remplit tout l'écran d'intro */
+  background-position: 50% 42%;        /* garde le personnage + journal cadrés (desktop) */
+}
+@media (max-width: 640px) {
+  /* Sur mobile, cover rogne les côtés : on biaise vers la droite pour
+     garder le personnage assis bien visible. */
+  .room--entry { background-position: 60% 48%; }
+}
+
 /* Mise en page éditoriale (inspiration Max Mara « Jacket Circle ») :
    mot-repère en petites capitales, titre en deux temps (italique moyen
    + capitales très grandes), puis un paragraphe italique de description. */

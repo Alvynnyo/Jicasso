@@ -3,10 +3,9 @@
  *
  * Gère :
  *  - le flux mobile de cartes (mobile-feed)
- *  - la bascule de langue FR/EN (setLanguage, localStorage)
  *  - la lightbox
  *
- * Dépend de js/translations.js chargé avant ce fichier.
+ * Dépend de js/oeuvres-data.js et js/translations.js chargés avant ce fichier.
  */
 
 /* ── Données — dérivées de js/oeuvres-data.js ────────────────
@@ -17,8 +16,12 @@ var series = Object.keys(oeuvresData).map(function(key) {
 });
 
 /* ── État ─────────────────────────────────────────────────── */
-var currentLang      = localStorage.getItem('indirah-lang') || 'fr';
+var currentLang      = window.IndirahI18n ? window.IndirahI18n.getLanguage() : (localStorage.getItem('indirah-lang') || 'fr');
 var lightboxTrigger  = null;
+
+window.addEventListener('indirah:languagechange', function () {
+  currentLang = window.IndirahI18n ? window.IndirahI18n.getLanguage() : currentLang;
+});
 
 function getFocusable(container) {
   return Array.from(container.querySelectorAll(
@@ -171,42 +174,6 @@ function buildDesktopGrids() {
 
 
 /* ══════════════════════════════════════════════════════════
-   LANGUE
-══════════════════════════════════════════════════════════ */
-
-function setLanguage(lang) {
-  if (!translations[lang]) return;
-
-  currentLang = lang;
-  localStorage.setItem('indirah-lang', lang);
-  document.documentElement.lang = lang;
-
-  /* Tous les éléments data-i18n (desktop + mobile feed) */
-  document.querySelectorAll('[data-i18n]').forEach(function(el) {
-    var key  = el.dataset.i18n;
-    var text = translations[lang][key];
-    if (text !== undefined) el.textContent = text;
-  });
-
-  /* Attributs alt et aria-label localisés */
-  document.querySelectorAll('[data-i18n-alt-title]').forEach(function(el) {
-    var title = translations[lang][el.dataset.i18nAltTitle] || '';
-    var tech  = translations[lang][el.dataset.i18nAltTechnique] || '';
-    var label = title + (tech ? ', ' + tech.toLowerCase() : '');
-    if (el.tagName === 'IMG') el.alt = label;
-    else el.setAttribute('aria-label', label);
-  });
-
-  /* Bouton de langue */
-  document.querySelectorAll('.lang-option').forEach(function(btn) {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
-  });
-
-  window.dispatchEvent(new CustomEvent('indirah:languagechange'));
-}
-
-
-/* ══════════════════════════════════════════════════════════
    LIGHTBOX
 ══════════════════════════════════════════════════════════ */
 
@@ -292,7 +259,7 @@ function initLightbox() {
   /* Fermeture */
   closeBtn.addEventListener('click', closeLightbox);
   overlay.addEventListener('click', function(e) {
-    if (e.target === overlay) closeLightbox();
+    if (e.target === overlay || e.target === content) closeLightbox();
   });
 
   /* Navigation dans la série */
@@ -449,83 +416,10 @@ function initMobileSwipe() {
 
 
 /* ══════════════════════════════════════════════════════════
-   MENU MOBILE — hamburger + pile de boutons pilule
-══════════════════════════════════════════════════════════ */
-
-function initHamburgerMenu() {
-  var btn     = document.getElementById('hamburger-btn');
-  var menu    = document.getElementById('mobile-menu');
-  var overlay = document.getElementById('mobile-menu-overlay');
-  var closeBtn = document.getElementById('mobile-menu-close');
-
-  if (!btn || !menu || !overlay || !closeBtn) return;
-
-  function openMenu() {
-    overlay.style.display = 'block';
-    menu.style.display    = 'flex';
-    overlay.offsetHeight; /* force reflow pour déclencher la transition */
-    menu.offsetHeight;
-    overlay.classList.add('active');
-    menu.classList.add('active');
-    btn.setAttribute('aria-expanded', 'true');
-  }
-
-  function closeMenu() {
-    overlay.classList.remove('active');
-    menu.classList.remove('active');
-    btn.setAttribute('aria-expanded', 'false');
-    setTimeout(function() {
-      if (!menu.classList.contains('active')) {
-        overlay.style.display = 'none';
-        menu.style.display    = 'none';
-      }
-    }, 260);
-  }
-
-  btn.addEventListener('click', function() {
-    if (menu.classList.contains('active')) closeMenu();
-    else openMenu();
-  });
-
-  closeBtn.addEventListener('click', closeMenu);
-  overlay.addEventListener('click', closeMenu);
-
-  /* Liens de navigation : ferme le menu, puis scroll (ancre) ou navigue (page) */
-  menu.querySelectorAll('a.mobile-menu-btn').forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      var href = link.getAttribute('href');
-      e.preventDefault();
-      closeMenu();
-      if (href && href.charAt(0) === '#') {
-        var target = document.getElementById(href.slice(1));
-        if (target) setTimeout(function() { target.scrollIntoView({ behavior: 'smooth' }); }, 260);
-      } else if (href) {
-        setTimeout(function() { window.location.href = href; }, 260);
-      }
-    });
-  });
-
-  /* Toggle de langue dans le menu — un listener par option pour fiabilité mobile */
-  document.querySelectorAll('#mobile-menu-lang .lang-option').forEach(function(option) {
-    option.addEventListener('click', function() {
-      setLanguage(option.dataset.lang);
-    });
-  });
-}
-
-
-/* ══════════════════════════════════════════════════════════
    INITIALISATION
 ══════════════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', function() {
-
-  /* Bascule de langue */
-  document.getElementById('lang-toggle').addEventListener('click', function(e) {
-    var option = e.target.closest('.lang-option');
-    if (option) setLanguage(option.dataset.lang);
-  });
-
 
   /* Desktop series grids */
   buildDesktopGrids();
@@ -533,12 +427,6 @@ document.addEventListener('DOMContentLoaded', function() {
   /* Mobile feed */
   buildMobileFeed();
 
-  /* Menu hamburger mobile */
-  initHamburgerMenu();
-
   /* Lightbox */
   initLightbox();
-
-  /* Langue initiale */
-  setLanguage(currentLang);
 });

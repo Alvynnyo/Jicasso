@@ -51,7 +51,6 @@
         { id: 'oeuvres', label: { fr: "Découvrir les œuvres", en: "Discover the works" } },
         { id: 'artiste', label: { fr: "Qui est Indirah ?",    en: "Who is Indirah?" } },
         { id: 'vision',  label: { fr: "Sa vision",            en: "Her vision" } },
-        { id: 'atelier', label: { fr: "L'atelier",            en: "The studio" } },
         { id: 'contact', label: { fr: "La contacter",         en: "Get in touch" } }
       ]
     },
@@ -60,7 +59,7 @@
     nodes: {
       artiste: {
         expression: 'mascotte-joue',
-        image: 'images/artiste.png',
+        image: 'images/artiste.webp',
         message: {
           fr: "Indirah est artiste peintre. Elle aime dire : « Peindre, c'est raconter ce que les mots ne savent pas dire. Chaque toile est une conversation entre ma main et mon silence. »",
           en: "Indirah is a visual artist. She likes to say: “Painting is telling what words cannot say. Each canvas is a conversation between my hand and my silence.”"
@@ -73,26 +72,13 @@
 
       vision: {
         expression: 'mascotte-montre',
-        image: 'images/vision.png',
+        image: 'images/vision.webp',
         message: {
           fr: "Sa vision ? « Je peins des figures, des émotions, des histoires qui me traversent. Mon travail est un pont entre ce qu'on voit et ce qu'on ressent. »",
           en: "Her vision? “I paint figures, emotions, stories that move through me. My work is a bridge between what we see and what we feel.”"
         },
         options: [
           { id: 'oeuvres', label: { fr: "Voir les œuvres", en: "See the works" } },
-          { id: 'menu',    label: LABELS.backToMenu }
-        ]
-      },
-
-      atelier: {
-        expression: 'mascotte-joue',
-        image: 'images/atelier.png',
-        message: {
-          fr: "L'atelier est son sanctuaire : « C'est là que le chaos devient couleur, que l'incertitude devient ligne, que le doute devient œuvre. »",
-          en: "The studio is her sanctuary: “That's where chaos becomes color, uncertainty becomes line, and doubt becomes art.”"
-        },
-        options: [
-          { id: 'artiste', label: { fr: "Qui est Indirah ?", en: "Who is Indirah?" } },
           { id: 'menu',    label: LABELS.backToMenu }
         ]
       },
@@ -126,6 +112,7 @@
   ════════════════════════════════════════════════════════════════ */
   var IMAGE_DIR   = 'images/mascotte/';
   var IMAGE_EXT   = '.webp';
+  var EXPRESSIONS  = ['mascotte-accueil', 'mascotte-montre', 'mascotte-joue', 'mascotte-ecoute'];
   var GREETED_KEY = 'mory_greeted';
   var COLLAPSED_KEY = 'mory_collapsed';
 
@@ -141,6 +128,7 @@
   var root, figure, minBtn, greetEl, greetText, greetClose;
   var panel, panelClose, messagesEl, optionsEl, headerTitle;
   var imageEls = [], activeImageIndex = 0, currentImageName = null;
+  var prefetchedExpressions = {};
 
   /* Fil de conversation : tableau ré-affichable pour le changement de langue.
      Chaque entrée : { role:'user'|'mory', ... }  */
@@ -265,6 +253,8 @@
     var headImg = document.createElement('img');
     headImg.src = imagePath('mascotte-accueil');
     headImg.alt = '';
+    headImg.loading = 'lazy';
+    headImg.decoding = 'async';
     headAvatar.appendChild(headImg);
 
     headerTitle = document.createElement('span');
@@ -316,6 +306,7 @@
       img.className = 'mory-img' + (i === 0 ? ' is-active' : '');
       img.alt = '';
       img.decoding = 'async';
+      img.loading = i === 0 ? 'eager' : 'lazy';
       figure.appendChild(img);
       imageEls.push(img);
     }
@@ -415,6 +406,7 @@
 
     if (!currentImageName) {
       imageEls[activeImageIndex].src = imagePath(name);
+      prefetchedExpressions[name] = true;
       currentImageName = name;
       return;
     }
@@ -433,9 +425,19 @@
       currentImageName = name;
     }
 
-    incoming.onload = swap;
+    incoming.onload = function () {
+      prefetchedExpressions[name] = true;
+      swap();
+    };
+    incoming.onerror = function () {
+      incoming.onload = null;
+      incoming.onerror = null;
+    };
     incoming.src = imagePath(name);
-    if (incoming.complete) swap();
+    if (incoming.complete && incoming.naturalWidth > 0) {
+      prefetchedExpressions[name] = true;
+      swap();
+    }
   }
 
   /* ════════════════════════════════════════════════════════════════
@@ -662,29 +664,10 @@
   }
 
   function scheduleGreeting() {
-    var intro = document.getElementById('book-intro');
-
     function fire(delay) {
       greetTimer = window.setTimeout(showGreeting, delay);
     }
-
-    function introVisible() {
-      if (!intro) return false;
-      var s = window.getComputedStyle(intro);
-      return s.display !== 'none' && s.visibility !== 'hidden' && s.opacity !== '0';
-    }
-
-    if (!intro || !introVisible()) {
-      fire(2000);
-      return;
-    }
-    /* Attendre la fermeture de l'intro livre (mobile) */
-    var observer = new MutationObserver(function () {
-      if (introVisible()) return;
-      observer.disconnect();
-      fire(900);
-    });
-    observer.observe(intro, { attributes: true, attributeFilter: ['class', 'style', 'hidden'] });
+    fire(2000);
   }
 
   /* ════════════════════════════════════════════════════════════════
@@ -696,11 +679,6 @@
     if (document.querySelector('#mobile-menu.active')) return true;
     if (document.querySelector('#mobile-menu-overlay.active')) return true;
 
-    var intro = document.getElementById('book-intro');
-    if (intro) {
-      var s = window.getComputedStyle(intro);
-      if (s.display !== 'none' && s.visibility !== 'hidden' && s.opacity !== '0') return true;
-    }
     return false;
   }
 
@@ -732,11 +710,25 @@
   /* ════════════════════════════════════════════════════════════════
      13. INITIALISATION
   ════════════════════════════════════════════════════════════════ */
-  function preloadImages() {
-    ['mascotte-accueil', 'mascotte-montre', 'mascotte-joue', 'mascotte-ecoute'].forEach(function (n) {
-      var pre = new Image();
-      pre.src = imagePath(n);
-    });
+  function prefetchExpression(name) {
+    if (!name || prefetchedExpressions[name] || name === currentImageName) return;
+    var pre = new Image();
+    pre.decoding = 'async';
+    pre.onload = function () { prefetchedExpressions[name] = true; };
+    pre.onerror = function () { delete prefetchedExpressions[name]; };
+    prefetchedExpressions[name] = 'pending';
+    pre.src = imagePath(name);
+  }
+
+  function scheduleExpressionPrefetch() {
+    function run() {
+      EXPRESSIONS.forEach(prefetchExpression);
+    }
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(run, { timeout: 5000 });
+    } else {
+      window.setTimeout(run, 3000);
+    }
   }
 
   /* ════════════════════════════════════════════════════════════════
@@ -753,7 +745,7 @@
 
   function init() {
     buildDom();
-    preloadImages();
+    scheduleExpressionPrefetch();
     observeOverlayState();
     scheduleGreeting();
   }

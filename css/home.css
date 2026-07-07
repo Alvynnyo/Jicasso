@@ -1,0 +1,155 @@
+/* ═══════════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════════ */
+.hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Image de fond — effet Ken Burns (div évite les contraintes max-width sur img) */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/moryspotlight.webp');
+  background-size: cover;
+  background-position: center center;
+  z-index: 0;
+  transform-origin: center center;
+  animation: kenBurns 22s ease-in-out infinite alternate;
+}
+
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+
+/* Voile sombre — préserve la lisibilité du contenu */
+.hero-veil {
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 58, 53, 0.25);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Home */
+.home-page {
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+.home-screen {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 96px 24px 118px;
+  background: var(--deep); /* repli si l'image ne se charge pas */
+  overflow: hidden;
+}
+
+/* Tableau en fond plein écran (full-bleed, sans cadre) */
+.home-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.home-bg-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Voile de lisibilité par-dessus l'image (assombrit haut et bas) */
+.home-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg,
+      rgba(7, 30, 28, 0.60) 0%,
+      rgba(7, 30, 28, 0.18) 30%,
+      rgba(7, 30, 28, 0.28) 60%,
+      rgba(7, 30, 28, 0.80) 100%),
+    radial-gradient(circle at 50% 46%, rgba(0, 0, 0, 0) 42%, rgba(7, 30, 28, 0.34) 100%);
+}
+
+.home-title-block {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.home-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.8rem, 9vw, 8rem);
+  font-weight: 300;
+  line-height: 0.9;
+  color: var(--cream);
+  letter-spacing: 0.08em;
+}
+
+.home-subtitle {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.home-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  padding: 18px 24px 20px;
+  border-top: 1px solid rgba(177, 183, 171, 0.1);
+  background: linear-gradient(to top, rgba(7, 30, 28, 0.92), rgba(7, 30, 28, 0));
+}
+
+.home-footer .footer-inner {
+  gap: 10px;
+}
+
+.home-footer .footer-links {
+  gap: 22px;
+}
+
+/* Cadrage mobile : biaise légèrement vers le haut pour garder le sujet
+   du tableau (visages) dans le champ sur écran étroit. */
+@media (max-width: 640px) {
+  .home-bg-img { object-position: 50% 34%; }
+}
+
+.works-main {
+  padding-top: 128px;
+}
+
+/* Responsive home */
+@media (max-width: 768px) {
+  .home-screen { padding: 88px 18px 112px; }
+  .home-title { font-size: clamp(3.1rem, 18vw, 6.2rem); letter-spacing: 0.06em; }
+  .home-subtitle { font-size: 0.74rem; letter-spacing: 0.2em; }
+  .home-footer { padding: 12px 18px calc(14px + env(safe-area-inset-bottom)); }
+  .home-footer .footer-logo { font-size: 1.1rem; }
+  .home-footer .footer-links { flex-wrap: wrap; justify-content: center; gap: 14px 18px; }
+  .home-footer .footer-copy { font-size: 0.64rem; }
+}
+
+@media (max-width: 480px), (max-height: 560px) {
+  .home-screen { padding-bottom: 84px; }
+  .home-footer { padding: 10px 16px calc(12px + env(safe-area-inset-bottom)); }
+  .home-footer .footer-inner { gap: 0; }
+  .home-footer .footer-links,
+  .home-footer .footer-copy { display: none; }
+}

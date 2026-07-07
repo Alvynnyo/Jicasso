@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════
    Source unique pour toutes les données d'œuvres.
-   Chargée avant translations.js et main.js / oeuvres.js.
+   Chargee avant translations.js, main.js, gallery.js et mory.js.
    Pour ajouter une œuvre : modifier ce fichier uniquement,
    puis ajouter les clés correspondantes dans translations.js.
 ══════════════════════════════════════════════════════════ */
@@ -9,10 +9,6 @@ var oeuvresData = {
     titleKey:     'serie1_title',
     textKey:      'serie1_text',
     linkKey:      'serie1_link',
-    videoSrc:     'videos/gardien.mp4',
-    videoThumb:   'images/serie-1/mory.webp',
-    introTextKey: 'seq_intro_text',
-    outroTextKey: 'seq_outro_text',
     works: [
       {
         id:           'work1',
@@ -70,10 +66,6 @@ var oeuvresData = {
     titleKey:     'serie2_title',
     textKey:      'serie2_text',
     linkKey:      'serie2_link',
-    videoSrc:     null,
-    videoThumb:   null,
-    introTextKey: null,
-    outroTextKey: null,
     works: [
       {
         id:           'work4',

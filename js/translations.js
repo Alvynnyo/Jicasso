@@ -11,6 +11,16 @@ const translations = {
     nav_musee:      "Musee",
     nav_contact:    "Contact",
 
+    // SEO
+    meta_home_title:       "Indirah - Artiste Peintre",
+    meta_home_desc:        "Site officiel d'Indirah, artiste peintre : oeuvres, musee interactif et contact.",
+    meta_oeuvres_title:    "Oeuvres - Indirah",
+    meta_oeuvres_desc:     "Explorez les series de peintures d'Indirah, avec une galerie visuelle et une lightbox immersive.",
+    meta_musee_title:      "Musee - Indirah",
+    meta_musee_desc:       "Parcourez les oeuvres d'Indirah dans un musee interactif en scrollytelling.",
+    meta_contact_title:    "Contact - Indirah",
+    meta_contact_desc:     "Contactez Indirah pour un projet artistique, une question ou une collaboration.",
+
     // Hero
     hero_scroll:    "Défiler",
 
@@ -27,13 +37,6 @@ const translations = {
     musee_intro_line1: "Bienvenue au",
     musee_intro_line2: "Musée",
     musee_intro_desc:  "Parcourez les œuvres d'Indirah comme les salles d'un musée. Chaque toile s'illumine à votre approche — laissez-vous porter.",
-
-    // Séquence "Une nuit au musée" (oeuvres.html)
-    seq_intro_text:     "Mais, où sont-elles ?",
-    seq_painting_label: "RECHERCHE",
-    seq_painting_reward: "RÉCOMPENSE : INESTIMABLE",
-    seq_outro_text:     "Pourquoi pas sur votre mur ...",
-    seq_replay:         "Revoir",
 
     // Série I — Paysages et lumière
     serie1_title:   "Série I",
@@ -73,7 +76,7 @@ const translations = {
 
     // Confirmation
     contact_success_title: "Merci.",
-    contact_success_text:  "Votre message est arrivé dans l'atelier. Je vous répondrai bientôt, le temps de poser les pinceaux.",
+    contact_success_text:  "Votre message est bien arrivé. Je vous répondrai bientôt, le temps de poser les pinceaux.",
 
     // Erreur
     contact_error_title: "Oops.",
@@ -108,6 +111,16 @@ const translations = {
     nav_musee:      "Museum",
     nav_contact:    "Contact",
 
+    // SEO
+    meta_home_title:       "Indirah - Visual Artist",
+    meta_home_desc:        "Official website of Indirah, visual artist: works, interactive museum and contact.",
+    meta_oeuvres_title:    "Works - Indirah",
+    meta_oeuvres_desc:     "Explore Indirah's painting series through a visual gallery and immersive lightbox.",
+    meta_musee_title:      "Museum - Indirah",
+    meta_musee_desc:       "Wander through Indirah's works in an interactive scrollytelling museum.",
+    meta_contact_title:    "Contact - Indirah",
+    meta_contact_desc:     "Contact Indirah for an artistic project, a question or a collaboration.",
+
     // Hero
     hero_scroll:    "Scroll",
 
@@ -124,13 +137,6 @@ const translations = {
     musee_intro_line1: "Welcome to the",
     musee_intro_line2: "Museum",
     musee_intro_desc:  "Wander through Indirah's works like the rooms of a museum. Each canvas lights up as you approach — let yourself drift.",
-
-    // Sequence "A night at the museum" (oeuvres.html)
-    seq_intro_text:     "But, where are they?",
-    seq_painting_label: "WANTED",
-    seq_painting_reward: "REWARD: PRICELESS",
-    seq_outro_text:     "Why not on your wall...",
-    seq_replay:         "Watch again",
 
     // Series I — Landscapes and light
     serie1_title:   "Series I",
@@ -198,3 +204,65 @@ const translations = {
     work6_technique: "",
   }
 };
+
+window.translations = translations;
+
+window.IndirahI18n = (function () {
+  'use strict';
+
+  var STORAGE_KEY = 'indirah-lang';
+
+  function getLanguage() {
+    return localStorage.getItem(STORAGE_KEY) || document.documentElement.lang || 'fr';
+  }
+
+  function getText(lang, key) {
+    return (translations[lang] && translations[lang][key]) ||
+           (translations.fr && translations.fr[key]) || '';
+  }
+
+  function apply(lang, options) {
+    options = options || {};
+    if (!translations[lang]) return null;
+
+    localStorage.setItem(STORAGE_KEY, lang);
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      var text = translations[lang][el.dataset.i18n];
+      if (text !== undefined) el.textContent = text;
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(function (el) {
+      var text = translations[lang][el.dataset.i18nPlaceholder];
+      if (text !== undefined) el.placeholder = text;
+    });
+
+    document.querySelectorAll('[data-i18n-content]').forEach(function (el) {
+      var text = translations[lang][el.dataset.i18nContent];
+      if (text !== undefined) el.setAttribute('content', text);
+    });
+
+    document.querySelectorAll('[data-i18n-alt-title]').forEach(function (el) {
+      var title = getText(lang, el.dataset.i18nAltTitle);
+      var tech = getText(lang, el.dataset.i18nAltTechnique);
+      var label = title + (tech ? ', ' + tech.toLowerCase() : '');
+      if (el.tagName === 'IMG') el.alt = label;
+      else el.setAttribute('aria-label', label);
+    });
+
+    document.querySelectorAll('.lang-option').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+
+    if (typeof options.afterApply === 'function') options.afterApply(lang);
+    window.dispatchEvent(new CustomEvent('indirah:languagechange'));
+    return lang;
+  }
+
+  return {
+    getLanguage: getLanguage,
+    getText: getText,
+    apply: apply
+  };
+}());

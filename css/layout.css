@@ -1,0 +1,399 @@
+/* ═══════════════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════════════ */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  /* Fade from deep-teal at top to transparent — blends into any section */
+  background: linear-gradient(
+    to bottom,
+    var(--deep) 0%,
+    rgba(13, 58, 53, 0.7) 60%,
+    transparent 100%
+  );
+  padding: 22px 48px 32px;
+  pointer-events: none; /* allow clicks through the transparent area */
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: all;
+  position: relative;
+}
+
+/* Marque — avatar réduit + nom */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: var(--cream);
+  transition: opacity var(--ease);
+}
+
+.brand:hover .brand-name { opacity: 0.75; }
+
+/* ═══════════════════════════════════════════════════════════
+   AVATAR — composant réutilisable (header + hero mobile)
+═══════════════════════════════════════════════════════════ */
+.avatar-container {
+  position: relative;
+  width: 108px;
+  height: 108px;
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.avatar-badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--cream);
+  box-shadow: 0 0 0 2.5px var(--deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Variante réduite — header desktop + mobile */
+.avatar-container.avatar-small {
+  width: 34px;
+  height: 34px;
+}
+
+.avatar-container.avatar-small .avatar-badge {
+  width: 11px;
+  height: 11px;
+  bottom: -1px;
+  right: -1px;
+  box-shadow: 0 0 0 1.5px var(--deep);
+}
+
+
+/* Navigation centree — pilule glassmorphism */
+.main-nav {
+  display: flex;
+  gap: 4px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 10px 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.main-nav a {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sage);
+  padding: 6px 18px;
+  border-radius: 999px;
+  transition: color 0.25s ease, background 0.25s ease;
+}
+.main-nav a:hover {
+  color: var(--cream);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Bouton langue — pilule glassmorphism */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 8px 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.lang-toggle:hover {
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.lang-option {
+  color: var(--sage);
+  transition: color var(--ease);
+}
+.lang-option.active { color: var(--cream); }
+
+.lang-sep {
+  color: var(--sage);
+  opacity: 0.4;
+  user-select: none;
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════ */
+.site-footer {
+  padding: 64px 48px;
+  text-align: center;
+  border-top: 1px solid rgba(177, 183, 171, 0.18);
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--cream);
+  letter-spacing: 0.12em;
+  transition: opacity var(--ease);
+}
+.footer-logo:hover { opacity: 0.7; }
+
+.footer-links {
+  display: flex;
+  gap: 36px;
+}
+
+.footer-links a {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sage);
+  transition: color var(--ease);
+}
+.footer-links a:hover { color: var(--cream); }
+
+.footer-link--disabled,
+.footer-link--disabled:hover {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+  color: var(--sage);
+}
+
+.footer-copy {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--sage);
+  opacity: 0.45;
+  letter-spacing: 0.06em;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   HAMBURGER + MENU MOBILE
+   Visible uniquement sur mobile (<768px)
+═══════════════════════════════════════════════════════════ */
+
+/* Bouton déclencheur */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  background: var(--cream);
+  border-radius: 2px;
+}
+
+/* Overlay sombre */
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 199;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+}
+
+/* Pile de boutons */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease-out;
+  pointer-events: none;
+}
+
+.mobile-menu.active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: all;
+}
+
+/* Bouton pilule */
+.mobile-menu-btn {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream);
+  text-align: center;
+  padding: 14px 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 180px;
+  text-decoration: none;
+  display: block;
+  transition: background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu-btn:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Toggle de langue dans le menu */
+.mobile-menu-lang {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.mobile-menu-lang .lang-option {
+  color: var(--sage);
+  transition: color 0.2s ease;
+  cursor: pointer;
+  padding: 6px 10px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu-lang .lang-option.active {
+  color: var(--cream);
+}
+
+.mobile-menu-lang .lang-sep {
+  color: var(--sage);
+  opacity: 0.4;
+  user-select: none;
+}
+
+/* Bouton fermeture */
+.mobile-menu-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  color: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu-close:active {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+
+
+/* Responsive layout */
+@media (max-width: 1024px) {
+  .site-header { padding: 16px 24px 20px; }
+  .main-nav { gap: 2px; padding: 8px 6px; }
+  .main-nav a { font-size: 0.76rem; letter-spacing: 0.12em; padding: 5px 14px; }
+  .site-footer { padding: 48px 24px; }
+  .footer-links { gap: 24px; }
+}
+
+@media (max-width: 768px) {
+  .site-header { padding: 14px 18px 18px; }
+  .main-nav { display: none; }
+  .lang-toggle { display: none; }
+  .hamburger-btn { display: flex; }
+}
+
+@media (max-width: 480px) {
+  .brand-name { font-size: 1.3rem; }
+}
+
+@media (max-width: 360px) {
+  .site-header { padding: 12px 14px 16px; }
+  .brand-name { font-size: 1.12rem; letter-spacing: 0.1em; }
+  .avatar-container.avatar-small { width: 30px; height: 30px; }
+  .hamburger-btn { width: 40px; height: 40px; }
+  .mobile-menu { top: 64px; }
+}

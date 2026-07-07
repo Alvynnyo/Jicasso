@@ -62,7 +62,7 @@ body.parcours {
       rgba(13, 58, 53, 0.55) 0%,
       rgba(13, 58, 53, 0.50) 45%,
       rgba(13, 58, 53, 0.62) 100%),
-    url('../images/journal.png');
+    url('../images/journal.webp');
   background-repeat: no-repeat;
   background-size: cover;              /* remplit tout l'écran d'intro */
   background-position: 50% 42%;        /* garde le personnage + journal cadrés (desktop) */

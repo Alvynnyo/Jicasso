@@ -10,7 +10,15 @@
 var WEB3FORMS_KEY = '05a7ad8e-a472-45fb-94b6-7551e1bdc112';
 
 var currentStep = 1;
-var currentLang = localStorage.getItem('indirah-lang') || 'fr';
+var currentLang = window.IndirahI18n ? window.IndirahI18n.getLanguage() : (localStorage.getItem('indirah-lang') || 'fr');
+
+window.addEventListener('indirah:languagechange', function () {
+  currentLang = window.IndirahI18n ? window.IndirahI18n.getLanguage() : currentLang;
+  var btnSend = document.getElementById('btn-send');
+  if (btnSend && !btnSend.disabled) {
+    btnSend.textContent = translations[currentLang].contact_send;
+  }
+});
 
 
 /* ══════════════════════════════════════════════════════════
@@ -166,107 +174,11 @@ function sendForm() {
 
 
 /* ══════════════════════════════════════════════════════════
-   LANGUE
-══════════════════════════════════════════════════════════ */
-
-function setLanguage(lang) {
-  if (!translations[lang]) return;
-  currentLang = lang;
-  localStorage.setItem('indirah-lang', lang);
-  document.documentElement.lang = lang;
-
-  document.querySelectorAll('[data-i18n]').forEach(function(el) {
-    var text = translations[lang][el.dataset.i18n];
-    if (text !== undefined) el.textContent = text;
-  });
-
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
-    var text = translations[lang][el.dataset.i18nPlaceholder];
-    if (text !== undefined) el.placeholder = text;
-  });
-
-  document.querySelectorAll('.lang-option').forEach(function(btn) {
-    btn.classList.toggle('active', btn.dataset.lang === lang);
-  });
-
-  /* btn-send géré séparément car son contenu change pendant l'envoi */
-  var btnSend = document.getElementById('btn-send');
-  if (btnSend && !btnSend.disabled) {
-    btnSend.textContent = translations[lang].contact_send;
-  }
-
-  window.dispatchEvent(new CustomEvent('indirah:languagechange'));
-}
-
-
-/* ══════════════════════════════════════════════════════════
-   MENU HAMBURGER
-══════════════════════════════════════════════════════════ */
-
-function initHamburgerMenu() {
-  var btn      = document.getElementById('hamburger-btn');
-  var menu     = document.getElementById('mobile-menu');
-  var overlay  = document.getElementById('mobile-menu-overlay');
-  var closeBtn = document.getElementById('mobile-menu-close');
-
-  if (!btn || !menu || !overlay || !closeBtn) return;
-
-  function openMenu() {
-    overlay.style.display = 'block';
-    menu.style.display    = 'flex';
-    overlay.offsetHeight;
-    menu.offsetHeight;
-    overlay.classList.add('active');
-    menu.classList.add('active');
-    btn.setAttribute('aria-expanded', 'true');
-  }
-
-  function closeMenu() {
-    overlay.classList.remove('active');
-    menu.classList.remove('active');
-    btn.setAttribute('aria-expanded', 'false');
-    setTimeout(function() {
-      if (!menu.classList.contains('active')) {
-        overlay.style.display = 'none';
-        menu.style.display    = 'none';
-      }
-    }, 260);
-  }
-
-  btn.addEventListener('click', function() {
-    if (menu.classList.contains('active')) closeMenu();
-    else openMenu();
-  });
-
-  closeBtn.addEventListener('click', closeMenu);
-  overlay.addEventListener('click', closeMenu);
-
-  menu.querySelectorAll('a.mobile-menu-btn').forEach(function(link) {
-    link.addEventListener('click', closeMenu);
-  });
-
-  document.querySelectorAll('#mobile-menu-lang .lang-option').forEach(function(option) {
-    option.addEventListener('click', function() { setLanguage(option.dataset.lang); });
-  });
-}
-
-
-/* ══════════════════════════════════════════════════════════
    INITIALISATION
 ══════════════════════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', function() {
 
-  /* Langue */
-  var langToggle = document.getElementById('lang-toggle');
-  if (langToggle) {
-    langToggle.addEventListener('click', function(e) {
-      var opt = e.target.closest('.lang-option');
-      if (opt) setLanguage(opt.dataset.lang);
-    });
-  }
-
-  setLanguage(currentLang);
   updateProgress();
 
   /* Apparition de l'étape 1 */
@@ -348,7 +260,4 @@ document.addEventListener('DOMContentLoaded', function() {
     this.style.height = 'auto';
     this.style.height = this.scrollHeight + 'px';
   });
-
-  /* ─── Menu hamburger ─── */
-  initHamburgerMenu();
 });

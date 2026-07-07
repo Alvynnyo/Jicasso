@@ -1,0 +1,21 @@
+{
+  "name": "Indirah",
+  "short_name": "Indirah",
+  "description": "Official website of Indirah, visual artist.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0D3A35",
+  "theme_color": "#0D3A35",
+  "icons": [
+    {
+      "src": "favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

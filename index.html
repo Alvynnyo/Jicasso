@@ -3,16 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Indirah - Artiste Peintre</title>
+  <title data-i18n="meta_home_title">Indirah - Artiste Peintre</title>
+  <meta name="description" content="Site officiel d'Indirah, artiste peintre : oeuvres, musee interactif et contact." data-i18n-content="meta_home_desc">
+  <link rel="canonical" href="https://indirah.fr/index.html">
+  <meta property="og:title" content="Indirah - Artiste Peintre" data-i18n-content="meta_home_title">
+  <meta property="og:description" content="Site officiel d'Indirah, artiste peintre : oeuvres, musee interactif et contact." data-i18n-content="meta_home_desc">
+  <meta property="og:image" content="https://indirah.fr/images/moryspotlight.webp">
+  <meta property="og:url" content="https://indirah.fr/index.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Indirah - Artiste Peintre" data-i18n-content="meta_home_title">
+  <meta name="twitter:description" content="Site officiel d'Indirah, artiste peintre : oeuvres, musee interactif et contact." data-i18n-content="meta_home_desc">
+  <meta name="twitter:image" content="https://indirah.fr/images/moryspotlight.webp">
+  <meta name="theme-color" content="#0D3A35">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/mory.css">
+  <link rel="stylesheet" href="css/base.css?v=20260707">
+  <link rel="stylesheet" href="css/layout.css?v=20260707">
+  <link rel="stylesheet" href="css/home.css?v=20260707">
+  <link rel="stylesheet" href="css/mory.css?v=20260707">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body id="top" class="home-page">
 
@@ -24,7 +40,7 @@
           <div class="avatar">
             <picture>
               <source srcset="images/indirahicon-small.webp" type="image/webp">
-              <img src="images/indirahicon-small.png" alt="" class="avatar-image">
+              <img src="images/indirahicon-small.webp" alt="" class="avatar-image">
             </picture>
           </div>
           <div class="avatar-badge">
@@ -105,8 +121,8 @@
     </button>
   </nav>
 
-  <script src="js/oeuvres-data.js"></script>
-  <script src="js/translations.js"></script>
+  <script defer src="js/oeuvres-data.js?v=20260707"></script>
+  <script defer src="js/translations.js?v=20260707"></script>
   <script>
     window.MORY_GREETING_KEY = 'mory_greeted_home';
     window.MORY_GREETING = {
@@ -114,7 +130,7 @@
       en: "I'm Mory, the museum guide. I'm ready to accompany you."
     };
   </script>
-  <script src="js/main.js"></script>
-  <script src="js/mory.js"></script>
+  <script defer src="js/nav.js?v=20260707"></script>
+  <script defer src="js/mory.js?v=20260707"></script>
 </body>
 </html>

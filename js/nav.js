@@ -75,6 +75,7 @@
         var href = link.getAttribute('href');
         e.preventDefault();
         closeMenu();
+        if (link.hasAttribute('data-contact-open')) return;
         if (href && href.charAt(0) === '#') {
           var target = document.getElementById(href.slice(1));
           if (target) setTimeout(function () { target.scrollIntoView({ behavior: 'smooth' }); }, 260);

@@ -1,7 +1,7 @@
 /**
  * Indirah — gallery.js
  * ────────────────────────────────────────────────────────────────
- * Parcours d'accueil en scrollytelling : une « salle » plein écran par
+ * Parcours immersif d'oeuvres.html : une « salle » plein écran par
  * œuvre, un spotlight qui s'allume à l'entrée dans le viewport, et Mory
  * qui peut commenter. Les salles d'œuvres sont générées depuis
  * oeuvres-data.js et insérées entre la salle d'entrée et la salle finale.
@@ -10,15 +10,15 @@
  * repli sur IntersectionObserver si GSAP n'est pas disponible. Aucun
  * scroll-jacking : l'utilisateur garde le contrôle du défilement.
  *
- * Chargé sur index.html après oeuvres-data.js, translations.js et main.js.
+ * Chargé sur oeuvres.html après oeuvres-data.js et translations.js.
  * ────────────────────────────────────────────────────────────────
  */
 
 /* Message d'accueil de Mory spécifique au parcours (lu par mory.js). */
-window.MORY_GREETING_KEY = 'mory_greeted_musee';
+window.MORY_GREETING_KEY = 'mory_greeted_works';
 window.MORY_GREETING = {
-  fr: "Je vais vous accompagner. Contentez-vous de scroller.",
-  en: "I'll guide you. Just scroll."
+  fr: "Je suis Mory. Je peux vous guider parmi les œuvres, à votre rythme.",
+  en: "I'm Mory. I can guide you through the works, at your own pace."
 };
 
 (function () {
@@ -87,8 +87,16 @@ window.MORY_GREETING = {
 
       var img = document.createElement('img');
       img.className = 'room-art-img';
-      img.src = work.srcSpotlight || work.src;   /* version « musée » si dispo */
-      img.setAttribute('loading', 'lazy');
+      var imageSrc = work.srcSpotlight || work.src;
+      if (i === 0) {
+        img.src = imageSrc;
+        img.setAttribute('loading', 'eager');
+        img.setAttribute('fetchpriority', 'high');
+        section.id = 'first-work';
+      } else {
+        img.dataset.src = imageSrc;
+        img.setAttribute('loading', 'lazy');
+      }
       img.setAttribute('decoding', 'async');
       img.dataset.i18nAltTitle = work.titleKey;
       img.dataset.i18nAltTechnique = work.techniqueKey;
@@ -126,6 +134,29 @@ window.MORY_GREETING = {
     });
 
     return Array.prototype.slice.call(gallery.querySelectorAll('.room'));
+  }
+
+  /* Les salles hors écran ne reçoivent leur URL d'image qu'à l'approche du
+     viewport. Cela empêche le navigateur de télécharger tout le parcours au départ. */
+  function setupProgressiveImages() {
+    var images = Array.prototype.slice.call(document.querySelectorAll('.room-art-img[data-src]'));
+    function load(img) {
+      if (!img.dataset.src) return;
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+    }
+    if (!('IntersectionObserver' in window)) {
+      images.forEach(load);
+      return;
+    }
+    var loader = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        load(entry.target);
+        loader.unobserve(entry.target);
+      });
+    }, { rootMargin: '150% 0px' });
+    images.forEach(function (img) { loader.observe(img); });
   }
 
   /* ── Activation / désactivation d'une salle ────────────────────── */
@@ -209,12 +240,47 @@ window.MORY_GREETING = {
     });
   }
 
+  function initExperienceControls() {
+    var experience = document.getElementById('immersive-experience');
+    var enter = document.getElementById('immersive-enter');
+    var close = document.getElementById('immersive-close');
+    var finish = document.getElementById('immersive-finish');
+    if (!experience || !enter || !close) return;
+
+    function openExperience() {
+      experience.hidden = false;
+      experience.scrollTop = 0;
+      document.body.classList.add('immersive-open');
+      if (history.replaceState) history.replaceState(null, '', '#parcours-immersif');
+      close.focus();
+    }
+
+    function closeExperience() {
+      experience.hidden = true;
+      document.body.classList.remove('immersive-open');
+      document.documentElement.style.setProperty('--room-bg', '#0D3A35');
+      if (history.replaceState) history.replaceState(null, '', location.pathname + location.search);
+      enter.focus();
+    }
+
+    enter.addEventListener('click', openExperience);
+    close.addEventListener('click', closeExperience);
+    if (finish) finish.addEventListener('click', closeExperience);
+    document.addEventListener('keydown', function (event) {
+      var lightbox = document.getElementById('lightbox-overlay');
+      if (event.key === 'Escape' && !experience.hidden && !(lightbox && lightbox.classList.contains('active'))) closeExperience();
+    });
+    if (location.hash === '#parcours-immersif') openExperience();
+  }
+
   /* ── Init ──────────────────────────────────────────────────────── */
   function init() {
     var rooms = buildRooms();
     if (!rooms.length) return;
 
+    setupProgressiveImages();
     initScrollCue();
+    initExperienceControls();
 
     var hasGsap = (typeof window.gsap !== 'undefined') &&
                   (typeof window.ScrollTrigger !== 'undefined');

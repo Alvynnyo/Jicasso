@@ -21,7 +21,22 @@ var lightboxTrigger  = null;
 
 window.addEventListener('indirah:languagechange', function () {
   currentLang = window.IndirahI18n ? window.IndirahI18n.getLanguage() : currentLang;
+  buildDesktopGrids();
+  buildMobileFeed();
+  var overlay = document.getElementById('lightbox-overlay');
+  if (overlay && overlay.classList.contains('active')) showLightboxImage(lightboxIndex);
 });
+
+function localized(value) {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  return value[currentLang] || value.fr || '';
+}
+
+function cardMeta(work) {
+  var t = translations[currentLang];
+  return [t[work.techniqueKey] || '', localized(work.year), localized(work.dimensions), localized(work.availability)].filter(Boolean);
+}
 
 function getFocusable(container) {
   return Array.from(container.querySelectorAll(
@@ -39,6 +54,7 @@ function getFocusable(container) {
 function buildMobileFeed() {
   var feed = document.getElementById('mobile-feed');
   if (!feed) return;
+  feed.innerHTML = '';
 
   var t = translations[currentLang];
 
@@ -66,6 +82,13 @@ function buildMobileFeed() {
     text.setAttribute('data-i18n', serie.textKey);
     text.textContent = t[serie.textKey] || '';
     header.appendChild(text);
+
+    if (serie.status === 'upcoming') {
+      header.classList.add('mobile-series-teaser');
+      group.appendChild(header);
+      feed.appendChild(group);
+      return;
+    }
 
     group.appendChild(header);
 
@@ -105,6 +128,11 @@ function buildMobileFeed() {
       cardTechnique.setAttribute('data-i18n', work.techniqueKey);
       cardTechnique.textContent = t[work.techniqueKey] || '';
       info.appendChild(cardTechnique);
+
+      var cardDetails = document.createElement('span');
+      cardDetails.className = 'mobile-card-details';
+      cardDetails.textContent = cardMeta(work).slice(1).join(' · ');
+      info.appendChild(cardDetails);
 
       card.appendChild(info);
 
@@ -166,6 +194,20 @@ function buildDesktopGrids() {
       btn.setAttribute('aria-label', label);
 
       btn.appendChild(img);
+
+      var info = document.createElement('span');
+      info.className = 'serie-grid-info';
+      var cardTitle = document.createElement('span');
+      cardTitle.className = 'serie-grid-title';
+      cardTitle.setAttribute('data-i18n', work.titleKey);
+      cardTitle.textContent = title;
+      var details = document.createElement('span');
+      details.className = 'serie-grid-details';
+      details.textContent = cardMeta(work).join(' · ');
+      info.appendChild(cardTitle);
+      info.appendChild(details);
+      btn.appendChild(info);
+      btn.addEventListener('click', function() { openLightbox(work.src, btn); });
       item.appendChild(btn);
       grid.appendChild(item);
     });
@@ -206,8 +248,13 @@ function showLightboxImage(index) {
   var work = lightboxWorks[index];
   var t    = translations[currentLang];
   document.getElementById('lightbox-img').src = work.src;
+  document.getElementById('lightbox-img').alt = (t[work.titleKey] || '') + ', ' + (t[work.techniqueKey] || '').toLowerCase();
   document.getElementById('lightbox-caption-title').textContent     = t[work.titleKey]     || '';
   document.getElementById('lightbox-caption-technique').textContent = t[work.techniqueKey] || '';
+  document.getElementById('lightbox-caption-year').textContent = localized(work.year);
+  document.getElementById('lightbox-caption-dimensions').textContent = localized(work.dimensions);
+  document.getElementById('lightbox-caption-availability').textContent = localized(work.availability);
+  document.getElementById('lightbox-caption-story').textContent = localized(work.story);
   updatePositionDots();
 }
 
@@ -280,14 +327,6 @@ function initLightbox() {
     if (e.key === 'Escape')      { closeLightbox(); }
     if (e.key === 'ArrowLeft')   { e.preventDefault(); lightboxIndex = (lightboxIndex - 1 + lightboxWorks.length) % lightboxWorks.length; showLightboxImage(lightboxIndex); }
     if (e.key === 'ArrowRight')  { e.preventDefault(); lightboxIndex = (lightboxIndex + 1) % lightboxWorks.length; showLightboxImage(lightboxIndex); }
-  });
-
-  /* Clic (et clavier) sur les boutons du grid desktop */
-  document.querySelectorAll('.serie-grid-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var img = btn.querySelector('img');
-      if (img) openLightbox(img.getAttribute('src'), btn);
-    });
   });
 
   /* Piège de focus dans la lightbox */

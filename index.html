@@ -4,133 +4,105 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="meta_home_title">Indirah - Artiste Peintre</title>
-  <meta name="description" content="Site officiel d'Indirah, artiste peintre : oeuvres, musee interactif et contact." data-i18n-content="meta_home_desc">
+  <meta name="description" content="Indirah, artiste peintre : figures, émotions et œuvres à découvrir." data-i18n-content="meta_home_desc">
   <link rel="canonical" href="https://indirah.fr/index.html">
   <meta property="og:title" content="Indirah - Artiste Peintre" data-i18n-content="meta_home_title">
-  <meta property="og:description" content="Site officiel d'Indirah, artiste peintre : oeuvres, musee interactif et contact." data-i18n-content="meta_home_desc">
-  <meta property="og:image" content="https://indirah.fr/images/hero-mory-galerie.webp">
+  <meta property="og:description" content="Indirah, artiste peintre : figures, émotions et œuvres à découvrir." data-i18n-content="meta_home_desc">
+  <meta property="og:image" content="https://indirah.fr/images/hero-accueil-texture.webp">
   <meta property="og:url" content="https://indirah.fr/index.html">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Indirah - Artiste Peintre" data-i18n-content="meta_home_title">
-  <meta name="twitter:description" content="Site officiel d'Indirah, artiste peintre : oeuvres, musee interactif et contact." data-i18n-content="meta_home_desc">
-  <meta name="twitter:image" content="https://indirah.fr/images/hero-mory-galerie.webp">
+  <meta name="twitter:description" content="Indirah, artiste peintre : figures, émotions et œuvres à découvrir." data-i18n-content="meta_home_desc">
+  <meta name="twitter:image" content="https://indirah.fr/images/hero-accueil-texture.webp">
   <meta name="theme-color" content="#0D3A35">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/base.css?v=20260707">
-  <link rel="stylesheet" href="css/layout.css?v=20260707">
-  <link rel="stylesheet" href="css/home.css?v=20260707">
-  <link rel="stylesheet" href="css/mory.css?v=20260707">
+  <link rel="preload" as="image" href="images/hero-accueil-texture.webp" fetchpriority="high">
+  <link rel="stylesheet" href="css/base.css?v=20260714">
+  <link rel="stylesheet" href="css/layout.css?v=20260715-2">
+  <link rel="stylesheet" href="css/home.css?v=20260715-3">
+  <link rel="stylesheet" href="css/mory.css?v=20260715-2">
+  <link rel="stylesheet" href="css/contact-popup.css?v=20260715-2">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
 </head>
 <body id="top" class="home-page">
-
   <header class="site-header" id="site-header">
     <div class="header-inner">
-
       <a href="index.html" class="brand">
-        <div class="avatar-container avatar-small">
-          <div class="avatar">
-            <picture>
-              <source srcset="images/logo-indirah.webp" type="image/webp">
-              <img src="images/logo-indirah.webp" alt="" class="avatar-image">
-            </picture>
-          </div>
-          <div class="avatar-badge">
-            <svg viewBox="0 0 24 24" width="7" height="7" fill="none"
-                 stroke="#276152" stroke-width="3"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-          </div>
-        </div>
         <span class="brand-name">Indirah</span>
       </a>
-
       <nav class="main-nav" aria-label="Navigation principale">
         <a href="index.html" data-i18n="nav_accueil" class="nav-current">Accueil</a>
         <a href="oeuvres.html" data-i18n="nav_oeuvres">Oeuvres</a>
-        <a href="musee.html" data-i18n="nav_musee">Musee</a>
-        <a href="contact.html" data-i18n="nav_contact">Contact</a>
+        <a href="apropos.html" data-i18n="nav_apropos">A propos</a>
+        <a href="contact.html" data-i18n="nav_contact" data-contact-open>Contact</a>
       </nav>
-
-      <button class="lang-toggle" id="lang-toggle" aria-label="Changer de langue">
-        <span class="lang-option" data-lang="fr">FR</span>
-        <span class="lang-sep">/</span>
-        <span class="lang-option" data-lang="en">EN</span>
-      </button>
-
-      <button class="hamburger-btn" id="hamburger-btn" aria-label="Menu" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
+      <button class="lang-toggle" id="lang-toggle" aria-label="Changer de langue"><span class="lang-option" data-lang="fr">FR</span><span class="lang-sep">/</span><span class="lang-option" data-lang="en">EN</span></button>
+      <button class="hamburger-btn" id="hamburger-btn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </header>
 
-  <main class="home-screen" aria-label="Accueil">
-    <div class="home-bg" aria-hidden="true">
-      <img src="images/hero-mory-galerie.webp" alt="" class="home-bg-img">
-    </div>
-    <div class="home-veil" aria-hidden="true"></div>
-    <div class="home-title-block">
-      <h1 class="home-title" id="home-title">Indirah</h1>
-      <p class="home-subtitle" data-i18n="home_subtitle">Peinture</p>
-    </div>
+  <main aria-label="Accueil">
+    <section class="home-screen" id="home-hero">
+      <div class="home-bg" aria-hidden="true"><img src="images/hero-accueil-texture.webp" alt="" class="home-bg-img" fetchpriority="high"></div>
+      <div class="home-veil" aria-hidden="true"></div>
+      <div class="home-hero-content">
+        <p class="home-depth" data-i18n="home_depth">Série en cours</p>
+        <h1 class="home-hook" data-i18n="home_hook">Peindre ce que les mots taisent.</h1>
+        <p class="home-identity" data-i18n="home_identity">Indirah — peintre, figures &amp; émotions.</p>
+        <div class="home-actions">
+          <a href="oeuvres.html" class="home-cta home-cta--primary" data-i18n="home_cta_oeuvres">Découvrir les œuvres</a>
+          <a href="apropos.html" class="home-cta home-cta--secondary" data-i18n="home_cta_artist">Rencontrer l'artiste</a>
+        </div>
+      </div>
+      <a class="home-scroll-cue" href="#home-works"><span class="home-scroll-text" data-i18n="home_scroll">Défiler</span><span class="home-scroll-arrow" aria-hidden="true">↓</span></a>
+    </section>
+
+    <section class="home-works" id="home-works" aria-labelledby="home-works-title">
+      <div class="home-section-heading"><p class="home-section-eyebrow" data-i18n="home_works_eyebrow">Aperçu</p><h2 id="home-works-title" data-i18n="home_works_title">Quelques œuvres</h2></div>
+      <div class="home-works-list">
+        <figure class="home-work"><img src="images/serie-1/maria.webp" alt="Sous les pivoines" loading="lazy" decoding="async"><figcaption data-i18n="work1_title">Sous les pivoines</figcaption></figure>
+        <figure class="home-work"><img src="images/serie-1/mory.webp" alt="L'Accord intérieur" loading="lazy" decoding="async"><figcaption data-i18n="work2_title">L'Accord intérieur</figcaption></figure>
+        <figure class="home-work"><img src="images/serie-1/stepout.webp" alt="À pleine voix" loading="lazy" decoding="async"><figcaption data-i18n="work3_title">À pleine voix</figcaption></figure>
+      </div>
+      <a class="home-text-link" href="oeuvres.html" data-i18n="home_works_link">Voir toutes les œuvres</a>
+    </section>
+
+    <section class="home-artist" aria-labelledby="home-artist-title">
+      <figure class="home-artist-image"><img src="images/portrait-artiste.webp" alt="Portrait d'Indirah" loading="lazy" decoding="async"></figure>
+      <div class="home-artist-copy"><p class="home-section-eyebrow" data-i18n="home_artist_eyebrow">L'artiste</p><h2 id="home-artist-title" data-i18n="home_artist_phrase">Ses figures donnent une présence à ce qui reste sans voix.</h2><a class="home-text-link" href="apropos.html" data-i18n="home_cta_artist">Rencontrer l'artiste</a></div>
+    </section>
+
+    <aside class="home-social" aria-label="Réseau social"><span data-i18n="home_social_prompt">Suivre le travail</span><span aria-hidden="true">→</span><!-- TODO: remplacer #TODO-instagram-url par l'URL Instagram officielle. --><a href="#TODO-instagram-url" data-i18n="footer_instagram">Instagram</a></aside>
+
+    <section class="home-closing" aria-labelledby="home-closing-title"><h2 id="home-closing-title" data-i18n="home_closing_title">Une œuvre vous parle ?</h2><a class="home-cta home-cta--primary" href="contact.html" data-i18n="home_cta_contact" data-contact-open data-contact-subject="Accueil — Une œuvre vous parle ?">La contacter</a></section>
   </main>
 
   <footer class="site-footer home-footer">
     <div class="footer-inner">
-      <a href="index.html" class="footer-logo">Indirah</a>
-      <nav class="footer-links" aria-label="Liens externes">
-        <a href="oeuvres.html" data-i18n="nav_oeuvres">Oeuvres</a>
-        <a href="musee.html" data-i18n="nav_musee">Musee</a>
-        <a href="contact.html" data-i18n="footer_contact">Contact</a>
-      </nav>
-      <p class="footer-copy" data-i18n="footer_copy">© 2024 Indirah. Tous droits reserves.</p>
+      <a href="#top" class="footer-logo">Indirah</a>
+      <nav class="footer-links" aria-label="Liens de pied de page"><a href="oeuvres.html" data-i18n="nav_oeuvres">Oeuvres</a><a href="apropos.html" data-i18n="nav_apropos">A propos</a><a href="contact.html" data-i18n="footer_contact" data-contact-open>Contact</a><!-- TODO: remplacer #TODO-instagram-url par l'URL Instagram officielle. --><a href="#TODO-instagram-url" data-i18n="footer_instagram">Instagram</a></nav>
+      <p class="footer-copy" data-i18n="footer_copy">© 2024 Indirah. Tous droits réservés.</p>
     </div>
   </footer>
 
   <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
-
   <nav class="mobile-menu" id="mobile-menu" aria-label="Menu mobile">
-    <a href="index.html" class="mobile-menu-btn" data-i18n="nav_accueil">Accueil</a>
-    <a href="oeuvres.html" class="mobile-menu-btn" data-i18n="nav_oeuvres">Oeuvres</a>
-    <a href="musee.html" class="mobile-menu-btn" data-i18n="nav_musee">Musee</a>
-    <a href="contact.html" class="mobile-menu-btn" data-i18n="nav_contact">Contact</a>
-    <div class="mobile-menu-btn mobile-menu-lang" id="mobile-menu-lang">
-      <span class="lang-option" data-lang="fr">FR</span>
-      <span class="lang-sep">/</span>
-      <span class="lang-option" data-lang="en">EN</span>
-    </div>
-    <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Fermer le menu">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-           stroke="currentColor" stroke-width="1.5"
-           stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
+    <a href="index.html" class="mobile-menu-btn" data-i18n="nav_accueil">Accueil</a><a href="oeuvres.html" class="mobile-menu-btn" data-i18n="nav_oeuvres">Oeuvres</a><a href="apropos.html" class="mobile-menu-btn" data-i18n="nav_apropos">A propos</a><a href="contact.html" class="mobile-menu-btn" data-i18n="nav_contact" data-contact-open>Contact</a>
+    <div class="mobile-menu-btn mobile-menu-lang" id="mobile-menu-lang"><span class="lang-option" data-lang="fr">FR</span><span class="lang-sep">/</span><span class="lang-option" data-lang="en">EN</span></div>
+    <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Fermer le menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </nav>
 
-  <script defer src="js/oeuvres-data.js?v=20260707"></script>
-  <script defer src="js/translations.js?v=20260707"></script>
-  <script>
-    window.MORY_GREETING_KEY = 'mory_greeted_home';
-    window.MORY_GREETING = {
-      fr: "Je suis Mory, le guide du musee. Je reste pret a vous accompagner.",
-      en: "I'm Mory, the museum guide. I'm ready to accompany you."
-    };
-  </script>
-  <script defer src="js/nav.js?v=20260707"></script>
-  <script defer src="js/mory.js?v=20260707"></script>
+  <script defer src="js/oeuvres-data.js?v=20260714"></script>
+  <script defer src="js/translations.js?v=20260715"></script>
+  <script>window.MORY_GREETING_KEY='mory_greeted_home_identity';window.MORY_GREETING={fr:"Je suis Mory. Je vous guide parmi les figures, les émotions et les histoires d'Indirah.",en:"I'm Mory. I'll guide you through Indirah's figures, emotions and stories."};</script>
+  <script defer src="js/nav.js?v=20260714"></script>
+  <script defer src="js/contact-popup.js?v=20260715"></script>
+  <script defer src="js/mory.js?v=20260714"></script>
 </body>
 </html>

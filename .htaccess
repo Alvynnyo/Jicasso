@@ -14,6 +14,9 @@ Options -MultiViews
   # ── Ancienne page "Atelier" (supprimée) -> Oeuvres (301 permanent) ──
   RewriteRule ^atelier(?:\.html)?/?$ /oeuvres [R=301,L]
 
+  # ── Ancienne URL Musée -> nouveau parcours d'accueil ──
+  RewriteRule ^musee(?:\.html)?/?$ /oeuvres.html#parcours-immersif [NE,R=301,L]
+
   # ── Routes propres : servir "/oeuvres" depuis "oeuvres.html" ──
   # On ne réécrit que si la cible .html existe et que l'URL demandée
   # n'est pas déjà un fichier/dossier réel (css, js, images… servis tels

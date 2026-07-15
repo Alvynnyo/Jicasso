@@ -4,11 +4,13 @@
   "trailingSlash": false,
   "redirects": [
     { "source": "/atelier", "destination": "/oeuvres", "permanent": true },
-    { "source": "/atelier.html", "destination": "/oeuvres", "permanent": true }
+    { "source": "/atelier.html", "destination": "/oeuvres", "permanent": true },
+    { "source": "/musee", "destination": "/oeuvres.html#parcours-immersif", "permanent": true },
+    { "source": "/musee.html", "destination": "/oeuvres.html#parcours-immersif", "permanent": true }
   ],
   "rewrites": [
     { "source": "/oeuvres", "destination": "/oeuvres.html" },
-    { "source": "/musee", "destination": "/musee.html" },
+    { "source": "/apropos", "destination": "/apropos.html" },
     { "source": "/contact", "destination": "/contact.html" }
   ]
 }

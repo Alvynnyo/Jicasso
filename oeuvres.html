@@ -22,9 +22,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/base.css?v=20260707">
-  <link rel="stylesheet" href="css/layout.css?v=20260707">
-  <link rel="stylesheet" href="css/works.css?v=20260707">
-  <link rel="stylesheet" href="css/mory.css?v=20260707">
+  <link rel="stylesheet" href="css/layout.css?v=20260715-2">
+  <link rel="stylesheet" href="css/works.css?v=20260715-2">
+  <link rel="stylesheet" href="css/gallery.css?v=20260715-2">
+  <link rel="stylesheet" href="css/mory.css?v=20260715-2">
+  <link rel="stylesheet" href="css/contact-popup.css?v=20260715-2">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -36,29 +38,14 @@
     <div class="header-inner">
 
       <a href="index.html" class="brand">
-        <div class="avatar-container avatar-small">
-          <div class="avatar">
-            <picture>
-              <source srcset="images/logo-indirah.webp" type="image/webp">
-              <img src="images/logo-indirah.webp" alt="" class="avatar-image">
-            </picture>
-          </div>
-          <div class="avatar-badge">
-            <svg viewBox="0 0 24 24" width="7" height="7" fill="none"
-                 stroke="#276152" stroke-width="3"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-          </div>
-        </div>
         <span class="brand-name">Indirah</span>
       </a>
 
       <nav class="main-nav" aria-label="Navigation principale">
         <a href="index.html" data-i18n="nav_accueil">Accueil</a>
         <a href="oeuvres.html" data-i18n="nav_oeuvres" class="nav-current">Oeuvres</a>
-        <a href="musee.html" data-i18n="nav_musee">Musee</a>
-        <a href="contact.html" data-i18n="nav_contact">Contact</a>
+        <a href="apropos.html" data-i18n="nav_apropos">A propos</a>
+        <a href="contact.html" data-i18n="nav_contact" data-contact-open>Contact</a>
       </nav>
 
       <button class="lang-toggle" id="lang-toggle" aria-label="Changer de langue">
@@ -77,6 +64,15 @@
   </header>
 
   <main class="works-main">
+    <section class="works-intro" aria-labelledby="works-title">
+      <div>
+        <p class="works-intro-eyebrow" data-i18n="immersive_eyebrow">Un autre regard</p>
+        <h1 class="works-intro-title" id="works-title" data-i18n="nav_oeuvres">Oeuvres</h1>
+        <p class="works-intro-text" data-i18n="immersive_text">Trois œuvres, trois salles, un temps de regard guidé par Mory.</p>
+      </div>
+      <button class="immersive-enter" id="immersive-enter" type="button" data-i18n="immersive_enter">Entrer dans le parcours</button>
+    </section>
+
     <section class="serie works-first-serie" id="serie-1">
       <div class="serie-divider" role="separator"></div>
       <div class="serie-inner">
@@ -84,44 +80,47 @@
         <div class="serie-info">
           <h2 class="serie-title" data-i18n="serie1_title">Serie I</h2>
           <p class="serie-text" data-i18n="serie1_text">
-            Paysages et lumiere. Une exploration des saisons et de leurs couleurs.
+            Figures et présence. Trois visages entre intériorité, musique et affirmation.
           </p>
-          <a class="serie-link serie-link--disabled" data-i18n="serie1_link">Voir la serie</a>
+          <a class="serie-link" href="#serie-1-gallery" data-i18n="serie1_link">Voir les trois œuvres</a>
         </div>
 
-        <div class="serie-grid" data-serie="serie1"></div>
+        <div class="serie-grid" id="serie-1-gallery" data-serie="serie1"></div>
 
       </div>
     </section>
 
     <section class="serie" id="serie-2">
       <div class="serie-divider" role="separator"></div>
-      <div class="serie-inner">
-
-        <div class="serie-info">
-          <h2 class="serie-title" data-i18n="serie2_title">Serie II</h2>
-          <p class="serie-text" data-i18n="serie2_text">
-            Portraits et figures. Le corps comme matiere et comme ombre.
-          </p>
-          <a class="serie-link serie-link--disabled" data-i18n="serie2_link">Voir la serie</a>
-        </div>
-
-        <div class="serie-grid" data-serie="serie2"></div>
-
+      <div class="serie-teaser" role="status">
+        <div><h2 class="serie-title" data-i18n="serie2_title">Serie II</h2><p data-i18n="serie2_text">Nouvelle série en préparation.</p></div>
       </div>
     </section>
 
     <section class="mobile-feed" id="mobile-feed"></section>
   </main>
 
+  <div class="immersive-experience" id="immersive-experience" hidden>
+    <button class="immersive-close" id="immersive-close" type="button" data-i18n="immersive_close">Quitter le parcours</button>
+    <div class="gallery" id="gallery" aria-label="Parcours immersif">
+      <section class="room room--entry is-lit" id="room-entry">
+        <div class="room-entry-inner">
+          <p class="entry-eyebrow">Indirah</p>
+          <h2 class="entry-title"><span class="entry-title-lead" data-i18n="immersive_intro_line1">Bienvenue dans le</span><span class="entry-title-main" data-i18n="immersive_intro_line2">Parcours</span></h2>
+          <p class="entry-desc" data-i18n="immersive_intro_desc">Avancez d'une œuvre à l'autre. Chaque toile s'éclaire à votre approche — laissez-vous porter.</p>
+        </div>
+        <a class="scroll-cue" href="#first-work" aria-label="Commencer la visite"><span class="scroll-cue-text" data-i18n="home_scroll">Défiler</span><span class="scroll-cue-arrow" aria-hidden="true">↓</span></a>
+      </section>
+      <section class="room room--final" id="room-final">
+        <div class="room-final-inner"><h2 class="room-final-title" data-i18n="home_final_title">Chaque toile a son histoire.</h2><p class="room-final-text" data-i18n="home_final_text">La suite vous appartient.</p><div class="room-final-cta"><button class="room-btn" id="immersive-finish" type="button" data-i18n="immersive_close">Quitter le parcours</button><a href="contact.html" class="room-btn room-btn--ghost" data-i18n="home_cta_contact" data-contact-open data-contact-subject="Œuvres — Parcours immersif">La contacter</a></div><p class="room-final-sign">Indirah</p></div>
+      </section>
+    </div>
+  </div>
+
   <footer class="site-footer">
     <div class="footer-inner">
       <a href="#top" class="footer-logo">Indirah</a>
-      <nav class="footer-links" aria-label="Liens externes">
-        <a class="footer-link--disabled" data-i18n="footer_instagram">Instagram</a>
-        <a class="footer-link--disabled" data-i18n="footer_artsy">Artsy</a>
-        <a href="contact.html" data-i18n="footer_contact">Contact</a>
-      </nav>
+      <nav class="footer-links" aria-label="Liens de pied de page"><a href="oeuvres.html" data-i18n="nav_oeuvres">Oeuvres</a><a href="apropos.html" data-i18n="nav_apropos">A propos</a><a href="contact.html" data-i18n="footer_contact" data-contact-open>Contact</a><!-- TODO: remplacer #TODO-instagram-url par l'URL Instagram officielle. --><a href="#TODO-instagram-url" data-i18n="footer_instagram">Instagram</a></nav>
       <p class="footer-copy" data-i18n="footer_copy">© 2024 Indirah. Tous droits reserves.</p>
     </div>
   </footer>
@@ -146,7 +145,13 @@
       <img class="lightbox-img" id="lightbox-img" alt="">
       <div class="lightbox-caption">
         <span class="lightbox-caption-title" id="lightbox-caption-title"></span>
-        <span class="lightbox-caption-technique" id="lightbox-caption-technique"></span>
+        <dl class="lightbox-meta">
+          <div><dt data-i18n="meta_year">Année</dt><dd id="lightbox-caption-year"></dd></div>
+          <div><dt data-i18n="meta_medium">Technique</dt><dd id="lightbox-caption-technique"></dd></div>
+          <div><dt data-i18n="meta_dimensions">Dimensions</dt><dd id="lightbox-caption-dimensions"></dd></div>
+          <div><dt data-i18n="meta_availability">Disponibilité</dt><dd id="lightbox-caption-availability"></dd></div>
+        </dl>
+        <p class="lightbox-story" id="lightbox-caption-story"></p>
       </div>
     </div>
     <button class="lightbox-arrow lightbox-arrow--next" id="lightbox-next" aria-label="Image suivante">
@@ -164,8 +169,8 @@
   <nav class="mobile-menu" id="mobile-menu" aria-label="Menu mobile">
     <a href="index.html" class="mobile-menu-btn" data-i18n="nav_accueil">Accueil</a>
     <a href="oeuvres.html" class="mobile-menu-btn" data-i18n="nav_oeuvres">Oeuvres</a>
-    <a href="musee.html" class="mobile-menu-btn" data-i18n="nav_musee">Musee</a>
-    <a href="contact.html" class="mobile-menu-btn" data-i18n="nav_contact">Contact</a>
+    <a href="apropos.html" class="mobile-menu-btn" data-i18n="nav_apropos">A propos</a>
+    <a href="contact.html" class="mobile-menu-btn" data-i18n="nav_contact" data-contact-open>Contact</a>
     <div class="mobile-menu-btn mobile-menu-lang" id="mobile-menu-lang">
       <span class="lang-option" data-lang="fr">FR</span>
       <span class="lang-sep">/</span>
@@ -181,10 +186,12 @@
     </button>
   </nav>
 
-  <script defer src="js/oeuvres-data.js?v=20260707"></script>
-  <script defer src="js/translations.js?v=20260707"></script>
-  <script defer src="js/nav.js?v=20260707"></script>
-  <script defer src="js/main.js?v=20260707"></script>
-  <script defer src="js/mory.js?v=20260707"></script>
+  <script defer src="js/oeuvres-data.js?v=20260714"></script>
+  <script defer src="js/translations.js?v=20260715"></script>
+  <script defer src="js/nav.js?v=20260714"></script>
+  <script defer src="js/main.js?v=20260714"></script>
+  <script defer src="js/gallery.js?v=20260714"></script>
+  <script defer src="js/contact-popup.js?v=20260715"></script>
+  <script defer src="js/mory.js?v=20260714"></script>
 </body>
 </html>

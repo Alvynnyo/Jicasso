@@ -1,271 +1,78 @@
-/* ═══════════════════════════════════════════════════════════
-   CONTACT — page narrative, mobile-first
-═══════════════════════════════════════════════════════════ */
-
-/* Barre de progression (1px fixée tout en haut) */
-.contact-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(177, 183, 171, 0.12);
-  z-index: 600;
+/* Page Contact — point d'entrée léger vers le popup partagé. */
+.contact-page-main {
+  min-height: calc(100svh - 80px);
+  display: grid;
+  place-items: center;
+  padding: 120px 24px 72px;
 }
 
-.contact-progress-bar {
-  height: 100%;
-  background: var(--forest);
-  width: 0;
-  transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Conteneur principal */
-.contact-main {
-  min-height: 100vh;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 100px 48px 60px;
-}
-
-/* Étapes — cachées par défaut, JS gère display */
-.form-step {
-  display: none;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 580px;
-}
-
-/* Compteur 01 — 03 */
-.step-counter {
-  font-family: var(--font-body);
-  font-size: 0.68rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--sage);
-  opacity: 0.4;
-  margin-bottom: 36px;
-  user-select: none;
-}
-
-/* Question principale */
-.step-question {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(1.85rem, 4.2vw, 2.9rem);
-  font-weight: 300;
-  font-style: italic;
-  color: var(--cream);
-  line-height: 1.28;
-  margin-bottom: 44px;
-  cursor: default;
-}
-
-/* Champ — uniquement soulignement, pas de boîte */
-.step-input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(177, 183, 171, 0.45);
-  border-radius: 0;
-  outline: none;
-  padding: 10px 0 14px;
-  font-family: var(--font-body);
-  font-size: clamp(1.1rem, 2.4vw, 1.55rem);
-  color: var(--cream);
-  caret-color: var(--cream);
-  transition: border-color 0.3s ease;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.step-input:focus {
-  border-bottom-color: var(--cream);
-}
-
-.step-input::placeholder {
-  color: var(--sage);
-  opacity: 0.45;
-}
-
-/* Textarea */
-.step-textarea {
-  resize: none;
-  overflow: hidden;
-  line-height: 1.65;
-  min-height: 2.4em;
-}
-
-/* Message d'erreur */
-.step-error {
-  min-height: 1.3em;
-  margin-top: 12px;
-  font-family: var(--font-body);
-  font-size: 0.76rem;
-  letter-spacing: 0.04em;
-  color: #a86060;
-  opacity: 0;
-  transition: opacity 0.22s ease;
-}
-
-.step-error.visible {
-  opacity: 1;
-}
-
-/* Zone de navigation */
-.step-nav {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  margin-top: 44px;
-  flex-wrap: wrap;
-}
-
-/* Bouton Suivant / Envoyer — pilule glassmorphism */
-.btn-next,
-.btn-send {
-  font-family: var(--font-body);
-  font-size: 0.79rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--cream);
-  padding: 15px 46px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-  cursor: pointer;
-  min-height: 48px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: background 0.2s ease, border-color 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-
-@media (hover: hover) {
-  .btn-next:hover,
-  .btn-send:hover {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.26);
-  }
-}
-
-.btn-next:active,
-.btn-send:active {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.btn-send:disabled {
-  cursor: default;
-  opacity: 0.75;
-}
-
-/* Bouton Retour — textuel, discret */
-.btn-back {
-  font-family: var(--font-body);
-  font-size: 0.76rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--sage);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 15px 4px;
-  min-height: 48px;
-  transition: color 0.25s ease;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.btn-back:hover { color: var(--cream); }
-
-/* Spinner de chargement */
-.btn-spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
-  border-top-color: var(--cream);
-  border-radius: 50%;
-  animation: contact-spin 0.72s linear infinite;
-  flex-shrink: 0;
-}
-
-@keyframes contact-spin {
-  to { transform: rotate(360deg); }
-}
-
-/* État final — confirmation centré */
-#step-confirm {
-  align-items: center;
+.contact-page-card {
+  width: min(680px, 100%);
+  padding: clamp(42px, 8vw, 88px) clamp(24px, 7vw, 72px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.035);
   text-align: center;
 }
 
-#step-confirm .step-final-text {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: 300;
+.contact-page-eyebrow {
+  margin: 0 0 18px;
   color: var(--sage);
-  line-height: 1.85;
-  max-width: 440px;
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 
-/* États finaux */
-.step-final-title {
+.contact-page-title {
+  margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(3.2rem, 8vw, 5.5rem);
-  font-weight: 300;
+  font-size: clamp(3.2rem, 8vw, 6.2rem);
   font-style: italic;
-  color: var(--cream);
-  line-height: 1.05;
-  margin-bottom: 26px;
+  font-weight: 300;
+  line-height: 0.95;
 }
 
-.step-final-text {
-  font-family: var(--font-body);
-  font-size: 0.92rem;
+.contact-page-invitation {
+  max-width: 470px;
+  margin: 28px auto 36px;
   color: var(--sage);
-  line-height: 1.8;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.7vw, 1.5rem);
+  font-style: italic;
+  line-height: 1.45;
 }
 
-.fallback-email {
+.contact-page-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 14px 30px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
   color: var(--cream);
-  border-bottom: 1px solid var(--forest);
-  padding-bottom: 1px;
-  transition: border-color 0.25s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.fallback-email:hover { border-bottom-color: var(--cream); }
-
-/* Lien actif dans la nav desktop */
-.main-nav a.nav-current {
-  color: var(--cream);
-  background: rgba(255, 255, 255, 0.1);
+.contact-page-open:hover,
+.contact-page-open:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
-/* ── Mobile ── */
-@media (max-width: 768px) {
-  .contact-main {
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding-top: 118px;
-    padding-left: 24px;
-    padding-right: 24px;
-    padding-bottom: 60px;
+@media (max-width: 640px) {
+  .contact-page-main {
+    min-height: calc(100svh - 72px);
+    padding: 102px 16px 56px;
   }
 
-  .step-question {
-    margin-bottom: 36px;
-  }
-
-  .step-nav {
-    margin-top: 36px;
+  .contact-page-card {
+    padding: 48px 20px;
+    border-radius: 20px;
   }
 }

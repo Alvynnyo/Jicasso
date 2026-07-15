@@ -8,7 +8,11 @@
 /atelier        /oeuvres   301
 /atelier.html   /oeuvres   301
 
-# Routes propres (/oeuvres, /musee, /contact) :
+# Ancienne URL publique du parcours, désormais parcours immersif des Oeuvres
+/musee          /oeuvres.html#parcours-immersif  301
+/musee.html     /oeuvres.html#parcours-immersif  301
+
+# Routes propres (/oeuvres, /apropos, /contact) :
 # Netlify sert automatiquement "oeuvres.html" pour une requête "/oeuvres",
 # aucune règle supplémentaire n'est nécessaire. Les liens internes en
 # ".html" continuent de fonctionner tels quels.

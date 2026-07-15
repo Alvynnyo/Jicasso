@@ -1,6 +1,5 @@
 /* ════════════════════════════════════════════════════════════════
-   GALLERY — parcours d'accueil (scrollytelling « une nuit au musée »)
-   Chargé uniquement sur index.html, après style.css.
+   GALLERY — parcours immersif lancé depuis oeuvres.html.
    Chaque œuvre occupe une « salle » plein écran ; un spotlight
    s'allume à l'entrée dans le viewport (classe .is-lit posée par
    js/gallery.js via GSAP ScrollTrigger, avec repli IntersectionObserver).
@@ -17,6 +16,34 @@ body.parcours {
   transition: background-color 0.9s ease;
   overflow-x: hidden;
 }
+
+body.immersive-open { overflow: hidden; }
+.immersive-experience[hidden] { display: none; }
+.immersive-experience {
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--room-bg);
+  transition: background-color 0.9s ease;
+}
+.immersive-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 370;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid rgba(251, 246, 240, 0.55);
+  border-radius: 999px;
+  background: #0D3A35;
+  color: var(--cream);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+.immersive-close:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
 
 .gallery {
   position: relative;
@@ -50,7 +77,7 @@ body.parcours {
   transform: translateY(0);
 }
 
-/* Fond statique de l'écran d'intro Musée : image « journal » bien cadrée.
+/* Fond statique de l'écran d'intro du parcours : image « journal » bien cadrée.
    AUCUN effet (pas de zoom, pas de filtre vintage, pas de grain, pas de
    transition) — l'image reste telle quelle, seulement redimensionnée.
    Un voile teal semi-transparent est superposé uniquement pour garder
@@ -62,7 +89,7 @@ body.parcours {
       rgba(13, 58, 53, 0.55) 0%,
       rgba(13, 58, 53, 0.50) 45%,
       rgba(13, 58, 53, 0.62) 100%),
-    url('../images/hero-musee-journal.webp');
+    url('../images/hero-parcours-journal.webp');
   background-repeat: no-repeat;
   background-size: cover;              /* remplit tout l'écran d'intro */
   background-position: 50% 42%;        /* garde le personnage + journal cadrés (desktop) */
@@ -132,19 +159,29 @@ body.parcours {
   align-items: center;
   gap: 6px;
   color: var(--cream, #FBF6F0);
-  opacity: 0.7;
+  opacity: 1;
   text-decoration: none;
-  animation: cue-bob 2.4s ease-in-out infinite;
+  padding: 12px 20px;
+  border: 1px solid rgba(251, 246, 240, 0.65);
+  border-radius: 999px;
+  background: rgba(13, 58, 53, 0.72);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  animation: cue-bob 1.45s ease-in-out infinite;
 }
 .scroll-cue-text {
   font-family: var(--font-body, 'EB Garamond', Georgia, serif);
-  font-size: 0.72rem;
+  font-size: 0.86rem;
   letter-spacing: 0.34em;
   text-transform: uppercase;
 }
+.scroll-cue-arrow {
+  font-size: 2rem;
+  line-height: 0.8;
+  font-weight: 300;
+}
 @keyframes cue-bob {
   0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(7px); }
+  50%      { transform: translateX(-50%) translateY(11px); }
 }
 
 /* ════════════════════════════════════════════════════════════════

@@ -1,12 +1,12 @@
 /**
  * Indirah — mory.js
  * ────────────────────────────────────────────────────────────────
- * « Mory », guide de musée interactif : un chatbot ENTIÈREMENT SCRIPTÉ
+ * « Mory », guide interactif du parcours : un chatbot ENTIÈREMENT SCRIPTÉ
  * (aucune IA). Toutes les questions et réponses sont écrites en dur
  * ci-dessous dans MORY_CONVERSATION. Le visiteur choisit parmi des
  * boutons ; Mory répond avec une bulle de chat et propose la suite.
  *
- * Chargé sur index.html, oeuvres.html et contact.html, après
+ * Chargé sur index.html, oeuvres.html, apropos.html et contact.html, après
  * oeuvres-data.js et translations.js. Le DOM est injecté dynamiquement.
  * ────────────────────────────────────────────────────────────────
  */
@@ -90,7 +90,7 @@
           en: "A story to tell, a project in mind? Indirah is listening. Leave her a message and she'll reply as soon as she sets down her brushes."
         },
         options: [
-          { id: 'goto-contact', href: 'contact.html', label: LABELS.writeToHer },
+          { id: 'goto-contact', contactOpen: true, subject: 'Mory — Écrire à Indirah', label: LABELS.writeToHer },
           { id: 'menu',         label: LABELS.backToMenu }
         ]
       },
@@ -366,6 +366,7 @@
       if (!btn || !optionsEl.contains(btn)) return;
       var opt = currentOptions[parseInt(btn.dataset.optionIndex, 10)];
       if (!opt) return;
+      if (opt.contactOpen) return;
       if (opt.href) { window.location.href = opt.href; return; }
       navigate(opt.id, opt.label);
     });
@@ -555,6 +556,10 @@
       btn.dataset.optionIndex = String(index);
       btn.dataset.optionId = opt.id;
       if (opt.href) btn.dataset.href = opt.href;
+      if (opt.contactOpen) {
+        btn.dataset.contactOpen = '';
+        if (opt.subject) btn.dataset.contactSubject = opt.subject;
+      }
       btn.textContent = pick(opt.label);
       optionsEl.appendChild(btn);
     });
@@ -724,11 +729,16 @@
     function run() {
       EXPRESSIONS.forEach(prefetchExpression);
     }
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(run, { timeout: 5000 });
-    } else {
-      window.setTimeout(run, 3000);
-    }
+    /* Sur une page d'accueil peu interactive, requestIdleCallback peut partir
+       avant même la fin du chargement. On réserve d'abord la bande passante au
+       premier écran, puis on précharge les expressions pendant un temps idle. */
+    window.setTimeout(function () {
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(run, { timeout: 2000 });
+      } else {
+        run();
+      }
+    }, 3000);
   }
 
   /* ════════════════════════════════════════════════════════════════

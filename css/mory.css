@@ -1,7 +1,7 @@
 /* ════════════════════════════════════════════════════════════════
-   MORY — guide de musée interactif (chatbot scripté)
-   Chargé sur les 3 pages via <link>, après style.css.
-   Palette : teal profond du site, glassmorphism cohérent.
+   MORY — guide interactif du parcours (chatbot scripté)
+   Chargé sur les pages via <link>, après base.css et layout.css.
+   Palette : teal profond du site, surfaces sobres et opaques.
 ════════════════════════════════════════════════════════════════ */
 
 /* ── Conteneur fixe (coin inférieur droit) ─────────────────────── */
@@ -88,7 +88,7 @@
   height: 24px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(13, 58, 53, 0.9);
+  background: #0D3A35;
   color: #FBF6F0;
   display: flex;
   align-items: center;
@@ -123,7 +123,7 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 50%;
-  background: rgba(13, 58, 53, 0.9);
+  background: #0D3A35;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
   animation: none;
 }
@@ -148,16 +148,14 @@
   padding: 13px 34px 13px 15px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 14px;
-  background: rgba(13, 58, 53, 0.9);
+  background: #0D3A35;
   color: #FBF6F0;
   font-family: var(--font-body, 'EB Garamond', Georgia, serif);
   font-size: 14px;
   font-style: italic;
   line-height: 1.4;
   text-align: left;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22);
   cursor: pointer;
   opacity: 0;
   transform: scale(0.9) translateY(8px);
@@ -181,7 +179,7 @@
   height: 14px;
   border-right: 1px solid rgba(255, 255, 255, 0.15);
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(13, 58, 53, 0.9);
+  background: #0D3A35;
   transform: rotate(45deg);
 }
 .mory-greeting-text { margin: 0; }
@@ -210,7 +208,7 @@
 }
 
 /* ════════════════════════════════════════════════════════════════
-   PANNEAU DE CONVERSATION (style messagerie, glassmorphism)
+   PANNEAU DE CONVERSATION (style messagerie sobre)
 ════════════════════════════════════════════════════════════════ */
 .mory-panel {
   display: none;
@@ -221,10 +219,8 @@
   margin: 0 0 14px 0;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 18px;
-  background: rgba(13, 58, 53, 0.92);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+  background: #0D3A35;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   transform-origin: right bottom;
   pointer-events: auto;

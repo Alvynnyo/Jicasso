@@ -330,3 +330,42 @@
   .hamburger-btn { width: 40px; height: 40px; }
   .mobile-menu { top: 60px; right: 14px; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   RIDEAU DE TRANSITION — changement de langue (cosmétique)
+   Overlay teal plein écran, au-dessus de TOUT (nav, Mory, popup).
+   Piloté par js/nav.js (classe .is-visible). Repli instantané si
+   prefers-reduced-motion : le JS n'affiche alors pas le rideau.
+═══════════════════════════════════════════════════════════ */
+.lang-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000; /* au-dessus de tout (popup contact 3000, Mory 480…) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0D3A35;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.16s ease, visibility 0s linear 0.16s;
+}
+.lang-curtain.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto; /* absorbe les clics pendant l'affichage, jamais au-delà */
+  transition: opacity 0.16s ease;
+}
+.lang-curtain-mark {
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  color: var(--cream, #FBF6F0);
+  opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lang-curtain { transition: none; }
+}

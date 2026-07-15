@@ -28,13 +28,15 @@
   /* Libellés réutilisés (boutons récurrents) */
   var LABELS = {
     backToMenu:  { fr: 'Retour au menu',    en: 'Back to menu' },
-    anotherWork: { fr: 'Une autre œuvre',   en: 'Another work' },
+    chooseWork:  { fr: 'Choisir une œuvre', en: 'Pick a work' },
+    nextWork:    { fr: "L'œuvre suivante →", en: 'Next work →' },
     writeToHer:  { fr: 'Écrire à Indirah',  en: 'Write to Indirah' }
   };
 
   var MORY_CONVERSATION = {
 
-    /* Bulle d'accueil affichée une fois par session */
+    /* Bulle d'accueil affichée une fois par session (repli si la page ne
+       définit pas window.MORY_GREETING). */
     greeting: {
       fr: "Bonjour, je suis Mory. Guide de cette galerie, et accessoirement contrebassiste. Cliquez sur moi, je vous raconte tout.",
       en: "Hello, I'm Mory. Guide of this gallery, and bassist on the side. Click me, I'll tell you everything."
@@ -48,38 +50,28 @@
         en: "What would you like to know?"
       },
       options: [
-        { id: 'oeuvres', label: { fr: "Découvrir les œuvres", en: "Discover the works" } },
-        { id: 'artiste', label: { fr: "Qui est Indirah ?",    en: "Who is Indirah?" } },
-        { id: 'vision',  label: { fr: "Sa vision",            en: "Her vision" } },
-        { id: 'contact', label: { fr: "La contacter",         en: "Get in touch" } }
+        { id: 'work:work1', featured: true, label: { fr: "Suivez-moi",        en: "Follow me" } },
+        { id: 'oeuvres',                    label: { fr: "Choisir une œuvre",  en: "Pick a work" } },
+        { id: 'about',                      label: { fr: "Un mot sur Indirah", en: "A word about Indirah" } },
+        { id: 'contact',                    label: { fr: "La contacter",       en: "Get in touch" } }
       ]
     },
 
     /* Nœuds de réponse */
     nodes: {
-      artiste: {
+      /* « Un mot sur Indirah » — registre intime de Mory, COMPLÉMENTAIRE de la
+         page À propos (il ne la recopie pas). ⚠️ Décrit le VRAI processus de
+         travail de l'artiste → à faire relire en priorité par Indirah. */
+      about: {
         expression: 'mascotte-joue',
-        image: 'images/portrait-artiste.webp',
         message: {
-          fr: "Indirah est artiste peintre. Elle aime dire : « Peindre, c'est raconter ce que les mots ne savent pas dire. Chaque toile est une conversation entre ma main et mon silence. »",
-          en: "Indirah is a visual artist. She likes to say: “Painting is telling what words cannot say. Each canvas is a conversation between my hand and my silence.”"
+          fr: "La page « À propos » vous dit sa démarche. Moi, je vous dis autre chose : Indirah peint ce qu'elle n'arrive pas à dire tout haut. Ça commence dans le silence, souvent le soir, la main décide avant la tête. Quand une toile la met un peu mal à l'aise, c'est souvent qu'elle est juste.",
+          en: "The About page tells you her approach. I'll tell you something else: Indirah paints what she can't quite say out loud. It starts in silence, often at night — the hand decides before the head. When a canvas makes her a little uneasy, that's usually when it's right."
         },
         options: [
-          { id: 'vision', label: { fr: "Et sa vision ?", en: "And her vision?" } },
-          { id: 'menu',   label: LABELS.backToMenu }
-        ]
-      },
-
-      vision: {
-        expression: 'mascotte-montre',
-        image: 'images/mains-pinceau.webp',
-        message: {
-          fr: "Sa vision ? « Je peins des figures, des émotions, des histoires qui me traversent. Mon travail est un pont entre ce qu'on voit et ce qu'on ressent. »",
-          en: "Her vision? “I paint figures, emotions, stories that move through me. My work is a bridge between what we see and what we feel.”"
-        },
-        options: [
-          { id: 'oeuvres', label: { fr: "Voir les œuvres", en: "See the works" } },
-          { id: 'menu',    label: LABELS.backToMenu }
+          { id: 'goto-apropos', href: 'apropos.html', label: { fr: "Lire sa démarche", en: "Read her approach" } },
+          { id: 'goto-oeuvres', href: 'oeuvres.html', label: { fr: "Voir les œuvres",  en: "See the works" } },
+          { id: 'menu',                                label: LABELS.backToMenu }
         ]
       },
 
@@ -95,8 +87,8 @@
         ]
       },
 
-      /* Le nœud « oeuvres » construit ses boutons dynamiquement à partir
-         de oeuvres-data.js (voir buildOeuvresNode / buildWorkNode plus bas). */
+      /* Le nœud « oeuvres » (Choisir une œuvre) construit ses boutons
+         dynamiquement à partir de oeuvres-data.js (voir buildOeuvresNode). */
       oeuvres: {
         expression: 'mascotte-montre',
         message: {
@@ -105,6 +97,47 @@
         }
       }
     }
+  };
+
+  /* ── Récits par œuvre, dans la VOIX de Mory (parcours guidé « Suivez-moi »).
+     ⚠️ Contenu éditorial à valider par l'artiste. `next` chaîne le parcours ;
+     la dernière œuvre (next: null) mène au nœud « payoff » une fois les 3 vues. */
+  var MORY_WORKS = {
+    work1: {
+      message: {
+        fr: "On commence par elle. Le visage se dérobe sous les pivoines — et pourtant elle est là, entière. Indirah cache le regard pour qu'on cherche le reste : la nuque, la peau, ce jardin qu'on porte en dedans. La fleur ne vous rendra pas les yeux, mais elle vous rendra la présence.",
+        en: "We begin with her. The face slips beneath the peonies — yet she is wholly there. Indirah hides the gaze so we look for the rest: the neck, the skin, the garden one carries within. The flower won't give you back her eyes, but it will give you her presence."
+      },
+      transition: {
+        fr: "La suivante, elle… c'est un peu moi.",
+        en: "The next one… is a little bit me."
+      },
+      next: 'work2'
+    },
+    work2: {
+      message: {
+        fr: "Ah, celle-ci… c'est de là que je viens. Le contrebassiste, au cœur de l'orange et du vert. Indirah n'a pas peint un musicien : elle a peint le son. Les couleurs vibrent avant la mélodie — écoutez d'abord, vous comprendrez après.",
+        en: "Ah, this one… this is where I come from. The double bassist, at the heart of orange and green. Indirah didn't paint a musician — she painted the sound. The colors vibrate before the melody: listen first, you'll understand after."
+      },
+      transition: {
+        fr: "La dernière, elle, ne murmure pas. Elle crie.",
+        en: "The last one doesn't murmur. It shouts."
+      },
+      next: 'work3'
+    },
+    work3: {
+      message: {
+        fr: "Et on finit fort. Une figure jaillit d'un monde de manchettes et de silences imprimés. Bouche ouverte, chevelure immense : une voix qui refuse la marge. Le papier devient matière, la figure prend toute la place. Laissez-la vous atteindre.",
+        en: "And we end loud. A figure erupts from a world of headlines and printed silences. Open mouth, monumental hair: a voice that refuses the margins. Paper becomes matter, the figure takes all the space. Let it reach you."
+      },
+      next: null
+    }
+  };
+
+  /* Payoff — n'apparaît qu'après avoir vu les 3 œuvres (voir buildWorkNode). */
+  var MORY_PAYOFF = {
+    fr: "Voilà mes trois : un visage qu'on devine, un son qu'on écoute, une voix qu'on entend. Trois façons d'être présent sans tout dire. Si l'une vous a parlé, dites-le à Indirah.",
+    en: "There are my three: a face you sense, a sound you hear, a voice you can't ignore. Three ways of being present without telling all. If one spoke to you, tell Indirah."
   };
 
   /* ════════════════════════════════════════════════════════════════
@@ -138,6 +171,7 @@
   var greetTimer  = null;
   var hasEntered  = false;
   var sayText     = null; /* texte transitoire en cours (API publique Mory.say) */
+  var viewedWorks = {};   /* œuvres vues dans la conversation courante (payoff) */
 
   /* ════════════════════════════════════════════════════════════════
      3. HELPERS
@@ -204,19 +238,53 @@
     };
   }
 
+  function allWorksViewed() {
+    var all = getAllWorks();
+    return all.length > 0 && all.every(function (w) { return viewedWorks[w.id]; });
+  }
+
   function buildWorkNode(workId) {
     var w = findWork(workId);
     if (!w) return null;
+    var mw = MORY_WORKS[workId] || {};
+
+    /* Trace des œuvres vues dans la conversation courante (pour le payoff). */
+    viewedWorks[workId] = true;
+
+    /* Récit + transition (voix de Mory) réunis dans une seule bulle. */
+    var message = {
+      fr: (mw.message ? mw.message.fr : '') + (mw.transition ? '\n\n' + mw.transition.fr : ''),
+      en: (mw.message ? mw.message.en : '') + (mw.transition ? '\n\n' + mw.transition.en : '')
+    };
+
+    var options = [];
+    if (mw.next) {
+      /* Enchaînement guidé vers l'œuvre suivante. */
+      options.push({ id: 'work:' + mw.next, featured: true, label: LABELS.nextWork });
+    } else if (allWorksViewed()) {
+      /* Dernière œuvre ET les 3 vues → payoff (jamais incohérent). */
+      options.push({ id: 'payoff', featured: true, label: { fr: 'Continuer', en: 'Continue' } });
+    }
+    options.push({ id: 'oeuvres', label: LABELS.chooseWork });
+    options.push({ id: 'menu',    label: LABELS.backToMenu });
+
     return {
       expression: 'mascotte-montre',
       image: w.src,
       title: tr(w.titleKey),
       subtitle: tr(w.techniqueKey),
-      message: (w.description && w.description.fr)
-        ? w.description
-        : { fr: "Description à venir pour cette œuvre.", en: "Description coming soon for this work." },
+      message: message,
+      options: options
+    };
+  }
+
+  function buildPayoffNode() {
+    return {
+      expression: 'mascotte-ecoute',
+      message: MORY_PAYOFF,
       options: [
-        { id: 'oeuvres', label: LABELS.anotherWork },
+        { id: 'goto-contact', contactOpen: true, subject: 'Mory — Écrire à Indirah', featured: true, label: LABELS.writeToHer },
+        { id: 'oeuvres', label: LABELS.chooseWork },
         { id: 'menu',    label: LABELS.backToMenu }
       ]
     };
@@ -225,6 +293,7 @@
   function getNode(nodeId) {
     if (nodeId === 'menu') return MORY_CONVERSATION.menu;
     if (nodeId === 'oeuvres') return buildOeuvresNode();
+    if (nodeId === 'payoff') return buildPayoffNode();
     if (nodeId.indexOf('work:') === 0) return buildWorkNode(nodeId.slice(5));
     return MORY_CONVERSATION.nodes[nodeId] || null;
   }
@@ -552,7 +621,7 @@
     (options || []).forEach(function (opt, index) {
       var btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'mory-opt';
+      btn.className = 'mory-opt' + (opt.featured ? ' mory-opt--featured' : '');
       btn.dataset.optionIndex = String(index);
       btn.dataset.optionId = opt.id;
       if (opt.href) btn.dataset.href = opt.href;
@@ -593,6 +662,7 @@
     /* Nouvelle conversation à chaque ouverture : on repart du menu. */
     thread = [];
     currentOptions = [];
+    viewedWorks = {};
     messagesEl.innerHTML = '';
     optionsEl.innerHTML = '';
     navigate('menu', null);

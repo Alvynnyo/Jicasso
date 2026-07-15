@@ -337,6 +337,7 @@
   font-size: 14px;
   line-height: 1.5;
   color: #FBF6F0;
+  white-space: pre-line; /* conserve le saut de ligne récit → transition */
 }
 
 .mory-chat-img {
@@ -420,6 +421,19 @@
 .mory-opt:focus-visible {
   outline: 2px solid rgba(251, 246, 240, 0.8);
   outline-offset: 2px;
+}
+
+/* Action principale mise en avant (Suivez-moi, L'œuvre suivante, Continuer,
+   Écrire à Indirah sur le payoff) — pilule pleine, contrastée. */
+.mory-opt--featured {
+  background: #FBF6F0;
+  border-color: #FBF6F0;
+  color: #0D3A35;
+  font-weight: 500;
+}
+.mory-opt--featured:hover {
+  background: #fff;
+  border-color: #fff;
 }
 
 /* ════════════════════════════════════════════════════════════════

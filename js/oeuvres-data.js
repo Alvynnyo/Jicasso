@@ -8,6 +8,7 @@ var oeuvresData = {
       {
         id: 'work1',
         src: 'images/serie-1/maria.webp',
+        srcLightbox: 'images/serie-1/maria-mur.webp',
         srcSpotlight: 'images/serie-1/maria-spotlight.webp',
         titleKey: 'work1_title',
         techniqueKey: 'work1_technique',
@@ -26,6 +27,7 @@ var oeuvresData = {
       {
         id: 'work2',
         src: 'images/serie-1/mory.webp',
+        srcLightbox: 'images/serie-1/mory-mur.webp',
         srcSpotlight: 'images/serie-1/mory-spotlight.webp',
         titleKey: 'work2_title',
         techniqueKey: 'work2_technique',
@@ -44,6 +46,7 @@ var oeuvresData = {
       {
         id: 'work3',
         src: 'images/serie-1/stepout.webp',
+        srcLightbox: 'images/serie-1/stepout-mur.webp',
         srcSpotlight: 'images/serie-1/stepout-spotlight.webp',
         titleKey: 'work3_title',
         techniqueKey: 'work3_technique',

@@ -1,0 +1,29 @@
+# Documents administratifs prives
+administratif/
+
+# Fichiers systeme
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editeurs / IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Dependances et builds locaux eventuels
+node_modules/
+dist/
+build/
+
+# Fichiers temporaires et caches locaux
+*.tmp
+*.temp
+*.log
+.cache/
+.tmp-*/
+
+# Variables/configuration locales
+.env
+.env.*
+!.env.example

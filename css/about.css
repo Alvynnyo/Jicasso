@@ -73,6 +73,9 @@
   background: #0b312c;            /* repli sobre avant chargement de la miniature */
   cursor: pointer;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+  line-height: 0;
+  appearance: none;
+  -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -87,20 +90,25 @@
 
 .about-video-play {
   position: absolute;
-  inset: 0;
-  margin: auto;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
   width: 74px;
   height: 74px;
   display: grid;
+  flex: 0 0 auto;
   place-items: center;
   border-radius: 50%;
   background: var(--cream, #FBF6F0);
   color: #0D3A35;                /* triangle teal */
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  transform: translate(-50%, -50%);
   transition: transform 0.25s ease;
   pointer-events: none;         /* le <button> parent capte le clic */
 }
 .about-video-play svg {
+  display: block;
+  flex: 0 0 auto;
   width: 26px;
   height: 26px;
   margin-left: 4px;             /* centrage optique du triangle */
@@ -123,20 +131,24 @@
   font-style: italic;
   line-height: 1.2;
   text-align: center;
+  white-space: normal;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transform: translate(-50%, 8px);
-  transition: opacity 0.24s ease, transform 0.24s ease;
+  transition: opacity 0.24s ease, transform 0.24s ease, visibility 0s linear 0.24s;
 }
 
 .about-video.is-message-visible .about-video-message {
   opacity: 1;
+  visibility: visible;
   transform: translate(-50%, 0);
+  transition-delay: 0s;
 }
 
 @media (hover: hover) {
   .about-video:hover .about-video-poster { transform: scale(1.03); }
-  .about-video:hover .about-video-play  { transform: scale(1.08); }
+  .about-video:hover .about-video-play  { transform: translate(-50%, -50%) scale(1.08); }
 }
 .about-video:focus-visible {
   outline: 2px solid var(--cream, #FBF6F0);

@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="images/portrait-artiste.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="images/video-apropos-poster.webp" fetchpriority="high">
   <link rel="stylesheet" href="css/base.css?v=20260714">
   <link rel="stylesheet" href="css/layout.css?v=20260715-2">
   <link rel="stylesheet" href="css/about.css?v=20260715-2">
@@ -35,7 +35,14 @@
   <main>
     <section class="about-hero">
       <div class="about-copy"><p class="about-eyebrow" data-i18n="apropos_eyebrow">L'artiste</p><h1 data-i18n="apropos_title">Peindre ce que les mots taisent.</h1><p class="about-lead" data-i18n="apropos_intro">Indirah est artiste peintre. Elle construit, toile après toile, un langage fait de figures, d'émotions et d'histoires.</p></div>
-      <figure class="about-image about-image--portrait"><img src="images/portrait-artiste.webp" alt="Portrait d'Indirah" loading="eager" fetchpriority="high"></figure>
+      <!-- TODO: remplacer data-yt-id par l'ID YouTube réel une fois la vidéo publiée -->
+      <button type="button" class="about-video" data-yt-id="TODO-youtube-id" aria-label="Lire la vidéo de présentation d'Indirah">
+        <img class="about-video-poster" src="images/video-apropos-poster.webp" alt="Indirah — vidéo de présentation" loading="eager" fetchpriority="high" decoding="async">
+        <span class="about-video-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </span>
+        <span class="about-video-message" data-i18n="video_coming_soon" aria-live="polite">Quelque chose de grand arrive.</span>
+      </button>
     </section>
     <section class="about-quote"><blockquote data-i18n="apropos_quote">Peindre, c'est raconter ce que les mots ne savent pas dire.</blockquote></section>
     <section class="about-section about-section--reverse">
@@ -60,6 +67,7 @@
   <script>window.MORY_GREETING_KEY='mory_greeted_about';window.MORY_GREETING={fr:"Je vous laisse découvrir Indirah à votre rythme. Si un point vous intrigue, je peux l'approfondir avec vous.",en:"Take your time discovering Indirah. If something catches your attention, I can explore it with you."};</script>
   <script defer src="js/nav.js?v=20260714"></script>
   <script defer src="js/contact-popup.js?v=20260715"></script>
+  <script defer src="js/video-facade.js?v=20260716"></script>
   <script defer src="js/mory.js?v=20260714"></script>
 </body>
 </html>

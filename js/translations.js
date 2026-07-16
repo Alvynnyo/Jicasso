@@ -55,6 +55,7 @@ const translations = {
     apropos_personal_title: "Des histoires à ressentir",
     apropos_personal_p1: "Ses figures ne livrent pas tout. Elles invitent le regard à s'approcher, à s'arrêter et à inventer sa propre lecture.",
     apropos_cta: "Découvrir les oeuvres",
+    video_coming_soon: "Quelque chose de grand arrive.",
 
     // Série I — figures
     serie1_title:   "Série I",
@@ -178,6 +179,7 @@ const translations = {
     apropos_personal_title: "Stories to be felt",
     apropos_personal_p1: "Her figures never reveal everything. They invite the eye to come closer, pause and imagine its own reading.",
     apropos_cta: "Discover the works",
+    video_coming_soon: "Something great is coming.",
 
     // Series I — figures
     serie1_title:   "Series I",

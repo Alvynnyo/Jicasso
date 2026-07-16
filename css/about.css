@@ -57,6 +57,106 @@
 
 .about-image--portrait img { object-position: center 25%; }
 
+/* ═══════════════════════════════════════════════════════════
+   FAÇADE VIDÉO (lite embed YouTube) — hero À propos
+   16:9, lecture au clic ; aucun effet de verre/flou.
+═══════════════════════════════════════════════════════════ */
+.about-video {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0b312c;            /* repli sobre avant chargement de la miniature */
+  cursor: pointer;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.about-video-poster {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(.82);         /* cohérent avec .about-image */
+  transition: transform 0.5s ease;
+}
+
+.about-video-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--cream, #FBF6F0);
+  color: #0D3A35;                /* triangle teal */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  transition: transform 0.25s ease;
+  pointer-events: none;         /* le <button> parent capte le clic */
+}
+.about-video-play svg {
+  width: 26px;
+  height: 26px;
+  margin-left: 4px;             /* centrage optique du triangle */
+  fill: currentColor;
+}
+
+.about-video-message {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(22px, 5vw, 38px);
+  z-index: 2;
+  max-width: min(78%, 420px);
+  padding: 11px 18px;
+  border: 1px solid rgba(251, 246, 240, 0.42);
+  border-radius: 999px;
+  background: #0D3A35;
+  color: var(--cream, #FBF6F0);
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1rem, 2.4vw, 1.32rem);
+  font-style: italic;
+  line-height: 1.2;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 8px);
+  transition: opacity 0.24s ease, transform 0.24s ease;
+}
+
+.about-video.is-message-visible .about-video-message {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (hover: hover) {
+  .about-video:hover .about-video-poster { transform: scale(1.03); }
+  .about-video:hover .about-video-play  { transform: scale(1.08); }
+}
+.about-video:focus-visible {
+  outline: 2px solid var(--cream, #FBF6F0);
+  outline-offset: 3px;
+}
+/* Placeholder non renseigné : curseur par défaut (clic inactif géré en JS). */
+.about-video[data-yt-id="TODO-youtube-id"] { cursor: pointer; }
+
+/* Iframe injectée au clic — même cadre/coins/ratio que la façade. */
+.about-video-frame {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
+}
+
 .about-quote {
   display: grid;
   place-items: center;

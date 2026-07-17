@@ -18,6 +18,7 @@
   var nameInput;
   var emailInput;
   var messageInput;
+  var phoneInput;
   var activeTrigger;
   var isOpen = false;
   var focusTimer;
@@ -52,6 +53,7 @@
             '<input type="hidden" id="contact-popup-subject" name="subject">' +
             fieldMarkup('name', 'text', 'contact_q1', 'contact_ph1', 'name') +
             fieldMarkup('email', 'email', 'contact_q2', 'contact_ph2', 'email') +
+            fieldMarkup('phone', 'tel', 'contact_q4', 'contact_ph4', 'tel') +
             '<div class="contact-popup-field">' +
               '<label for="contact-popup-message" data-i18n="contact_q3"></label>' +
               '<textarea id="contact-popup-message" name="message" rows="3" data-i18n-placeholder="contact_ph3" aria-describedby="contact-popup-error-message"></textarea>' +
@@ -83,6 +85,7 @@
     nameInput = root.querySelector('#contact-popup-name');
     emailInput = root.querySelector('#contact-popup-email');
     messageInput = root.querySelector('#contact-popup-message');
+    phoneInput = root.querySelector('#contact-popup-phone');
 
     closeButton.addEventListener('click', close);
     root.addEventListener('click', function (event) {
@@ -103,7 +106,7 @@
     return '<div class="contact-popup-field">' +
       '<label for="contact-popup-' + id + '" data-i18n="' + labelKey + '"></label>' +
       '<input id="contact-popup-' + id + '" name="' + id + '" type="' + type + '" autocomplete="' + autocomplete + '"' +
-        (id === 'email' ? ' inputmode="email"' : '') + ' data-i18n-placeholder="' + placeholderKey + '" aria-describedby="contact-popup-error-' + id + '">' +
+        (id === 'email' ? ' inputmode="email"' : id === 'phone' ? ' inputmode="tel"' : '') + ' data-i18n-placeholder="' + placeholderKey + '" aria-describedby="contact-popup-error-' + id + '">' +
       '<p class="contact-popup-error" id="contact-popup-error-' + id + '" aria-live="polite"></p>' +
     '</div>';
   }
@@ -137,7 +140,7 @@
   }
 
   function clearErrors() {
-    [nameInput, emailInput, messageInput].forEach(function (input) {
+    [nameInput, emailInput, phoneInput, messageInput].forEach(function (input) {
       input.removeAttribute('aria-invalid');
       var error = document.getElementById(input.getAttribute('aria-describedby'));
       error.textContent = '';
@@ -232,6 +235,14 @@
       setError(messageInput, 'contact_err_min');
       invalid.push(messageInput);
     }
+    /* Téléphone FACULTATIF : validé seulement s'il est renseigné, et de
+       façon souple (rejette surtout les valeurs manifestement invalides —
+       lettres, ou moins de 6 chiffres — sans bloquer les formats internationaux). */
+    var phone = phoneInput.value.trim();
+    if (phone && (/[a-zA-Z]/.test(phone) || phone.replace(/\D/g, '').length < 6)) {
+      setError(phoneInput, 'contact_err_phone');
+      invalid.push(phoneInput);
+    }
     if (invalid.length) invalid[0].focus();
     return invalid.length === 0;
   }
@@ -246,16 +257,20 @@
     event.preventDefault();
     if (!validate()) return;
     setSending(true);
+    var payload = {
+      access_key: WEB3FORMS_KEY,
+      name: nameInput.value.trim(),
+      email: emailInput.value.trim(),
+      message: messageInput.value.trim(),
+      subject: subjectInput.value || DEFAULT_SUBJECT
+    };
+    /* Téléphone ajouté uniquement s'il est renseigné (pas de champ vide dans le mail). */
+    var phone = phoneInput.value.trim();
+    if (phone) payload.phone = phone;
     fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        access_key: WEB3FORMS_KEY,
-        name: nameInput.value.trim(),
-        email: emailInput.value.trim(),
-        message: messageInput.value.trim(),
-        subject: subjectInput.value || DEFAULT_SUBJECT
-      })
+      body: JSON.stringify(payload)
     })
       .then(function (response) { return response.json(); })
       .then(function (data) {

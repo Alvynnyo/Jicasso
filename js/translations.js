@@ -54,7 +54,7 @@ const translations = {
     apropos_personal_eyebrow: "Une présence",
     apropos_personal_title: "Des histoires à ressentir",
     apropos_personal_p1: "Ses figures ne livrent pas tout. Elles invitent le regard à s'approcher, à s'arrêter et à inventer sa propre lecture.",
-    apropos_cta: "Découvrir les oeuvres",
+    apropos_cta: "Découvrir les œuvres",
     video_coming_soon: "Quelque chose de grand arrive.",
 
     // Série I — figures
@@ -89,6 +89,8 @@ const translations = {
     // Placeholders
     contact_ph1: "Votre nom",
     contact_ph2: "votre@email.com",
+    contact_q4:  "Un numéro pour vous joindre plus vite ? (facultatif)",
+    contact_ph4: "(555) 123-4567",
     contact_ph3: "Décrivez votre projet…",
 
     // Boutons
@@ -111,10 +113,11 @@ const translations = {
 
     // Validation
     contact_err_empty: "Ce champ est requis.",
+    contact_err_phone: "Ce numéro semble incomplet ou invalide.",
     contact_err_email: "L’adresse e-mail n’est pas valide.",
     contact_err_min:   "Votre message doit contenir au moins 10 caractères.",
 
-    // Oeuvres individuelles — titre et technique
+    // Œuvres individuelles — titre et technique
     // Série I
     work1_title:     "Sous les pivoines",
     work1_technique: "Huile sur toile",
@@ -213,6 +216,8 @@ const translations = {
     // Placeholders
     contact_ph1: "Your name",
     contact_ph2: "your@email.com",
+    contact_q4:  "A number to reach you faster? (optional)",
+    contact_ph4: "(555) 123-4567",
     contact_ph3: "Tell me about your project…",
 
     // Buttons
@@ -235,6 +240,7 @@ const translations = {
 
     // Validation
     contact_err_empty: "This field is required.",
+    contact_err_phone: "This phone number looks incomplete or invalid.",
     contact_err_email: "Please enter a valid email address.",
     contact_err_min:   "Your message must be at least 10 characters long.",
 

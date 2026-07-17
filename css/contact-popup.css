@@ -262,11 +262,11 @@ body.contact-popup-open {
   }
 
   .contact-popup-head {
-    margin-bottom: 22px;
+    margin-bottom: 18px;
   }
 
   .contact-popup-form {
-    gap: 16px;
+    gap: 13px;
   }
 
   .contact-popup-field textarea {

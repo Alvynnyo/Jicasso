@@ -8,16 +8,16 @@ Une migration React/Next.js a ete etudiee pour de futurs composants 3D et une ar
 
 ```text
 .
-|-- index.html          # Accueil : hero abstrait, apercu d'oeuvres, amorce artiste, cloture
-|-- oeuvres.html        # Oeuvres : series, grilles, feed mobile, lightbox et parcours immersif
+|-- index.html          # Accueil : hero abstrait, apercu d'œuvres, amorce artiste, cloture
+|-- oeuvres.html        # Œuvres : series, grilles, feed mobile, lightbox et parcours immersif
 |-- apropos.html        # Page epuree de presentation et demarche de l'artiste
 |-- contact.html        # Page mince avec bouton d'ouverture du popup de contact partage
 |-- css/
 |   |-- base.css        # Variables, reset, base typographique
 |   |-- layout.css      # Header, navigation epuree, footer, menu mobile
 |   |-- home.css        # Accueil et sections de la page
-|   |-- works.css       # Page Oeuvres, grilles, feed mobile, lightbox
-|   |-- gallery.css     # Parcours immersif integre a Oeuvres
+|   |-- works.css       # Page Œuvres, grilles, feed mobile, lightbox
+|   |-- gallery.css     # Parcours immersif integre a Œuvres
 |   |-- about.css       # Page A propos
 |   |-- contact.css     # Page Contact mince
 |   |-- contact-popup.css # Popup de contact partage
@@ -25,8 +25,8 @@ Une migration React/Next.js a ete etudiee pour de futurs composants 3D et une ar
 |-- js/
 |   |-- translations.js # Textes FR/EN et application data-i18n
 |   |-- nav.js          # Navigation, menu mobile, switch langue
-|   |-- oeuvres-data.js # Source de verite des oeuvres et images
-|   |-- main.js         # Oeuvres : grilles, feed mobile, lightbox
+|   |-- oeuvres-data.js # Source de verite des œuvres et images
+|   |-- main.js         # Œuvres : grilles, feed mobile, lightbox
 |   |-- gallery.js      # Parcours immersif : salles, activation, commentaires Mory
 |   |-- contact-popup.js # Popup partage, validation et Web3Forms
 |   `-- mory.js         # Assistant/guide anime
@@ -34,12 +34,12 @@ Une migration React/Next.js a ete etudiee pour de futurs composants 3D et une ar
 |   |-- hero-accueil-texture.webp
 |   |-- hero-parcours-journal.webp
 |   |-- hero-apropos-pinboard.webp # asset conserve, non charge par la page A propos actuelle
-|   |-- hero-mory-galerie.webp     # visuel social/partage pour Oeuvres et Contact
+|   |-- hero-mory-galerie.webp     # visuel social/partage pour Œuvres et Contact
 |   |-- logo-indirah.webp          # asset conserve, non reference par le logo actuel
 |   |-- mains-pinceau.webp
 |   |-- portrait-artiste.webp
 |   |-- mascotte/       # Expressions de Mory
-|   |-- serie-1/        # Oeuvres et versions spotlight
+|   |-- serie-1/        # Œuvres et versions spotlight
 |   `-- serie-2/        # Placeholder vide.webp
 |-- originals/images/   # Sources non compressees conservees hors assets servis
 |-- robots.txt
@@ -52,18 +52,18 @@ Une migration React/Next.js a ete etudiee pour de futurs composants 3D et une ar
 
 ## Pages Actives
 
-- `index.html` : Accueil en plusieurs sections. Le hero utilise `images/hero-accueil-texture.webp`, puis la page enchaine apercu des oeuvres, amorce artiste, rappel social, cloture et footer.
+- `index.html` : Accueil en plusieurs sections. Le hero utilise `images/hero-accueil-texture.webp`, puis la page enchaine apercu des œuvres, amorce artiste, rappel social, cloture et footer.
 - `oeuvres.html` : Acces direct aux series, grille desktop, feed mobile, lightbox et parcours immersif integre.
 - `apropos.html` : Presentation bilingue epuree de l'artiste et de sa demarche, sur fond teal uni.
 - `contact.html` : Page mince avec invitation et bouton d'ouverture du popup partage.
 
-Le menu actif est : `Accueil / Oeuvres / A propos / Contact`.
+Le menu actif est : `Accueil / Œuvres / A propos / Contact`.
 
 ## Fonctionnalites Cles
 
 - **Bilingue FR/EN** : les textes utilisent `data-i18n`, `data-i18n-placeholder`, `data-i18n-alt-*` et `data-i18n-content`. `js/translations.js` applique la langue et persiste le choix dans `localStorage` avec la cle `indirah-lang`.
 - **Mory** : assistant de conversation scripte dans `js/mory.js`. Les expressions sont dans `images/mascotte/`. Mory peut ouvrir le popup de contact partage depuis son option `Ecrire a Indirah`.
-- **Oeuvres** : `js/oeuvres-data.js` est la source de verite des series, titres, techniques, recits, disponibilites et chemins d'images. `js/main.js` genere les grilles desktop et le feed mobile, puis pilote la lightbox.
+- **Œuvres** : `js/oeuvres-data.js` est la source de verite des series, titres, techniques, recits, disponibilites et chemins d'images. `js/main.js` genere les grilles desktop et le feed mobile, puis pilote la lightbox.
 - **Parcours immersif** : `js/gallery.js` genere les salles depuis `oeuvres-data.js` dans `oeuvres.html`. Les animations utilisent GSAP + ScrollTrigger depuis CDN, avec repli IntersectionObserver et chargement progressif des images.
 - **Contact partage** : `js/contact-popup.js` et `css/contact-popup.css` construisent un popup unique, ouvrable depuis les navigations, le menu mobile, l'Accueil, la page Contact, le parcours immersif et Mory. Le popup gere validation locale, etats de succes/erreur, focus, fermeture clavier et envoi Web3Forms.
 
@@ -73,7 +73,7 @@ Les assets publics suivent une convention descriptive en kebab-case, par categor
 
 Les originaux lourds et non compresses sont conserves dans `originals/images/`. Utiliser ces fichiers si une nouvelle compression, une taille differente ou un format alternatif devient necessaire.
 
-`images/serie-2/vide.webp` est un placeholder volontaire pour les oeuvres a venir. Il doit etre remplace progressivement par de vraies oeuvres dans `js/oeuvres-data.js`.
+`images/serie-2/vide.webp` est un placeholder volontaire pour les œuvres a venir. Il doit etre remplace progressivement par de vraies œuvres dans `js/oeuvres-data.js`.
 
 ## SEO Et Hosting
 
@@ -124,7 +124,7 @@ L'ouverture directe des fichiers HTML peut fonctionner pour des verifications si
 
 - Supprimer `_redirects` et `.htaccess` si Vercel devient l'unique plateforme de deploiement.
 - Revoir `vercel.json`, les canonical, le sitemap et les liens internes au moment d'une vraie bascule vers URLs propres.
-- Remplacer progressivement `images/serie-2/vide.webp` par de vraies oeuvres.
+- Remplacer progressivement `images/serie-2/vide.webp` par de vraies œuvres.
 - Completer les annees et dimensions dans `js/oeuvres-data.js`.
-- Continuer a utiliser `js/oeuvres-data.js` comme source unique pour ajouter ou renommer les oeuvres.
+- Continuer a utiliser `js/oeuvres-data.js` comme source unique pour ajouter ou renommer les œuvres.
 - Revalider les performances si de nouvelles images lourdes ou de nouvelles animations sont ajoutees.

@@ -7,14 +7,14 @@ const translations = {
   fr: {
     // Navigation
     nav_accueil:    "Accueil",
-    nav_oeuvres:    "Oeuvres",
+    nav_oeuvres:    "Œuvres",
     nav_apropos:    "A propos",
     nav_contact:    "Contact",
 
     // SEO
     meta_home_title:       "Indirah - Artiste Peintre",
     meta_home_desc:        "Indirah, artiste peintre : figures, émotions et œuvres à découvrir.",
-    meta_oeuvres_title:    "Oeuvres - Indirah",
+    meta_oeuvres_title:    "Œuvres - Indirah",
     meta_oeuvres_desc:     "Explorez les series de peintures d'Indirah, avec une galerie visuelle et une lightbox immersive.",
     meta_contact_title:    "Contact - Indirah",
     meta_contact_desc:     "Contactez Indirah pour un projet artistique, une question ou une collaboration.",

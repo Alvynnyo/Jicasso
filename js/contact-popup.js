@@ -66,7 +66,7 @@
           '<h2 data-i18n="contact_success_title"></h2><p data-i18n="contact_success_text"></p>' +
         '</section>' +
         '<section class="contact-popup-state contact-popup-failure" role="alert" aria-live="assertive" hidden>' +
-          '<h2 data-i18n="contact_error_title"></h2><p><span data-i18n="contact_error_text"></span> <a href="mailto:contact@indirah.fr">contact@indirah.fr</a>.</p>' +
+          '<h2 data-i18n="contact_error_title"></h2><p data-i18n="contact_error_text"></p>' +
           '<button class="contact-popup-retry" type="button" data-i18n="contact_retry"></button>' +
         '</section>' +
       '</div>';

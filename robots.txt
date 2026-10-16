@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://indirah.fr/sitemap.xml
+Sitemap: https://alvynnyo.github.io/Jicasso/sitemap.xml

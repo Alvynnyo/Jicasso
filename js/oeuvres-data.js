@@ -8,6 +8,9 @@ var oeuvresData = {
       {
         id: 'work1',
         src: 'images/serie-1/maria.webp',
+        srcThumb: 'images/serie-1/maria-thumb.webp',
+        thumbWidth: 675,
+        thumbHeight: 900,
         srcLightbox: 'images/serie-1/maria-mur.webp',
         srcSpotlight: 'images/serie-1/maria-spotlight.webp',
         widthCm: 50,
@@ -29,6 +32,9 @@ var oeuvresData = {
       {
         id: 'work2',
         src: 'images/serie-1/mory.webp',
+        srcThumb: 'images/serie-1/mory-thumb.webp',
+        thumbWidth: 900,
+        thumbHeight: 456,
         srcLightbox: 'images/serie-1/mory-mur.webp',
         srcSpotlight: 'images/serie-1/mory-spotlight.webp',
         widthCm: 122,
@@ -50,6 +56,9 @@ var oeuvresData = {
       {
         id: 'work3',
         src: 'images/serie-1/stepout.webp',
+        srcThumb: 'images/serie-1/stepout-thumb.webp',
+        thumbWidth: 673,
+        thumbHeight: 900,
         srcLightbox: 'images/serie-1/stepout-mur.webp',
         srcSpotlight: 'images/serie-1/stepout-spotlight.webp',
         widthCm: 60,

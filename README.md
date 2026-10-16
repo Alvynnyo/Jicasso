@@ -45,9 +45,9 @@ Une migration React/Next.js a ete etudiee pour de futurs composants 3D et une ar
 |-- robots.txt
 |-- sitemap.xml
 |-- manifest.json
-|-- vercel.json
-|-- _redirects          # Legacy Netlify
-`-- .htaccess           # Legacy Apache
+|-- atelier.html        # Page-relais de l'ancienne route Atelier (vers oeuvres.html)
+|-- musee.html          # Page-relais de l'ancienne route Musee (vers oeuvres.html#parcours-immersif)
+`-- .github/workflows/pages.yml  # Build et deploiement GitHub Pages
 ```
 
 ## Pages Actives
@@ -88,15 +88,17 @@ Le site contient les fichiers et balises SEO de base :
 - canonical par page
 - `theme-color`
 
-Les URLs SEO utilisent actuellement `https://indirah.fr/...`. Verifier et remplacer ce domaine partout si le domaine final change : pages HTML, `robots.txt`, `sitemap.xml`, `manifest.json` si besoin.
+Les URLs SEO utilisent l'URL publique actuelle `https://alvynnyo.github.io/Jicasso/...`. Si le domaine change, la remplacer partout : pages HTML, `robots.txt`, `sitemap.xml`, `manifest.json` si besoin.
 
 Etat hosting actuel :
 
-- Le site est encore pense comme un site statique simple, compatible GitHub Pages.
-- `vercel.json` est present pour une migration future vers Vercel.
-- `cleanUrls` est volontairement a `false` tant que les URLs `.html` restent la reference stable.
-- `vercel.json` contient les redirects/rewrite necessaires pour les anciennes routes publiques et les routes courtes.
-- `_redirects` et `.htaccess` sont encore presents comme fichiers legacy Netlify/Apache. Les supprimer avant un deploiement final Vercel si Vercel devient l'unique cible.
+- Le deploiement cible GitHub Pages : `https://alvynnyo.github.io/Jicasso/`.
+- `.github/workflows/pages.yml` construit un dossier `_site` a partir d'une liste publique explicite, puis le deploie uniquement depuis `main`. Sur une Pull Request, l'artefact est construit et valide sans deploiement.
+- Liste publique : `index.html`, `oeuvres.html`, `apropos.html`, `contact.html`, `atelier.html`, `musee.html`, `robots.txt`, `sitemap.xml`, `manifest.json`, `favicon.svg`, `favicon-32x32.png`, `apple-touch-icon.png`, et les dossiers `css/`, `js/`, `images/`.
+- `originals/`, `docs/`, ce README et les fichiers techniques (`.github/`, `.gitignore`) ne font pas partie de l'artefact du site.
+- Les anciennes routes sont conservees par `atelier.html` (vers `oeuvres.html`) et `musee.html` (vers `oeuvres.html#parcours-immersif`).
+- A l'activation du workflow, la source de GitHub Pages doit etre configuree sur « GitHub Actions » (Settings > Pages).
+- Les images d'œuvres ont trois usages distincts : `*-thumb.webp` (vignettes des cartes, de l'accueil et de Mory), `*-mur.webp` (lightbox) et `*-spotlight.webp` (parcours immersif). Les fichiers `maria.webp`, `mory.webp` et `stepout.webp` restent les sources identifiantes dans `js/oeuvres-data.js`.
 
 ## Migration React En Pause
 
@@ -122,8 +124,7 @@ L'ouverture directe des fichiers HTML peut fonctionner pour des verifications si
 
 ## A Faire
 
-- Supprimer `_redirects` et `.htaccess` si Vercel devient l'unique plateforme de deploiement.
-- Revoir `vercel.json`, les canonical, le sitemap et les liens internes au moment d'une vraie bascule vers URLs propres.
+- Revoir les canonical, le sitemap et les liens internes au moment d'une vraie bascule vers URLs propres.
 - Remplacer progressivement `images/serie-2/vide.webp` par de vraies œuvres.
 - Completer les annees et dimensions dans `js/oeuvres-data.js`.
 - Continuer a utiliser `js/oeuvres-data.js` comme source unique pour ajouter ou renommer les œuvres.

@@ -1,0 +1,85 @@
+name: Pages
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # Une PR n'annule que ses propres builds, jamais un run de main.
+    concurrency:
+      group: pages-build-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build _site from the explicit public list
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          root_files=(
+            index.html oeuvres.html apropos.html contact.html
+            atelier.html musee.html
+            robots.txt sitemap.xml manifest.json
+            favicon.svg favicon-32x32.png apple-touch-icon.png
+          )
+          public_dirs=(css js images)
+
+          for item in "${root_files[@]}"; do
+            [ -f "$item" ] || { echo "::error::Fichier public obligatoire absent : $item"; exit 1; }
+          done
+          for item in "${public_dirs[@]}"; do
+            [ -d "$item" ] || { echo "::error::Dossier public obligatoire absent : $item"; exit 1; }
+          done
+
+          rm -rf _site
+          mkdir _site
+          cp -- "${root_files[@]}" _site/
+          cp -R -- "${public_dirs[@]}" _site/
+
+          for forbidden in .git .github .gitignore README.md .htaccess _redirects vercel.json originals docs administratif Youtube node_modules .venv venv .cache; do
+            if [ -e "_site/$forbidden" ]; then
+              echo "::error::Chemin interdit present dans _site : $forbidden"
+              exit 1
+            fi
+          done
+          if find _site \( -name '.DS_Store' -o -name 'Thumbs.db' -o -name '*.tmp' -o -name '*.log' -o -name '__pycache__' \) | grep -q .; then
+            echo "::error::Fichier temporaire ou cache present dans _site"
+            exit 1
+          fi
+
+          echo "Contenu de _site :"
+          find _site -maxdepth 1 -mindepth 1 | sort
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    # Jamais sur une PR, ni sur un lancement manuel hors de main.
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

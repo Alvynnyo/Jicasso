@@ -124,11 +124,16 @@ function buildMobileFeed() {
       imgWrap.className = 'mobile-card-image';
 
       var img = document.createElement('img');
-      img.src = work.src;
+      img.src = work.srcThumb || work.src;
+      if (work.thumbWidth && work.thumbHeight) {
+        img.setAttribute('width', work.thumbWidth);
+        img.setAttribute('height', work.thumbHeight);
+      }
       img.alt = (t[work.titleKey] || '') + (t[work.techniqueKey] ? ', ' + t[work.techniqueKey].toLowerCase() : '');
       img.dataset.i18nAltTitle     = work.titleKey;
       img.dataset.i18nAltTechnique = work.techniqueKey;
       img.setAttribute('loading', 'lazy');
+      img.setAttribute('decoding', 'async');
       imgWrap.appendChild(img);
       card.appendChild(imgWrap);
 
@@ -203,8 +208,13 @@ function buildDesktopGrids() {
       btn.dataset.i18nAltTechnique = work.techniqueKey;
 
       var img = document.createElement('img');
-      img.src = work.src;
+      img.src = work.srcThumb || work.src;
+      if (work.thumbWidth && work.thumbHeight) {
+        img.setAttribute('width', work.thumbWidth);
+        img.setAttribute('height', work.thumbHeight);
+      }
       img.setAttribute('loading', 'lazy');
+      img.setAttribute('decoding', 'async');
       img.dataset.i18nAltTitle     = work.titleKey;
       img.dataset.i18nAltTechnique = work.techniqueKey;
 

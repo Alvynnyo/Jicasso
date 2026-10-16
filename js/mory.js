@@ -270,7 +270,7 @@
 
     return {
       expression: 'mascotte-montre',
-      image: w.src,
+      image: w.srcThumb || w.src,
       title: tr(w.titleKey),
       subtitle: tr(w.techniqueKey),
       message: message,

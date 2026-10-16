@@ -109,7 +109,7 @@ const translations = {
 
     // Erreur
     contact_error_title: "Oops.",
-    contact_error_text:  "Une erreur est survenue. Réessayez ou écrivez-moi directement à",
+    contact_error_text:  "Une erreur est survenue. Veuillez réessayer plus tard.",
 
     // Validation
     contact_err_empty: "Ce champ est requis.",
@@ -236,7 +236,7 @@ const translations = {
 
     // Error
     contact_error_title: "Oops.",
-    contact_error_text:  "Something went wrong. Try again or write to me directly at",
+    contact_error_text:  "An error occurred. Please try again later.",
 
     // Validation
     contact_err_empty: "This field is required.",

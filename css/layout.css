@@ -156,12 +156,18 @@
 }
 .footer-links a:hover { color: var(--cream); }
 
-.footer-link--disabled,
-.footer-link--disabled:hover {
-  opacity: 0.45;
-  cursor: default;
-  pointer-events: none;
+/* Instagram : visible mais non interactif tant que l'URL officielle n'existe pas. */
+.instagram-soon {
   color: var(--sage);
+  opacity: 0.6;
+  cursor: default;
+}
+
+.footer-links .instagram-soon {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 .footer-copy {
@@ -369,6 +375,14 @@
   .lang-toggle { display: none; }
   .hamburger-btn { display: flex; }
   .footer-links { flex-wrap: wrap; justify-content: center; row-gap: 14px; }
+}
+
+/* Mory (fixe, bas droite) ne recouvre jamais le copyright : sur les petits
+   écrans, le footer réserve la hauteur de la figure (~82 px), et celle de la
+   bulle d'accueil seulement quand elle est visible (classe posée par mory.js). */
+@media (max-width: 640px) {
+  .site-footer { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
+  body.mory-greeting-open .site-footer { padding-bottom: calc(190px + env(safe-area-inset-bottom)); }
 }
 
 @media (max-width: 480px) {

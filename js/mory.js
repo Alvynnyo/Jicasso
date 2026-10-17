@@ -270,7 +270,7 @@
 
     return {
       expression: 'mascotte-montre',
-      image: w.srcThumb || w.src,
+      image: w.srcThumb,
       title: tr(w.titleKey),
       subtitle: tr(w.techniqueKey),
       message: message,
@@ -742,6 +742,13 @@
   /* ════════════════════════════════════════════════════════════════
      10. BULLE D'ACCUEIL (une fois par session)
   ════════════════════════════════════════════════════════════════ */
+  /* État de la bulle synchronisé sur <body> (mory-greeting-open) : le footer
+     n'agrandit sa réserve basse sur mobile que lorsque la bulle est visible. */
+  function setGreetingVisible(visible) {
+    root.classList.toggle('has-greeting', visible);
+    document.body.classList.toggle('mory-greeting-open', visible);
+  }
+
   function showGreeting() {
     var greetedKey = window.MORY_GREETING_KEY || GREETED_KEY;
     if (getStored(sessionStorage, greetedKey) === 'true') return;
@@ -752,11 +759,11 @@
     /* window.MORY_GREETING permet à une page (ex. le parcours d'accueil)
        de personnaliser le message d'accueil de Mory. */
     greetText.textContent = pick(window.MORY_GREETING || MORY_CONVERSATION.greeting);
-    root.classList.add('has-greeting');
+    setGreetingVisible(true);
   }
   function hideGreeting() {
     clearTimeout(greetTimer);
-    root.classList.remove('has-greeting');
+    setGreetingVisible(false);
     sayText = null;
   }
 
@@ -774,11 +781,11 @@
     if (opts.expression) setImage(opts.expression);
     sayText = textMap;
     greetText.textContent = pick(textMap);
-    root.classList.add('has-greeting');
+    setGreetingVisible(true);
     var duration = (opts.duration === undefined) ? 6000 : opts.duration;
     if (duration > 0) {
       greetTimer = window.setTimeout(function () {
-        root.classList.remove('has-greeting');
+        setGreetingVisible(false);
         sayText = null;
       }, duration);
     }
@@ -799,7 +806,6 @@
      fait pas partie : Mory y reste volontairement disponible. */
   function hasActiveOverlay() {
     if (document.querySelector('#lightbox-overlay.active')) return true;
-    if (document.querySelector('#seq-overlay.active')) return true;
     if (window.IndirahContact && typeof window.IndirahContact.isOpen === 'function') {
       if (window.IndirahContact.isOpen()) return true;
     } else if (document.querySelector('#contact-popup.is-open')) {

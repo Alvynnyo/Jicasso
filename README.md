@@ -29,7 +29,7 @@ Une migration React/Next.js a ete etudiee pour de futurs composants 3D et une ar
 |   |-- main.js         # Œuvres : grilles, feed mobile, lightbox
 |   |-- gallery.js      # Parcours immersif : salles, activation, commentaires Mory
 |   |-- contact-popup.js # Popup partage, validation et Web3Forms
-|   |-- jeffrey-video.js # Commande bilingue du film d'annonce Jeffrey (accueil)
+|   |-- jeffrey-video.js # Commande bilingue des films Jeffrey (accueil, carte « À venir » d'Œuvres)
 |   `-- mory.js         # Assistant/guide anime
 |-- images/
 |   |-- hero-accueil-texture.webp
@@ -41,7 +41,10 @@ Une migration React/Next.js a ete etudiee pour de futurs composants 3D et une ar
 |   `-- serie-1/        # Œuvres : *-thumb, *-mur (lightbox), *-spotlight ; sources pleine resolution non publiees
 |-- media/
 |   |-- jeffrey_v2_web.mp4         # Film d'annonce Jeffrey (accueil, lecture a la demande)
-|   `-- jeffrey-v2-poster.webp     # Affiche extraite du film
+|   |-- jeffrey-v2-poster.webp     # Affiche extraite du film
+|   |-- jeffrey-serie-2-introduction.mp4          # Presentation de Jeffrey, Serie 2 (Œuvres, carte « À venir »), 9:16
+|   |-- jeffrey-serie-2-introduction-poster.webp  # Affiche extraite de la presentation (540x960)
+|   `-- jeffrey-serie-2-introduction-en.vtt       # Sous-titres anglais de la presentation
 |-- originals/images/   # Sources non compressees conservees hors assets servis
 |-- robots.txt
 |-- sitemap.xml
@@ -100,7 +103,7 @@ Etat hosting actuel :
 - Les Pull Requests vers `dev` et vers `main` construisent et valident l'artefact sans le deployer.
 - Un push sur `dev` construit l'artefact sans le deployer.
 - Seul un push sur `main` deploie le site. Un lancement manuel (`workflow_dispatch`) construit seulement l'artefact.
-- Liste publique : `index.html`, `oeuvres.html`, `apropos.html`, `contact.html`, `atelier.html`, `musee.html`, `robots.txt`, `sitemap.xml`, `manifest.json`, `favicon.svg`, `favicon-32x32.png`, `apple-touch-icon.png`, et les dossiers `css/`, `js/`, `images/`, `media/`.
+- Liste publique : `index.html`, `oeuvres.html`, `apropos.html`, `contact.html`, `atelier.html`, `musee.html`, `robots.txt`, `sitemap.xml`, `manifest.json`, `favicon.svg`, `favicon-32x32.png`, `apple-touch-icon.png`, les dossiers `css/`, `js/`, `images/`, et les medias listes un par un dans `public_media` (films Jeffrey, leurs affiches et les sous-titres de la presentation Serie 2) ; le dossier `media/` n'est jamais copie en entier.
 - Exclusions explicites de l'artefact (`excluded_files` dans le workflow) : `images/serie-1/maria.webp`, `mory.webp` et `stepout.webp`. Ces sources pleine resolution restent dans le depot mais ne sont jamais chargees par le site.
 - `originals/`, `docs/`, `Youtube/`, `administratif/`, ce README et les fichiers techniques (`.github/`, `.gitignore`) ne font pas partie de l'artefact du site.
 - Les anciennes routes sont conservees par `atelier.html` (vers `oeuvres.html`) et `musee.html` (vers `oeuvres.html#parcours-immersif`).

@@ -23,7 +23,7 @@
 
   <link rel="stylesheet" href="css/base.css?v=20261017">
   <link rel="stylesheet" href="css/layout.css?v=20261018">
-  <link rel="stylesheet" href="css/works.css?v=20261018">
+  <link rel="stylesheet" href="css/works.css?v=20261019">
   <link rel="stylesheet" href="css/gallery.css?v=20261018">
   <link rel="stylesheet" href="css/mory.css?v=20261017">
   <link rel="stylesheet" href="css/contact-popup.css?v=20261017">
@@ -88,9 +88,20 @@
     <section class="upcoming-work" id="a-venir" aria-labelledby="upcoming-work-title">
       <div class="upcoming-work-card">
         <div class="upcoming-work-light" aria-hidden="true"></div>
-        <p class="upcoming-work-eyebrow" data-i18n="upcoming_eyebrow">À venir</p>
-        <h2 class="upcoming-work-title" id="upcoming-work-title" data-i18n="upcoming_title">Une nouvelle œuvre prend forme.</h2>
-        <a class="upcoming-work-link" href="index.html#fragments-du-geste"><span data-i18n="upcoming_link">Suivre le geste</span> <span class="upcoming-work-arrow" aria-hidden="true">→</span></a>
+        <div class="upcoming-work-copy">
+          <p class="upcoming-work-eyebrow" data-i18n="upcoming_eyebrow">À venir</p>
+          <h2 class="upcoming-work-title" id="upcoming-work-title" data-i18n="jeffrey2_title">Jeffrey — Série 2</h2>
+          <p class="upcoming-work-text" id="jeffrey-serie2-desc" data-i18n="jeffrey2_text">Jeffrey nous ouvre les portes de son univers.</p>
+          <button type="button" class="upcoming-work-toggle" data-film-toggle data-film-play="jeffrey2_play" data-film-pause="jeffrey2_pause" data-film-replay="jeffrey2_replay" aria-controls="jeffrey-serie2" aria-describedby="upcoming-work-title" hidden><span data-i18n="jeffrey2_play">Voir la présentation</span></button>
+          <p class="upcoming-work-error" id="jeffrey-serie2-error" role="status" tabindex="-1" hidden><span data-i18n="jeffrey_film_error">Le film ne peut pas être lu pour le moment.</span> <a href="media/jeffrey-serie-2-introduction.mp4" data-i18n="jeffrey2_download">Télécharger la présentation (MP4, 4,5 Mo)</a></p>
+        </div>
+        <div class="upcoming-work-media">
+          <video class="upcoming-work-video" id="jeffrey-serie2" controls playsinline preload="metadata" width="1080" height="1920" poster="media/jeffrey-serie-2-introduction-poster.webp" aria-describedby="jeffrey-serie2-desc">
+            <source src="media/jeffrey-serie-2-introduction.mp4" type="video/mp4">
+            <track kind="subtitles" src="media/jeffrey-serie-2-introduction-en.vtt" srclang="en" label="English">
+            <p class="upcoming-work-fallback"><span data-i18n="jeffrey_film_fallback">Votre navigateur ne peut pas lire cette vidéo.</span> <a href="media/jeffrey-serie-2-introduction.mp4" data-i18n="jeffrey2_download">Télécharger la présentation (MP4, 4,5 Mo)</a></p>
+          </video>
+        </div>
       </div>
     </section>
 
@@ -161,11 +172,12 @@
   </nav>
 
   <script defer src="js/oeuvres-data.js?v=20261018"></script>
-  <script defer src="js/translations.js?v=20261018"></script>
+  <script defer src="js/translations.js?v=20261019"></script>
   <script defer src="js/nav.js?v=20261017"></script>
   <script defer src="js/main.js?v=20261018"></script>
   <script defer src="js/gallery.js?v=20261018"></script>
   <script defer src="js/contact-popup.js?v=20261017"></script>
-  <script defer src="js/mory.js?v=20261018"></script>
+  <script defer src="js/jeffrey-video.js?v=20261019"></script>
+  <script defer src="js/mory.js?v=20261019"></script>
 </body>
 </html>

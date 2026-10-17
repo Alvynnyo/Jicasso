@@ -204,7 +204,10 @@
 .mory-greeting-close:hover,
 .mory-greeting-close:focus-visible {
   background: rgba(255, 255, 255, 0.18);
-  outline: none;
+}
+.mory-greeting-close:focus-visible {
+  outline: 2px solid rgba(251, 246, 240, 0.9);
+  outline-offset: 2px;
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -282,7 +285,18 @@
 .mory-panel-close:hover,
 .mory-panel-close:focus-visible {
   background: rgba(255, 255, 255, 0.18);
-  outline: none;
+}
+.mory-panel-close:focus-visible {
+  outline: 2px solid rgba(251, 246, 240, 0.9);
+  outline-offset: 2px;
+}
+
+/* Cible stable du focus pendant que Mory « écrit » (les options sont
+   retirées puis remplacées) : indicateur discret mais visible. */
+.mory-messages:focus { outline: none; }
+.mory-messages:focus-visible {
+  outline: 2px solid rgba(251, 246, 240, 0.55);
+  outline-offset: -3px;
 }
 
 /* Zone de messages (défilement interne) */

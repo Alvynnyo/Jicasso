@@ -405,16 +405,40 @@ body.immersive-open { overflow: hidden; }
    MOUVEMENT RÉDUIT — pas de zoom ni d'atténuation, tout reste lisible
 ════════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  body.parcours { transition: none; }
+  body.parcours,
+  .immersive-experience { transition: none; }
   .scroll-cue { animation: none; }
   .room-entry-inner,
   .room-final-inner,
   .room-art-caption,
-  .room-art-stage::before { transition: none; }
+  .room-art-stage::before,
+  .room-btn { transition: none; }
+  /* Salles immédiatement lisibles, sans attendre l'« allumage ». */
+  .room--entry .room-entry-inner,
+  .room--final .room-final-inner,
+  .room-art-caption {
+    opacity: 1;
+    transform: none;
+  }
+  .room-art-stage::before { transform: translate(-50%, -50%); }
   .room-art-img {
     opacity: 1;
     filter: none;
     transform: none;
     transition: none;
   }
+  .room-btn:hover { transform: none; }
+}
+
+/* Téléphone en paysage : le bouton de sortie reste visible et les salles
+   ne coupent jamais l'œuvre ni son cartel. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .immersive-close {
+    top: max(10px, env(safe-area-inset-top));
+    right: max(10px, env(safe-area-inset-right));
+  }
+  .room { padding-top: 64px; padding-bottom: 48px; }
+  .room-art-img { max-height: calc(100svh - 150px); }
+  .scroll-cue { bottom: calc(12px + env(safe-area-inset-bottom)); padding: 8px 16px; }
+  .entry-desc { margin-top: 16px; }
 }

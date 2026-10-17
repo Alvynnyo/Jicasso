@@ -82,14 +82,30 @@
   border: 0;
   border-left: 1px solid #315d56;
   border-radius: 0;
-  padding: 8px 0 8px 18px;
+  padding: 6px 0 6px 15px;
 }
 
+/* Chaque langue est un vrai bouton : cible tactile d'au moins 24 px,
+   apparence inchangée (texte seul). */
 .lang-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 2px 3px;
+  font: inherit;
+  letter-spacing: inherit;
   color: var(--sage);
   transition: color var(--ease);
 }
+.lang-option:hover { color: var(--cream); }
 .lang-option.active { color: var(--cream); }
+.lang-option:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 
 .lang-sep {
   color: var(--sage);
@@ -265,7 +281,10 @@
   color: var(--sage);
   transition: color 0.2s ease;
   cursor: pointer;
+  min-width: 44px;
+  min-height: 36px;
   padding: 6px 10px;
+  border-radius: 6px;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -299,6 +318,38 @@
 
 .mobile-menu-close:active {
   background: #1d554d;
+}
+
+/* Focus clavier dans le menu mobile et sur ses déclencheurs. */
+.mobile-menu-btn:focus-visible,
+.mobile-menu-close:focus-visible,
+.hamburger-btn:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 2px;
+}
+
+/* Menu fermé : jamais atteignable, même pendant le fondu de sortie. */
+.mobile-menu[inert] { pointer-events: none; }
+
+/* Petits écrans en paysage : le menu reste entièrement consultable. */
+@media (max-height: 480px) {
+  .mobile-menu {
+    top: 60px;
+    max-height: calc(100vh - 72px);
+    max-height: calc(100svh - 72px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .mobile-menu-btn { padding-top: 10px; padding-bottom: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu,
+  .mobile-menu-overlay,
+  .mobile-menu-btn,
+  .mobile-menu-close,
+  .lang-option { transition: none; }
+  .mobile-menu { transform: none; }
 }
 
 

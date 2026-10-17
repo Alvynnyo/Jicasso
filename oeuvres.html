@@ -21,18 +21,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/base.css?v=20260707">
-  <link rel="stylesheet" href="css/layout.css?v=20260715-2">
-  <link rel="stylesheet" href="css/works.css?v=20260715-2">
-  <link rel="stylesheet" href="css/gallery.css?v=20260715-2">
-  <link rel="stylesheet" href="css/mory.css?v=20260715-2">
-  <link rel="stylesheet" href="css/contact-popup.css?v=20260715-2">
+  <link rel="stylesheet" href="css/base.css?v=20261017">
+  <link rel="stylesheet" href="css/layout.css?v=20261017">
+  <link rel="stylesheet" href="css/works.css?v=20261017">
+  <link rel="stylesheet" href="css/gallery.css?v=20261017">
+  <link rel="stylesheet" href="css/mory.css?v=20261017">
+  <link rel="stylesheet" href="css/contact-popup.css?v=20261017">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
 </head>
 <body id="top" class="works-page">
+  <a class="skip-link" href="#main-content" data-i18n="skip_link">Aller au contenu</a>
 
   <header class="site-header" id="site-header">
     <div class="header-inner">
@@ -41,29 +42,21 @@
         <span class="brand-name">Indirah</span>
       </a>
 
-      <nav class="main-nav" aria-label="Navigation principale">
+      <nav class="main-nav" aria-label="Navigation principale" data-i18n-aria-label="nav_main_label">
         <a href="index.html" data-i18n="nav_accueil">Accueil</a>
-        <a href="oeuvres.html" data-i18n="nav_oeuvres" class="nav-current">Œuvres</a>
+        <a href="oeuvres.html" data-i18n="nav_oeuvres" class="nav-current" aria-current="page">Œuvres</a>
         <a href="apropos.html" data-i18n="nav_apropos">A propos</a>
         <a href="contact.html" data-i18n="nav_contact" data-contact-open>Contact</a>
       </nav>
 
-      <button class="lang-toggle" id="lang-toggle" aria-label="Changer de langue">
-        <span class="lang-option" data-lang="fr">FR</span>
-        <span class="lang-sep">/</span>
-        <span class="lang-option" data-lang="en">EN</span>
-      </button>
+      <div class="lang-toggle" id="lang-toggle" role="group" aria-label="Langue du site" data-i18n-aria-label="lang_switch_label"><button type="button" class="lang-option active" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="true">FR</button><span class="lang-sep" aria-hidden="true">/</span><button type="button" class="lang-option" data-lang="en" lang="en" aria-label="English" aria-pressed="false">EN</button></div>
 
-      <button class="hamburger-btn" id="hamburger-btn" aria-label="Menu" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <button class="hamburger-btn" id="hamburger-btn" type="button" aria-label="Menu" data-i18n-aria-label="menu_toggle" aria-controls="mobile-menu" aria-expanded="false"><span></span><span></span><span></span></button>
 
     </div>
   </header>
 
-  <main class="works-main">
+  <main class="works-main" id="main-content">
     <section class="works-intro" aria-labelledby="works-title">
       <div>
         <p class="works-intro-eyebrow" data-i18n="immersive_eyebrow">Un autre regard</p>
@@ -90,26 +83,37 @@
       </div>
     </section>
 
+    <div class="mobile-feed" id="mobile-feed"></div>
+
+    <section class="upcoming-work" id="a-venir" aria-labelledby="upcoming-work-title">
+      <div class="upcoming-work-card">
+        <div class="upcoming-work-light" aria-hidden="true"></div>
+        <p class="upcoming-work-eyebrow" data-i18n="upcoming_eyebrow">À venir</p>
+        <h2 class="upcoming-work-title" id="upcoming-work-title" data-i18n="upcoming_title">Une nouvelle œuvre prend forme.</h2>
+        <a class="upcoming-work-link" href="index.html#fragments-du-geste"><span data-i18n="upcoming_link">Suivre le geste</span> <span class="upcoming-work-arrow" aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
     <section class="serie" id="serie-2">
       <div class="serie-divider" role="separator"></div>
-      <div class="serie-teaser" role="status">
+      <div class="serie-teaser">
         <div><h2 class="serie-title" data-i18n="serie2_title">Serie II</h2><p data-i18n="serie2_text">Nouvelle série en préparation.</p></div>
       </div>
     </section>
 
-    <section class="mobile-feed" id="mobile-feed"></section>
+    <div class="mobile-feed mobile-feed--after" id="mobile-feed-after"></div>
   </main>
 
-  <div class="immersive-experience" id="immersive-experience" hidden>
+  <div class="immersive-experience" id="immersive-experience" role="dialog" aria-label="Parcours immersif" data-i18n-aria-label="immersive_label" hidden>
     <button class="immersive-close" id="immersive-close" type="button" data-i18n="immersive_close">Quitter le parcours</button>
-    <div class="gallery" id="gallery" aria-label="Parcours immersif">
+    <div class="gallery" id="gallery">
       <section class="room room--entry is-lit" id="room-entry">
         <div class="room-entry-inner">
           <p class="entry-eyebrow">Indirah</p>
           <h2 class="entry-title"><span class="entry-title-lead" data-i18n="immersive_intro_line1">Bienvenue dans le</span><span class="entry-title-main" data-i18n="immersive_intro_line2">Parcours</span></h2>
           <p class="entry-desc" data-i18n="immersive_intro_desc">Avancez d'une œuvre à l'autre. Chaque toile s'éclaire à votre approche — laissez-vous porter.</p>
         </div>
-        <a class="scroll-cue" href="#first-work" aria-label="Commencer la visite"><span class="scroll-cue-text" data-i18n="home_scroll">Défiler</span><span class="scroll-cue-arrow" aria-hidden="true">↓</span></a>
+        <a class="scroll-cue" href="#first-work" aria-label="Défiler : commencer la visite" data-i18n-aria-label="immersive_start"><span class="scroll-cue-text" data-i18n="home_scroll">Défiler</span><span class="scroll-cue-arrow" aria-hidden="true">↓</span></a>
       </section>
       <section class="room room--final" id="room-final">
         <div class="room-final-inner"><h2 class="room-final-title" data-i18n="home_final_title">Chaque toile a son histoire.</h2><p class="room-final-text" data-i18n="home_final_text">La suite vous appartient.</p><div class="room-final-cta"><button class="room-btn" id="immersive-finish" type="button" data-i18n="immersive_close">Quitter le parcours</button><a href="contact.html" class="room-btn room-btn--ghost" data-i18n="home_cta_contact" data-contact-open data-contact-subject="Œuvres — Parcours immersif">La contacter</a></div><p class="room-final-sign">Indirah</p></div>
@@ -120,29 +124,15 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <a href="#top" class="footer-logo">Indirah</a>
-      <nav class="footer-links" aria-label="Liens de pied de page"><a href="oeuvres.html" data-i18n="nav_oeuvres">Œuvres</a><a href="apropos.html" data-i18n="nav_apropos">A propos</a><a href="contact.html" data-i18n="footer_contact" data-contact-open>Contact</a><!-- TODO: remplacer #TODO-instagram-url par l'URL Instagram officielle. --><a href="#TODO-instagram-url" data-i18n="footer_instagram">Instagram</a></nav>
+      <nav class="footer-links" aria-label="Liens de pied de page" data-i18n-aria-label="nav_footer_label"><a href="oeuvres.html" data-i18n="nav_oeuvres">Œuvres</a><a href="apropos.html" data-i18n="nav_apropos">A propos</a><a href="contact.html" data-i18n="footer_contact" data-contact-open>Contact</a><!-- TODO: remplacer #TODO-instagram-url par l'URL Instagram officielle. --><a href="#TODO-instagram-url" data-i18n="footer_instagram">Instagram</a></nav>
       <p class="footer-copy" data-i18n="footer_copy">© 2024 Indirah. Tous droits reserves.</p>
     </div>
   </footer>
 
-  <div class="lightbox-overlay" id="lightbox-overlay" role="dialog" aria-modal="true" aria-labelledby="lightbox-caption-title">
-    <button class="lightbox-close" id="lightbox-close" aria-label="Fermer">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-           stroke="currentColor" stroke-width="1.5"
-           stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
-    <button class="lightbox-arrow lightbox-arrow--prev" id="lightbox-prev" aria-label="Image precedente">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-           stroke="currentColor" stroke-width="1.5"
-           stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="15 18 9 12 15 6"/>
-      </svg>
-    </button>
+  <div class="lightbox-overlay" id="lightbox-overlay" role="dialog" aria-modal="true" aria-labelledby="lightbox-caption-title" hidden>
+    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Fermer la vue agrandie" data-i18n-aria-label="lightbox_close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button class="lightbox-arrow lightbox-arrow--prev" id="lightbox-prev" type="button" aria-label="Œuvre précédente" data-i18n-aria-label="lightbox_prev"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="15 18 9 12 15 6"/></svg></button>
     <div class="lightbox-content" id="lightbox-content">
-      <img class="lightbox-img" id="lightbox-img" alt="">
       <div class="lightbox-caption">
         <span class="lightbox-caption-title" id="lightbox-caption-title"></span>
         <dl class="lightbox-meta">
@@ -155,43 +145,27 @@
         <div class="lightbox-position" id="lightbox-position"></div>
       </div>
     </div>
-    <button class="lightbox-arrow lightbox-arrow--next" id="lightbox-next" aria-label="Image suivante">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-           stroke="currentColor" stroke-width="1.5"
-           stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="9 18 15 12 9 6"/>
-      </svg>
-    </button>
+    <button class="lightbox-arrow lightbox-arrow--next" id="lightbox-next" type="button" aria-label="Œuvre suivante" data-i18n-aria-label="lightbox_next"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="9 18 15 12 9 6"/></svg></button>
+    <p class="visually-hidden" id="lightbox-status" aria-live="polite" aria-atomic="true"></p>
   </div>
 
   <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
 
-  <nav class="mobile-menu" id="mobile-menu" aria-label="Menu mobile">
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Menu mobile" data-i18n-aria-label="nav_mobile_label">
     <a href="index.html" class="mobile-menu-btn" data-i18n="nav_accueil">Accueil</a>
-    <a href="oeuvres.html" class="mobile-menu-btn" data-i18n="nav_oeuvres">Œuvres</a>
+    <a href="oeuvres.html" class="mobile-menu-btn" data-i18n="nav_oeuvres" aria-current="page">Œuvres</a>
     <a href="apropos.html" class="mobile-menu-btn" data-i18n="nav_apropos">A propos</a>
     <a href="contact.html" class="mobile-menu-btn" data-i18n="nav_contact" data-contact-open>Contact</a>
-    <div class="mobile-menu-btn mobile-menu-lang" id="mobile-menu-lang">
-      <span class="lang-option" data-lang="fr">FR</span>
-      <span class="lang-sep">/</span>
-      <span class="lang-option" data-lang="en">EN</span>
-    </div>
-    <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Fermer le menu">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
-           stroke="currentColor" stroke-width="1.5"
-           stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"/>
-        <line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
-    </button>
+    <div class="mobile-menu-btn mobile-menu-lang" id="mobile-menu-lang" role="group" aria-label="Langue du site" data-i18n-aria-label="lang_switch_label"><button type="button" class="lang-option active" data-lang="fr" lang="fr" aria-label="Français" aria-pressed="true">FR</button><span class="lang-sep" aria-hidden="true">/</span><button type="button" class="lang-option" data-lang="en" lang="en" aria-label="English" aria-pressed="false">EN</button></div>
+    <button class="mobile-menu-close" id="mobile-menu-close" type="button" aria-label="Fermer le menu" data-i18n-aria-label="menu_close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </nav>
 
   <script defer src="js/oeuvres-data.js?v=20261016"></script>
-  <script defer src="js/translations.js?v=20260715"></script>
-  <script defer src="js/nav.js?v=20260714"></script>
-  <script defer src="js/main.js?v=20261016"></script>
-  <script defer src="js/gallery.js?v=20260714"></script>
-  <script defer src="js/contact-popup.js?v=20260715"></script>
-  <script defer src="js/mory.js?v=20261016"></script>
+  <script defer src="js/translations.js?v=20261017"></script>
+  <script defer src="js/nav.js?v=20261017"></script>
+  <script defer src="js/main.js?v=20261017"></script>
+  <script defer src="js/gallery.js?v=20261017"></script>
+  <script defer src="js/contact-popup.js?v=20261017"></script>
+  <script defer src="js/mory.js?v=20261017"></script>
 </body>
 </html>

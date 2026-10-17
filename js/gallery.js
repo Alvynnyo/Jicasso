@@ -33,8 +33,19 @@ window.MORY_GREETING = {
   var commented = {};   /* œuvres déjà commentées par Mory (une fois par visite) */
   var finalSaid = false;
 
+  /* Stockage protégé : localStorage peut lever une exception. */
   function getLang() {
-    return localStorage.getItem('indirah-lang') || document.documentElement.lang || 'fr';
+    if (window.IndirahI18n) return window.IndirahI18n.getLanguage();
+    try {
+      return window.localStorage.getItem('indirah-lang') || document.documentElement.lang || 'fr';
+    } catch (e) {
+      return document.documentElement.lang || 'fr';
+    }
+  }
+
+  function reducedMotion() {
+    if (window.IndirahUI) return window.IndirahUI.prefersReducedMotion();
+    return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }
   function pick(map) {
     if (!map) return '';
@@ -236,39 +247,85 @@ window.MORY_GREETING = {
     cue.addEventListener('click', function (e) {
       e.preventDefault();
       var target = firstArt || document.getElementById('room-final');
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (target) target.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
     });
   }
 
+  /* Parcours = dialogue plein écran NON modal au sens ARIA : Mory y reste
+     volontairement disponible. Le reste de la page est rendu inerte et le
+     focus est confiné au parcours + Mory. */
   function initExperienceControls() {
     var experience = document.getElementById('immersive-experience');
     var enter = document.getElementById('immersive-enter');
     var close = document.getElementById('immersive-close');
     var finish = document.getElementById('immersive-finish');
-    if (!experience || !enter || !close) return;
+    if (!experience || !enter || !close || experience.dataset.experienceBound) return;
+    experience.dataset.experienceBound = 'true';
+
+    var isOpen = false;
+    var releaseInert = null;
+    var releaseScroll = null;
+
+    function moryRoot() { return document.getElementById('mory'); }
+
+    function contactIsOpen() {
+      return !!(window.IndirahContact && typeof window.IndirahContact.isOpen === 'function' && window.IndirahContact.isOpen());
+    }
+
+    function lightboxIsOpen() {
+      var lightbox = document.getElementById('lightbox-overlay');
+      return !!(lightbox && lightbox.classList.contains('active'));
+    }
 
     function openExperience() {
+      if (isOpen) return;
+      isOpen = true;
+      var ui = window.IndirahUI;
       experience.hidden = false;
       experience.scrollTop = 0;
       document.body.classList.add('immersive-open');
-      if (history.replaceState) history.replaceState(null, '', '#parcours-immersif');
+      releaseScroll = ui ? ui.lockScroll() : null;
+      if (history.replaceState && location.hash !== '#parcours-immersif') {
+        history.replaceState(null, '', '#parcours-immersif');
+      }
       close.focus();
+      /* Mory (s'il existe déjà) reste hors de l'inert. */
+      releaseInert = ui ? ui.inertOutside([experience, moryRoot()]) : null;
+      if (ui) ui.notifyOverlayChange();
     }
 
     function closeExperience() {
+      if (!isOpen) return;
+      isOpen = false;
+      var ui = window.IndirahUI;
+      if (releaseInert) { releaseInert(); releaseInert = null; }
+      if (releaseScroll) { releaseScroll(); releaseScroll = null; }
+      /* Focus déplacé avant de masquer le parcours. */
+      enter.focus();
       experience.hidden = true;
       document.body.classList.remove('immersive-open');
       document.documentElement.style.setProperty('--room-bg', '#0D3A35');
-      if (history.replaceState) history.replaceState(null, '', location.pathname + location.search);
-      enter.focus();
+      if (history.replaceState && location.hash === '#parcours-immersif') {
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+      if (ui) ui.notifyOverlayChange();
     }
 
     enter.addEventListener('click', openExperience);
     close.addEventListener('click', closeExperience);
     if (finish) finish.addEventListener('click', closeExperience);
     document.addEventListener('keydown', function (event) {
-      var lightbox = document.getElementById('lightbox-overlay');
-      if (event.key === 'Escape' && !experience.hidden && !(lightbox && lightbox.classList.contains('active'))) closeExperience();
+      if (!isOpen || event.defaultPrevented) return;
+      /* La popup Contact ou la lightbox, si ouvertes, gèrent leur clavier. */
+      if (contactIsOpen() || lightboxIsOpen()) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeExperience();
+        return;
+      }
+      if (event.key === 'Tab' && window.IndirahUI) {
+        window.IndirahUI.trapTab(event, [experience, moryRoot()]);
+      }
     });
     if (location.hash === '#parcours-immersif') openExperience();
   }

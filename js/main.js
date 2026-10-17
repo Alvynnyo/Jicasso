@@ -6,6 +6,8 @@
  *  - la lightbox
  *
  * Dépend de js/oeuvres-data.js et js/translations.js chargés avant ce fichier.
+ * Utilise window.IndirahUI (js/nav.js) pour l'inert, le verrou de défilement
+ * et le piège de focus, avec repli sans erreur s'il est absent.
  */
 
 /* ── Données — dérivées de js/oeuvres-data.js ────────────────
@@ -15,17 +17,44 @@ var series = Object.keys(oeuvresData).map(function(key) {
   return oeuvresData[key];
 });
 
+/* ── Langue (stockage protégé : localStorage peut être indisponible) ── */
+function readLang() {
+  if (window.IndirahI18n) return window.IndirahI18n.getLanguage();
+  try { return window.localStorage.getItem('indirah-lang') || 'fr'; } catch (e) { return 'fr'; }
+}
+
 /* ── État ─────────────────────────────────────────────────── */
-var currentLang      = window.IndirahI18n ? window.IndirahI18n.getLanguage() : (localStorage.getItem('indirah-lang') || 'fr');
+var currentLang      = readLang();
 var lightboxTrigger  = null;
+var lightboxTriggerSrc = null;
 
 window.addEventListener('indirah:languagechange', function () {
-  currentLang = window.IndirahI18n ? window.IndirahI18n.getLanguage() : currentLang;
+  currentLang = readLang();
   buildDesktopGrids();
   buildMobileFeed();
-  var overlay = document.getElementById('lightbox-overlay');
-  if (overlay && overlay.classList.contains('active')) showLightboxImage(lightboxIndex);
+  if (lightboxOpen) showLightboxImage(lightboxIndex);
 });
+
+function ui() {
+  return window.IndirahUI || null;
+}
+
+function reducedMotion() {
+  var u = ui();
+  if (u) return u.prefersReducedMotion();
+  return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+
+function tr(key) {
+  var t = translations[currentLang] || translations.fr;
+  return (t && t[key]) || (translations.fr && translations.fr[key]) || '';
+}
+
+function format(template, values) {
+  return String(template || '').replace(/\{(\w+)\}/g, function (match, name) {
+    return Object.prototype.hasOwnProperty.call(values, name) ? values[name] : match;
+  });
+}
 
 function localized(value) {
   if (!value) return '';
@@ -57,7 +86,16 @@ function cardMeta(work) {
     .filter(function (value) { return !isPlaceholderValue(value); });
 }
 
+function workLabel(work) {
+  var t = translations[currentLang];
+  var title = t[work.titleKey] || '';
+  var tech  = t[work.techniqueKey] || '';
+  return title + (tech ? ', ' + tech.toLowerCase() : '');
+}
+
 function getFocusable(container) {
+  var u = ui();
+  if (u) return u.getFocusable(container);
   return Array.from(container.querySelectorAll(
     'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
   )).filter(function(el) {
@@ -65,19 +103,30 @@ function getFocusable(container) {
   });
 }
 
+function isVisible(el) {
+  var u = ui();
+  if (u) return u.isVisible(el);
+  return !!(el && el.isConnected && (el.offsetWidth || el.offsetHeight || el.getClientRects().length));
+}
+
 
 /* ══════════════════════════════════════════════════════════
    MOBILE FEED — flux vertical de cartes
+   Les séries publiées vont dans #mobile-feed ; les séries « à venir »
+   dans #mobile-feed-after, placé après l'annonce éditoriale statique.
 ══════════════════════════════════════════════════════════ */
 
 function buildMobileFeed() {
   var feed = document.getElementById('mobile-feed');
   if (!feed) return;
+  var feedAfter = document.getElementById('mobile-feed-after') || feed;
   feed.innerHTML = '';
+  if (feedAfter !== feed) feedAfter.innerHTML = '';
 
   var t = translations[currentLang];
 
   series.forEach(function(serie) {
+    var target = serie.status === 'upcoming' ? feedAfter : feed;
     var group = document.createElement('div');
     group.className = 'mobile-group';
 
@@ -105,7 +154,7 @@ function buildMobileFeed() {
     if (serie.status === 'upcoming') {
       header.classList.add('mobile-series-teaser');
       group.appendChild(header);
-      feed.appendChild(group);
+      target.appendChild(group);
       return;
     }
 
@@ -116,11 +165,17 @@ function buildMobileFeed() {
     grid.className = 'mobile-cards-grid';
 
     serie.works.forEach(function(work) {
-      var card = document.createElement('article');
+      /* Carte = véritable bouton : clavier (Entrée, Espace) natif. */
+      var card = document.createElement('button');
+      card.type = 'button';
       card.className = 'mobile-card';
+      card.dataset.workSrc = work.src;
+      card.dataset.i18nAltTitle     = work.titleKey;
+      card.dataset.i18nAltTechnique = work.techniqueKey;
+      card.setAttribute('aria-label', workLabel(work));
 
       /* Image */
-      var imgWrap = document.createElement('div');
+      var imgWrap = document.createElement('span');
       imgWrap.className = 'mobile-card-image';
 
       var img = document.createElement('img');
@@ -129,7 +184,7 @@ function buildMobileFeed() {
         img.setAttribute('width', work.thumbWidth);
         img.setAttribute('height', work.thumbHeight);
       }
-      img.alt = (t[work.titleKey] || '') + (t[work.techniqueKey] ? ', ' + t[work.techniqueKey].toLowerCase() : '');
+      img.alt = workLabel(work);
       img.dataset.i18nAltTitle     = work.titleKey;
       img.dataset.i18nAltTechnique = work.techniqueKey;
       img.setAttribute('loading', 'lazy');
@@ -138,7 +193,7 @@ function buildMobileFeed() {
       card.appendChild(imgWrap);
 
       /* Bloc texte */
-      var info = document.createElement('div');
+      var info = document.createElement('span');
       info.className = 'mobile-card-info';
 
       var cardTitle = document.createElement('span');
@@ -162,24 +217,14 @@ function buildMobileFeed() {
 
       card.appendChild(info);
 
-      /* Accessibilité clavier */
-      card.setAttribute('role', 'button');
-      card.setAttribute('tabindex', '0');
-
-      /* Lightbox au tap/clic/clavier sur la carte mobile */
+      /* Lightbox au tap / clic / clavier sur la carte mobile */
       card.addEventListener('click', function() { openLightbox(work.src, card); });
-      card.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          openLightbox(work.src, card);
-        }
-      });
 
       grid.appendChild(card);
     });
 
     group.appendChild(grid);
-    feed.appendChild(group);
+    target.appendChild(group);
   });
 }
 
@@ -203,7 +248,9 @@ function buildDesktopGrids() {
       item.className = 'serie-grid-item';
 
       var btn = document.createElement('button');
+      btn.type = 'button';
       btn.className = 'serie-grid-btn';
+      btn.dataset.workSrc = work.src;
       btn.dataset.i18nAltTitle     = work.titleKey;
       btn.dataset.i18nAltTechnique = work.techniqueKey;
 
@@ -219,8 +266,7 @@ function buildDesktopGrids() {
       img.dataset.i18nAltTechnique = work.techniqueKey;
 
       var title = t[work.titleKey] || '';
-      var tech  = t[work.techniqueKey] || '';
-      var label = title + (tech ? ', ' + tech.toLowerCase() : '');
+      var label = workLabel(work);
       img.alt = label;
       btn.setAttribute('aria-label', label);
 
@@ -248,11 +294,31 @@ function buildDesktopGrids() {
 
 /* ══════════════════════════════════════════════════════════
    LIGHTBOX
+   Toutes les fermetures (bouton, Échap, clic extérieur, geste tactile)
+   passent par closeLightbox() : focus, inert, défilement et styles
+   inline sont restitués au même endroit.
 ══════════════════════════════════════════════════════════ */
 
 var lightboxWorks = [];
 var lightboxIndex = 0;
 var lightboxLoadToken = 0;
+var lightboxOpen = false;
+var lightboxTimers = [];
+var releaseLightboxInert = null;
+var releaseLightboxScroll = null;
+
+function lightboxLater(fn, delay) {
+  var id = window.setTimeout(function () {
+    lightboxTimers = lightboxTimers.filter(function (t) { return t !== id; });
+    fn();
+  }, delay);
+  lightboxTimers.push(id);
+}
+
+function clearLightboxTimers() {
+  lightboxTimers.forEach(function (id) { window.clearTimeout(id); });
+  lightboxTimers = [];
+}
 
 function findWorkBySrc(src) {
   for (var i = 0; i < series.length; i++) {
@@ -265,25 +331,51 @@ function findWorkBySrc(src) {
   return null;
 }
 
+/* L'image est créée ici plutôt que dans le HTML : pas d'<img> sans source
+   (ni requête vers la page courante) avant la première ouverture. */
+function ensureLightboxImage() {
+  var img = document.getElementById('lightbox-img');
+  if (img) return img;
+  var content = document.getElementById('lightbox-content');
+  if (!content) return null;
+  img = document.createElement('img');
+  img.className = 'lightbox-img';
+  img.id = 'lightbox-img';
+  img.alt = '';
+  img.decoding = 'async';
+  content.insertBefore(img, content.firstChild);
+  return img;
+}
+
+/* Indicateurs mis à jour sur place : le point qui a le focus n'est jamais
+   détruit lors d'un changement d'œuvre. */
 function updatePositionDots() {
   var container = document.getElementById('lightbox-position');
   if (!container) return;
-  container.innerHTML = '';
-  for (var i = 0; i < lightboxWorks.length; i++) {
-    var dot = document.createElement('button');
-    dot.type = 'button';
-    dot.className = 'lightbox-position-dot' + (i === lightboxIndex ? ' active' : '');
-    dot.setAttribute('aria-label', 'Voir l’œuvre ' + (i + 1));
-    if (i === lightboxIndex) dot.setAttribute('aria-current', 'true');
-    dot.dataset.index = String(i);
-    container.appendChild(dot);
+  if (container.children.length !== lightboxWorks.length) {
+    container.innerHTML = '';
+    for (var i = 0; i < lightboxWorks.length; i++) {
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'lightbox-position-dot';
+      dot.dataset.index = String(i);
+      container.appendChild(dot);
+    }
   }
+  Array.prototype.forEach.call(container.children, function (dot, index) {
+    var active = index === lightboxIndex;
+    dot.classList.toggle('active', active);
+    dot.setAttribute('aria-label', format(tr('lightbox_goto'), { n: index + 1 }));
+    if (active) dot.setAttribute('aria-current', 'true');
+    else dot.removeAttribute('aria-current');
+  });
 }
 
 function showLightboxImage(index) {
   var work = lightboxWorks[index];
+  var img = ensureLightboxImage();
+  if (!work || !img) return;
   var t    = translations[currentLang];
-  var img = document.getElementById('lightbox-img');
   var lightboxSrc = work.srcLightbox || work.srcMur || work.src;
   var token = ++lightboxLoadToken;
   img.alt = (t[work.titleKey] || '') + ', ' + (t[work.techniqueKey] || '').toLowerCase();
@@ -308,40 +400,107 @@ function showLightboxImage(index) {
   updatePositionDots();
 }
 
+/* Annonce sobre du changement d'œuvre (une seule région live, polie). */
+function announceLightbox() {
+  var status = document.getElementById('lightbox-status');
+  var work = lightboxWorks[lightboxIndex];
+  if (!status || !work) return;
+  status.textContent = format(tr('lightbox_position'), {
+    n: lightboxIndex + 1,
+    total: lightboxWorks.length,
+    title: tr(work.titleKey)
+  });
+}
+
+function goToLightbox(index) {
+  if (!lightboxOpen || !lightboxWorks.length) return;
+  lightboxIndex = (index + lightboxWorks.length) % lightboxWorks.length;
+  showLightboxImage(lightboxIndex);
+  announceLightbox();
+}
+
+function resetLightboxStyles() {
+  var overlay = document.getElementById('lightbox-overlay');
+  var img     = document.getElementById('lightbox-img');
+  if (overlay) { overlay.style.opacity = ''; overlay.style.transition = ''; }
+  if (img) { img.style.transform = ''; img.style.transition = ''; }
+}
+
 function openLightbox(src, trigger) {
+  var overlay = document.getElementById('lightbox-overlay');
+  if (!overlay || lightboxOpen) return;
   var result = findWorkBySrc(src);
   if (!result) return;
   lightboxWorks = result.serieWorks;
   lightboxIndex = result.index;
+  lightboxTrigger = trigger || document.activeElement;
+  lightboxTriggerSrc = src;
+
+  clearLightboxTimers();
+  resetLightboxStyles();
+  var status = document.getElementById('lightbox-status');
+  if (status) status.textContent = '';
   showLightboxImage(lightboxIndex);
-  lightboxTrigger = trigger || null;
-  var overlay = document.getElementById('lightbox-overlay');
-  var img     = document.getElementById('lightbox-img');
-  if (img) { img.style.transform = ''; img.style.transition = ''; }
-  overlay.style.display = 'flex';
-  overlay.offsetHeight;
+
+  lightboxOpen = true;
+  overlay.hidden = false;
+  overlay.removeAttribute('inert');
+  overlay.offsetHeight; /* reflow avant la transition d'opacité */
   overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-  setTimeout(function() {
-    var closeBtn = document.getElementById('lightbox-close');
-    if (closeBtn) closeBtn.focus();
-  }, 50);
+
+  var u = ui();
+  releaseLightboxScroll = u ? u.lockScroll() : null;
+  var closeBtn = document.getElementById('lightbox-close');
+  if (closeBtn) closeBtn.focus();
+  /* Arrière-plan neutralisé une fois le focus dans la lightbox. */
+  releaseLightboxInert = u ? u.inertOutside([overlay]) : null;
+  if (u) u.notifyOverlayChange();
 }
 
-function closeLightbox() {
-  var overlay = document.getElementById('lightbox-overlay');
-  overlay.classList.remove('active');
-  var trigger = lightboxTrigger;
+/* Retour du focus sur le déclencheur ; si la grille a été reconstruite
+   entre-temps (changement de langue), sur la carte de la même œuvre. */
+function restoreLightboxFocus() {
+  var target = lightboxTrigger;
+  var src = lightboxTriggerSrc;
   lightboxTrigger = null;
-  setTimeout(function() {
-    if (!overlay.classList.contains('active')) {
-      overlay.style.display = 'none';
-      document.body.style.overflow = '';
-      var img = document.getElementById('lightbox-img');
-      if (img) { img.style.transform = ''; img.style.transition = ''; }
-      if (trigger) trigger.focus();
+  if (!target || !isVisible(target)) {
+    target = null;
+    var candidates = document.querySelectorAll('[data-work-src]');
+    for (var i = 0; i < candidates.length; i++) {
+      if (candidates[i].dataset.workSrc === src && isVisible(candidates[i])) {
+        target = candidates[i];
+        break;
+      }
     }
-  }, 300);
+  }
+  if (target && typeof target.focus === 'function') target.focus();
+}
+
+function finishLightboxClose() {
+  if (lightboxOpen) return;
+  var overlay = document.getElementById('lightbox-overlay');
+  if (!overlay) return;
+  overlay.hidden = true;
+  overlay.removeAttribute('inert');
+  resetLightboxStyles();
+}
+
+function closeLightbox(options) {
+  var overlay = document.getElementById('lightbox-overlay');
+  if (!overlay || !lightboxOpen) return;
+  options = options || {};
+  lightboxOpen = false;
+  clearLightboxTimers();
+  overlay.classList.remove('active');
+  if (releaseLightboxInert) { releaseLightboxInert(); releaseLightboxInert = null; }
+  if (releaseLightboxScroll) { releaseLightboxScroll(); releaseLightboxScroll = null; }
+  /* Focus restitué tout de suite, sans attendre la fin du fondu. */
+  restoreLightboxFocus();
+  overlay.setAttribute('inert', '');
+  var u = ui();
+  if (u) u.notifyOverlayChange();
+  if (options.immediate || reducedMotion()) finishLightboxClose();
+  else lightboxLater(finishLightboxClose, 300);
 }
 
 function initLightbox() {
@@ -351,24 +510,24 @@ function initLightbox() {
   var nextBtn  = document.getElementById('lightbox-next');
   var content  = document.getElementById('lightbox-content');
 
-  if (!overlay) return;
+  if (!overlay || !content || overlay.dataset.lightboxBound) return;
+  overlay.dataset.lightboxBound = 'true';
+  ensureLightboxImage();
 
   /* Fermeture */
-  closeBtn.addEventListener('click', closeLightbox);
+  if (closeBtn) closeBtn.addEventListener('click', function () { closeLightbox(); });
   overlay.addEventListener('click', function(e) {
     if (e.target === overlay || e.target === content) closeLightbox();
   });
 
   /* Navigation dans la série */
-  prevBtn.addEventListener('click', function(e) {
+  if (prevBtn) prevBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    lightboxIndex = (lightboxIndex - 1 + lightboxWorks.length) % lightboxWorks.length;
-    showLightboxImage(lightboxIndex);
+    goToLightbox(lightboxIndex - 1);
   });
-  nextBtn.addEventListener('click', function(e) {
+  if (nextBtn) nextBtn.addEventListener('click', function(e) {
     e.stopPropagation();
-    lightboxIndex = (lightboxIndex + 1) % lightboxWorks.length;
-    showLightboxImage(lightboxIndex);
+    goToLightbox(lightboxIndex + 1);
   });
   var position = document.getElementById('lightbox-position');
   if (position) {
@@ -376,31 +535,25 @@ function initLightbox() {
       var dot = e.target.closest ? e.target.closest('.lightbox-position-dot') : null;
       if (!dot || !position.contains(dot)) return;
       e.stopPropagation();
-      lightboxIndex = Number(dot.dataset.index);
-      showLightboxImage(lightboxIndex);
+      goToLightbox(Number(dot.dataset.index));
     });
   }
 
-  /* Touches clavier */
+  /* Clavier : Échap, flèches, piège de focus */
   document.addEventListener('keydown', function(e) {
-    if (!overlay.classList.contains('active')) return;
-    if (e.key === 'Escape')      { closeLightbox(); }
-    if (e.key === 'ArrowLeft')   { e.preventDefault(); lightboxIndex = (lightboxIndex - 1 + lightboxWorks.length) % lightboxWorks.length; showLightboxImage(lightboxIndex); }
-    if (e.key === 'ArrowRight')  { e.preventDefault(); lightboxIndex = (lightboxIndex + 1) % lightboxWorks.length; showLightboxImage(lightboxIndex); }
-  });
-
-  /* Piège de focus dans la lightbox */
-  overlay.addEventListener('keydown', function(e) {
-    if (!overlay.classList.contains('active') || e.key !== 'Tab') return;
+    if (!lightboxOpen) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeLightbox(); return; }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); goToLightbox(lightboxIndex - 1); return; }
+    if (e.key === 'ArrowRight') { e.preventDefault(); goToLightbox(lightboxIndex + 1); return; }
+    if (e.key !== 'Tab') return;
+    var u = ui();
+    if (u) { u.trapTab(e, overlay); return; }
     var focusable = getFocusable(overlay);
     if (!focusable.length) return;
     var first = focusable[0];
     var last  = focusable[focusable.length - 1];
-    if (e.shiftKey) {
-      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-    } else {
-      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-    }
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 
   /* Swipe mobile */
@@ -410,30 +563,64 @@ function initLightbox() {
 
 /* ══════════════════════════════════════════════════════════
    SWIPE MOBILE — navigation et fermeture par geste tactile
+   Sous prefers-reduced-motion : mêmes gestes, sans déplacement animé.
 ══════════════════════════════════════════════════════════ */
 
 function initMobileSwipe() {
   var overlay = document.getElementById('lightbox-overlay');
   var content = document.getElementById('lightbox-content');
-  var img     = document.getElementById('lightbox-img');
+  var img     = ensureLightboxImage();
   if (!content || !img || !overlay) return;
 
   var touchStartX = 0, touchStartY = 0, lastX = 0, lastY = 0;
   var swipeDir = null;
+  var still = false;
+
+  /* Remet le geste à l'état initial (styles inline et état interne), sans
+     fermer la lightbox, sans changer d'œuvre et sans toucher au focus. */
+  function resetGesture() {
+    img.style.transform      = '';
+    img.style.transition     = '';
+    overlay.style.opacity    = '';
+    overlay.style.transition = '';
+    touchStartX = 0;
+    touchStartY = 0;
+    lastX = 0;
+    lastY = 0;
+    swipeDir = null;
+  }
+
+  function slide(step, outX) {
+    if (still) { goToLightbox(lightboxIndex + step); return; }
+    img.style.transition = 'transform 0.3s ease';
+    img.style.transform = 'translateX(' + outX + 'vw)';
+    lightboxLater(function() {
+      goToLightbox(lightboxIndex + step);
+      img.style.transition = 'none';
+      img.style.transform  = 'translateX(' + (-outX) + 'vw)';
+      img.offsetHeight;
+      img.style.transition = 'transform 0.3s ease';
+      img.style.transform  = 'translateX(0)';
+    }, 280);
+  }
 
   content.addEventListener('touchstart', function(e) {
+    if (!lightboxOpen) return;
     var touch = e.touches[0];
     touchStartX = touch.clientX;
     touchStartY = touch.clientY;
     lastX = touch.clientX;
     lastY = touch.clientY;
     swipeDir = null;
-    img.style.transition     = 'none';
-    overlay.style.transition = 'none';
+    still = reducedMotion();
+    if (!still) {
+      img.style.transition     = 'none';
+      overlay.style.transition = 'none';
+    }
   }, { passive: true });
 
   content.addEventListener('touchmove', function(e) {
-    if (!e.touches.length) return;
+    if (!lightboxOpen || !e.touches.length) return;
     var touch  = e.touches[0];
     var dx     = touch.clientX - touchStartX;
     var dy     = touch.clientY - touchStartY;
@@ -447,9 +634,10 @@ function initMobileSwipe() {
 
     if (swipeDir === 'h') {
       e.preventDefault();
-      img.style.transform = 'translateX(' + dx + 'px)';
+      if (!still) img.style.transform = 'translateX(' + dx + 'px)';
     } else if (swipeDir === 'v') {
       e.preventDefault();
+      if (still) return;
       var clampedDy = Math.max(0, dy);
       img.style.transform = 'translateY(' + clampedDy + 'px)';
       overlay.style.opacity = String(Math.max(0.05, 1 - clampedDy / 220));
@@ -457,59 +645,41 @@ function initMobileSwipe() {
   }, { passive: false });
 
   content.addEventListener('touchend', function() {
+    if (!lightboxOpen) return;
     var dx = lastX - touchStartX;
     var dy = lastY - touchStartY;
 
     if (swipeDir === 'h') {
-      img.style.transition = 'transform 0.3s ease';
-      if (dx < -80) {
-        img.style.transform = 'translateX(-110vw)';
-        setTimeout(function() {
-          lightboxIndex = (lightboxIndex + 1) % lightboxWorks.length;
-          showLightboxImage(lightboxIndex);
-          img.style.transition = 'none';
-          img.style.transform  = 'translateX(110vw)';
-          img.offsetHeight;
-          img.style.transition = 'transform 0.3s ease';
-          img.style.transform  = 'translateX(0)';
-        }, 280);
-      } else if (dx > 80) {
-        img.style.transform = 'translateX(110vw)';
-        setTimeout(function() {
-          lightboxIndex = (lightboxIndex - 1 + lightboxWorks.length) % lightboxWorks.length;
-          showLightboxImage(lightboxIndex);
-          img.style.transition = 'none';
-          img.style.transform  = 'translateX(-110vw)';
-          img.offsetHeight;
-          img.style.transition = 'transform 0.3s ease';
-          img.style.transform  = 'translateX(0)';
-        }, 280);
-      } else {
+      if (dx < -80) slide(1, -110);
+      else if (dx > 80) slide(-1, 110);
+      else if (!still) {
+        img.style.transition = 'transform 0.3s ease';
         img.style.transform = 'translateX(0)';
       }
     } else if (swipeDir === 'v') {
-      img.style.transition     = 'transform 0.3s ease';
-      overlay.style.transition = 'opacity 0.3s ease';
       if (dy > 100) {
+        if (still) { closeLightbox({ immediate: true }); return; }
+        img.style.transition     = 'transform 0.3s ease';
+        overlay.style.transition = 'opacity 0.3s ease';
         img.style.transform   = 'translateY(80vh)';
         overlay.style.opacity = '0';
-        setTimeout(function() {
-          overlay.classList.remove('active');
-          overlay.style.display    = 'none';
-          overlay.style.opacity    = '';
-          overlay.style.transition = '';
-          img.style.transform  = '';
-          img.style.transition = '';
-          document.body.style.overflow = '';
-        }, 300);
-      } else {
+        /* Même chemin que les autres fermetures (focus, inert, scroll). */
+        lightboxLater(function() { closeLightbox({ immediate: true }); }, 300);
+      } else if (!still) {
+        img.style.transition     = 'transform 0.3s ease';
+        overlay.style.transition = 'opacity 0.3s ease';
         img.style.transform   = 'translateY(0)';
         overlay.style.opacity = '1';
-        setTimeout(function() { overlay.style.transition = ''; }, 300);
+        lightboxLater(function() { overlay.style.transition = ''; overlay.style.opacity = ''; }, 300);
       }
     } else {
-      img.style.transform = '';
+      resetGesture();
     }
+  }, { passive: true });
+
+  /* Geste annulé par le navigateur ou le système : retour à l'état neutre. */
+  content.addEventListener('touchcancel', function() {
+    resetGesture();
   }, { passive: true });
 }
 

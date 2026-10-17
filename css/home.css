@@ -43,6 +43,201 @@
 .home-scroll-arrow { font-size: 1.45rem; line-height: 1; }
 @keyframes home-cue { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
 
+/* Fragments d'un geste : triptyque vertical annoncant une nouvelle oeuvre.
+   Contenu visible par defaut ; lumiere et trame de toile en CSS seulement. */
+.home-fragments {
+  position: relative;
+  isolation: isolate;
+  /* clip et non hidden : hidden crée un conteneur de défilement, auquel
+     view() s'attacherait au lieu de la page. */
+  overflow: clip;
+  scroll-margin-top: 72px;
+  padding: clamp(96px, 12vw, 168px) clamp(24px, 6vw, 92px) clamp(104px, 13vw, 176px);
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(39, 97, 82, .30), transparent 70%),
+    linear-gradient(180deg, #082824 0%, #0a2f2b 52%, #072421 100%);
+}
+.home-fragments::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(251, 246, 240, .022) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .06) 0 1px, transparent 1px 4px);
+}
+.home-fragments-light {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 55% 30% at 50% 84%, rgba(255, 244, 225, .11), transparent 70%);
+}
+.home-fragments-inner { width: min(820px, 100%); margin: 0 auto; text-align: center; }
+.home-fragments-title {
+  margin: 0 0 clamp(56px, 8vw, 104px);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+.home-fragments-list { margin: 0; padding: 0; list-style: none; }
+.home-fragment { position: relative; padding: 0 0 clamp(64px, 9vw, 112px); }
+.home-fragment:last-child { padding-bottom: 0; }
+/* Trace verticale entre deux fragments */
+.home-fragment:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: clamp(14px, 2vw, 22px);
+  width: 1px;
+  height: clamp(30px, 5vw, 64px);
+  background: linear-gradient(180deg, rgba(177, 183, 171, 0), rgba(177, 183, 171, .55), rgba(177, 183, 171, 0));
+}
+.home-fragment-index {
+  display: block;
+  margin: 0 0 14px;
+  color: rgba(177, 183, 171, .72);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+  letter-spacing: .3em;
+  text-indent: .3em;
+}
+.home-fragment-title {
+  margin: 0 0 clamp(18px, 2.4vw, 26px);
+  color: var(--sage);
+  font-family: var(--font-body);
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: .34em;
+  text-indent: .34em;
+  text-transform: uppercase;
+}
+.home-fragment-text {
+  margin: 0 auto;
+  max-width: 34ch;
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 3.2vw, 2.4rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.28;
+  text-wrap: balance;
+}
+.home-fragment-text span { display: block; }
+.home-fragment-text span + span { margin-top: .35em; color: rgba(251, 246, 240, .76); }
+.home-fragment--reveal .home-fragment-title { color: var(--cream); }
+.home-fragment--reveal .home-fragment-text { font-size: clamp(1.85rem, 4.2vw, 3.1rem); max-width: 26ch; }
+
+/* Epilogue : film d'annonce "Jeffrey". Ratio naturel (16:9) preserve, jamais
+   recadre ; hauteur bornee a l'ecran pour rester entier en paysage. */
+.home-fragments-film { position: relative; margin: clamp(88px, 11vw, 140px) 0 0; }
+.home-fragments-film::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(-1 * clamp(58px, 8vw, 104px));
+  width: 1px;
+  height: clamp(30px, 5vw, 64px);
+  background: linear-gradient(180deg, rgba(177, 183, 171, 0), rgba(177, 183, 171, .55), rgba(177, 183, 171, 0));
+}
+.home-fragments-film-frame {
+  width: min(100%, calc((100vh - 48px) * 16 / 9));
+  width: min(100%, calc((100svh - 48px) * 16 / 9));
+  margin: 0 auto;
+  border: 1px solid rgba(251, 246, 240, .16);
+  background: #041a17;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .45);
+}
+.home-fragments-film-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: #041a17;
+}
+.home-fragments-film-fallback,
+.home-fragments-film-error {
+  margin: 0;
+  padding: 18px;
+  color: rgba(251, 246, 240, .86);
+  font-size: .95rem;
+  line-height: 1.5;
+}
+.home-fragments-film-fallback a,
+.home-fragments-film-error a { color: var(--cream); border-bottom: 1px solid rgba(251, 246, 240, .6); }
+.home-fragments-film-caption { display: grid; justify-items: center; gap: 12px; margin-top: 26px; }
+.home-fragments-film-title {
+  margin: 0;
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-style: italic;
+  font-weight: 300;
+}
+.home-fragments-film-desc { margin: 0; max-width: 40ch; color: var(--sage); font-size: .95rem; line-height: 1.55; }
+.home-fragments-film-desc span { display: block; }
+.home-fragments-film-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin-top: 6px;
+  padding: 10px 24px;
+  border: 1px solid rgba(251, 246, 240, .62);
+  border-radius: 999px;
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: .8rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: background .2s ease, border-color .2s ease;
+}
+.home-fragments-film-toggle[hidden],
+.home-fragments-film-error[hidden] { display: none; }
+.home-fragments-film-toggle:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+@media (hover: hover) {
+  .home-fragments-film-toggle:hover { background: rgba(251, 246, 240, .08); border-color: var(--cream); }
+}
+.home-fragments-film-error { padding: 0; text-align: center; }
+.home-fragments-film-error:focus { outline: none; }
+.home-fragments-film-error:focus-visible { outline: 2px solid var(--cream); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  .home-fragments-film-toggle { transition: none; }
+}
+
+/* Apparition progressive au defilement, sans JavaScript : uniquement si le
+   navigateur gere les timelines de vue et si le mouvement est accepte. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .home-fragment {
+      animation: home-fragment-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 85%;
+    }
+    .home-fragment--reveal .home-fragment-text {
+      animation: home-fragment-light linear both;
+      animation-timeline: view();
+      animation-range: entry 30% cover 55%;
+    }
+  }
+}
+@keyframes home-fragment-in {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes home-fragment-light {
+  from { text-shadow: 0 0 0 rgba(255, 244, 225, 0); }
+  to   { text-shadow: 0 0 30px rgba(255, 244, 225, .2); }
+}
+
 .home-works { padding: clamp(86px, 9vw, 132px) clamp(24px, 6vw, 92px); }
 .home-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: clamp(44px, 6vw, 76px); }
 .home-section-eyebrow { margin: 0 0 12px; color: var(--sage); font-size: .72rem; letter-spacing: .28em; text-transform: uppercase; }
@@ -50,6 +245,10 @@
 .home-artist-copy h2,
 .home-closing h2 { margin: 0; font-family: var(--font-display); font-weight: 300; }
 .home-section-heading h2 { font-size: clamp(3rem, 6vw, 5.4rem); line-height: .95; }
+/* Zoom texte 200 % : le titre se replie au lieu de déborder. */
+.home-section-heading { flex-wrap: wrap; }
+.home-section-heading h2,
+.home-fragments-title { min-width: 0; overflow-wrap: break-word; }
 .home-works-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(22px, 3.5vw, 56px); align-items: start; }
 .home-work { margin: 0; }
 .home-work:nth-child(2) { margin-top: clamp(28px, 5vw, 72px); }
@@ -79,6 +278,8 @@
   .home-actions { margin-top: 24px; gap: 10px; }
   .home-cta { min-height: 44px; padding: 10px 17px; font-size: .82rem; }
   .home-bg-img { object-position: 47% 50%; }
+  .home-fragments { padding: 88px 18px 96px; scroll-margin-top: 64px; }
+  .home-fragments-title { margin-bottom: 52px; }
   .home-works { padding: 72px 16px; }
   .home-section-heading { margin-bottom: 38px; }
   .home-works-list { grid-template-columns: 1fr; gap: 34px; }

@@ -172,8 +172,9 @@
 
 
 /* ═══════════════════════════════════════════════════════════
-   ANNONCE « À VENIR » — carte éditoriale indépendante des séries
-   (aucune donnée d'œuvre, aucune image ; lien HTML ordinaire)
+   ANNONCE « À VENIR » — Jeffrey, Série 2
+   Texte concis à gauche, présentation vidéo verticale (9:16) à droite ;
+   empilés sous 1024 px. Ratio naturel, jamais recadré ni étiré.
 ═══════════════════════════════════════════════════════════ */
 .upcoming-work {
   padding: 0 48px 100px;
@@ -184,9 +185,10 @@
   isolation: isolate;
   overflow: hidden;
   display: grid;
-  justify-items: start;
-  gap: 14px;
-  max-width: 760px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(28px, 4vw, 56px);
+  max-width: 920px;
   margin-left: calc(280px + 64px); /* aligné sur la colonne des œuvres */
   padding: clamp(30px, 4vw, 50px);
   border: 1px solid rgba(251, 246, 240, 0.3);
@@ -195,7 +197,6 @@
     radial-gradient(ellipse 85% 100% at 0% 0%, rgba(39, 97, 82, 0.34), transparent 72%),
     #082824;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .upcoming-work-light {
@@ -204,6 +205,25 @@
   z-index: -1;
   pointer-events: none;
   background: radial-gradient(ellipse 50% 70% at 100% 100%, rgba(255, 244, 225, 0.09), transparent 70%);
+}
+
+.upcoming-work-copy {
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* Aucun élément du texte (bouton compris) ne déborde de sa colonne vers la
+   vidéo, même avec un texte agrandi : il passe à la ligne. */
+.upcoming-work-copy > * { max-width: 100%; }
+
+/* Écrans intermédiaires : sans le décalage d'alignement sur la colonne des
+   œuvres, la colonne de texte garde une largeur lisible à côté de la vidéo.
+   Pas de borne basse : une largeur fractionnaire entre 1024 et 1025 px
+   resterait sinon sans règle (sous 1024 px, la marge est déjà nulle). */
+@media (max-width: 1279px) {
+  .upcoming-work-card { margin-left: 0; }
 }
 
 .upcoming-work-eyebrow {
@@ -226,44 +246,72 @@
   text-wrap: balance;
 }
 
-.upcoming-work-link {
+.upcoming-work-text {
+  margin: 0;
+  max-width: 32ch;
+  color: rgba(251, 246, 240, 0.82);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.upcoming-work-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  min-width: 44px;
   min-height: 44px;
-  margin-top: 6px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(251, 246, 240, 0.6);
+  margin-top: 8px;
+  padding: 10px 24px;
+  border: 1px solid rgba(251, 246, 240, 0.62);
+  border-radius: 999px;
   color: var(--cream);
   font-family: var(--font-body);
-  font-size: 0.82rem;
-  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-/* Toute la carte est cliquable, mais un seul lien est exposé. */
-.upcoming-work-link::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 22px;
-}
-
-.upcoming-work-link:focus-visible { outline: none; }
-.upcoming-work-link:focus-visible::after {
-  outline: 2px solid var(--cream);
-  outline-offset: -5px;
-}
-
-.upcoming-work-arrow { transition: transform 0.3s ease; }
+.upcoming-work-toggle[hidden],
+.upcoming-work-error[hidden] { display: none; }
+.upcoming-work-toggle:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
 
 @media (hover: hover) {
-  .upcoming-work-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(251, 246, 240, 0.55);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32);
-  }
-  .upcoming-work-card:hover .upcoming-work-arrow { transform: translateX(4px); }
+  .upcoming-work-toggle:hover { background: rgba(251, 246, 240, 0.08); border-color: var(--cream); }
+}
+
+.upcoming-work-error,
+.upcoming-work-fallback {
+  margin: 0;
+  color: rgba(251, 246, 240, 0.86);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.upcoming-work-fallback { padding: 16px; }
+.upcoming-work-error a,
+.upcoming-work-fallback a { color: var(--cream); border-bottom: 1px solid rgba(251, 246, 240, 0.6); }
+.upcoming-work-error:focus { outline: none; }
+.upcoming-work-error:focus-visible { outline: 2px solid var(--cream); outline-offset: 4px; }
+
+/* Vidéo verticale : largeur bornée par la hauteur d'écran pour rester entière. */
+.upcoming-work-media {
+  width: min(300px, calc((100vh - 140px) * 9 / 16));
+  width: min(300px, calc((100svh - 140px) * 9 / 16));
+  border: 1px solid rgba(251, 246, 240, 0.16);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #041a17;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+}
+
+.upcoming-work-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: contain;
+  background: #041a17;
 }
 
 
@@ -660,7 +708,9 @@
 
 @media (max-width: 1024px) {
   .upcoming-work { padding: 8px 16px 0; }
-  .upcoming-work-card { max-width: none; margin-left: 0; }
+  .upcoming-work-card { grid-template-columns: 1fr; justify-items: center; max-width: none; margin-left: 0; }
+  .upcoming-work-copy { justify-self: stretch; }
+  .upcoming-work-media { width: min(100%, 340px, calc((100svh - 140px) * 9 / 16)); }
 }
 
 /* ── Téléphone en paysage : image et légende côte à côte, tout reste
@@ -740,8 +790,7 @@
   .mobile-card,
   .serie-grid-item,
   .serie-grid-item img,
-  .upcoming-work-card,
-  .upcoming-work-arrow,
+  .upcoming-work-toggle,
   .immersive-enter { transition: none; }
   .lightbox-img,
   .lightbox-overlay.active .lightbox-img { transform: none; }

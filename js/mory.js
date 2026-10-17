@@ -478,6 +478,9 @@
 
     window.addEventListener('indirah:languagechange', onLanguageChange);
     window.addEventListener('indirah:overlaychange', updateOverlayState);
+    /* Demande explicite d'un lecteur vidéo : fermer la bulle (et annuler son
+       minuteur) sans masquer la mascotte ni la rouvrir ensuite. */
+    window.addEventListener('indirah:mory-hide-greeting', hideGreeting);
     window.addEventListener('resize', updateOverlayState);
   }
 

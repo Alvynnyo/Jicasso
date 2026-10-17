@@ -32,7 +32,7 @@ jobs:
             robots.txt sitemap.xml manifest.json
             favicon.svg favicon-32x32.png apple-touch-icon.png
           )
-          public_dirs=(css js images)
+          public_dirs=(css js images media)
 
           for item in "${root_files[@]}"; do
             [ -f "$item" ] || { echo "::error::Fichier public obligatoire absent : $item"; exit 1; }

@@ -97,7 +97,7 @@ Etat hosting actuel :
 - Les Pull Requests vers `dev` et vers `main` construisent et valident l'artefact sans le deployer.
 - Un push sur `dev` construit l'artefact sans le deployer.
 - Seul un push sur `main` deploie le site. Un lancement manuel (`workflow_dispatch`) construit seulement l'artefact.
-- Liste publique : `index.html`, `oeuvres.html`, `apropos.html`, `contact.html`, `atelier.html`, `musee.html`, `robots.txt`, `sitemap.xml`, `manifest.json`, `favicon.svg`, `favicon-32x32.png`, `apple-touch-icon.png`, et les dossiers `css/`, `js/`, `images/`.
+- Liste publique : `index.html`, `oeuvres.html`, `apropos.html`, `contact.html`, `atelier.html`, `musee.html`, `robots.txt`, `sitemap.xml`, `manifest.json`, `favicon.svg`, `favicon-32x32.png`, `apple-touch-icon.png`, et les dossiers `css/`, `js/`, `images/`, `media/`.
 - `originals/`, `docs/`, ce README et les fichiers techniques (`.github/`, `.gitignore`) ne font pas partie de l'artefact du site.
 - Les anciennes routes sont conservees par `atelier.html` (vers `oeuvres.html`) et `musee.html` (vers `oeuvres.html#parcours-immersif`).
 - La source de GitHub Pages est configuree sur « GitHub Actions » (Settings > Pages).

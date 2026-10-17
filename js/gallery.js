@@ -6,9 +6,9 @@
  * qui peut commenter. Les salles d'œuvres sont générées depuis
  * oeuvres-data.js et insérées entre la salle d'entrée et la salle finale.
  *
- * Animations liées au défilement via GSAP + ScrollTrigger (CDN), avec
- * repli sur IntersectionObserver si GSAP n'est pas disponible. Aucun
- * scroll-jacking : l'utilisateur garde le contrôle du défilement.
+ * Les salles s'allument au défilement via IntersectionObserver (aucune
+ * bibliothèque externe). Aucun scroll-jacking : l'utilisateur garde le
+ * contrôle du défilement.
  *
  * Chargé sur oeuvres.html après oeuvres-data.js et translations.js.
  * ────────────────────────────────────────────────────────────────
@@ -59,6 +59,17 @@ window.MORY_GREETING = {
            (translations.fr && translations.fr[key]) || '';
   }
 
+  /* Un seul avertissement par œuvre et par dérivé manquant. */
+  var warnedDerivatives = {};
+  function warnMissing(work, field) {
+    var key = work.id + ':' + field;
+    if (warnedDerivatives[key]) return;
+    warnedDerivatives[key] = true;
+    if (window.console && typeof console.warn === 'function') {
+      console.warn('[Indirah] Œuvre « ' + work.id + ' » : dérivé « ' + field + ' » manquant, image ignorée.');
+    }
+  }
+
   function getAllWorks() {
     if (typeof oeuvresData === 'undefined') return [];
     var out = [];
@@ -92,31 +103,38 @@ window.MORY_GREETING = {
 
       var stage = document.createElement('div');
       stage.className = 'room-art-stage';
+      if (i === 0) section.id = 'first-work';
 
-      var frame = document.createElement('div');
-      frame.className = 'room-art-frame';
-
-      var img = document.createElement('img');
-      img.className = 'room-art-img';
-      var imageSrc = work.srcSpotlight || work.src;
-      if (i === 0) {
-        img.src = imageSrc;
-        img.setAttribute('loading', 'eager');
-        img.setAttribute('fetchpriority', 'high');
-        section.id = 'first-work';
-      } else {
-        img.dataset.src = imageSrc;
-        img.setAttribute('loading', 'lazy');
-      }
-      img.setAttribute('decoding', 'async');
-      img.dataset.i18nAltTitle = work.titleKey;
-      img.dataset.i18nAltTechnique = work.techniqueKey;
       var title = tr(work.titleKey);
       var tech = tr(work.techniqueKey);
-      img.alt = title + (tech ? ', ' + tech.toLowerCase() : '');
+      var imageSrc = work.srcSpotlight;
 
-      frame.appendChild(img);
-      stage.appendChild(frame);
+      /* Sans image spotlight, la salle garde son cartel mais aucune image
+         (jamais d'URL undefined, aucun repli pleine résolution). */
+      if (imageSrc) {
+        var frame = document.createElement('div');
+        frame.className = 'room-art-frame';
+
+        var img = document.createElement('img');
+        img.className = 'room-art-img';
+        if (i === 0) {
+          img.src = imageSrc;
+          img.setAttribute('loading', 'eager');
+          img.setAttribute('fetchpriority', 'high');
+        } else {
+          img.dataset.src = imageSrc;
+          img.setAttribute('loading', 'lazy');
+        }
+        img.setAttribute('decoding', 'async');
+        img.dataset.i18nAltTitle = work.titleKey;
+        img.dataset.i18nAltTechnique = work.techniqueKey;
+        img.alt = title + (tech ? ', ' + tech.toLowerCase() : '');
+
+        frame.appendChild(img);
+        stage.appendChild(frame);
+      } else {
+        warnMissing(work, 'srcSpotlight');
+      }
 
       var caption = document.createElement('div');
       caption.className = 'room-art-caption';
@@ -208,22 +226,6 @@ window.MORY_GREETING = {
   }
 
   /* ── Pilotage du défilement ────────────────────────────────────── */
-  function setupGsap(rooms) {
-    gsap.registerPlugin(ScrollTrigger);
-    rooms.forEach(function (room) {
-      ScrollTrigger.create({
-        trigger: room,
-        start: 'top 62%',       /* la salle occupe ~40% du bas de l'écran */
-        end: 'bottom 38%',
-        onToggle: function (self) {
-          if (self.isActive) activateRoom(room);
-          else deactivateRoom(room);
-        }
-      });
-    });
-    window.addEventListener('load', function () { ScrollTrigger.refresh(); });
-  }
-
   function setupObserver(rooms) {
     if (!('IntersectionObserver' in window)) {
       /* Dernier repli : tout est allumé. */
@@ -339,10 +341,7 @@ window.MORY_GREETING = {
     initScrollCue();
     initExperienceControls();
 
-    var hasGsap = (typeof window.gsap !== 'undefined') &&
-                  (typeof window.ScrollTrigger !== 'undefined');
-    if (hasGsap) setupGsap(rooms);
-    else setupObserver(rooms);
+    setupObserver(rooms);
 
     /* La salle d'entrée est visible dès le chargement. */
     var entry = document.getElementById('room-entry');

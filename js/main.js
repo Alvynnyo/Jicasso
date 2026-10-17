@@ -26,7 +26,7 @@ function readLang() {
 /* ── État ─────────────────────────────────────────────────── */
 var currentLang      = readLang();
 var lightboxTrigger  = null;
-var lightboxTriggerSrc = null;
+var lightboxTriggerId = null;
 
 window.addEventListener('indirah:languagechange', function () {
   currentLang = readLang();
@@ -103,6 +103,23 @@ function getFocusable(container) {
   });
 }
 
+/* Dérivé d'image absent (œuvre incomplète dans oeuvres-data.js) : un seul
+   avertissement par œuvre et par champ, aucune URL undefined, aucun repli
+   vers une image pleine résolution. */
+var warnedDerivatives = {};
+
+function hasDerivative(work, field) {
+  if (work && work[field]) return true;
+  var key = (work && work.id) + ':' + field;
+  if (!warnedDerivatives[key]) {
+    warnedDerivatives[key] = true;
+    if (window.console && typeof console.warn === 'function') {
+      console.warn('[Indirah] Œuvre « ' + (work && work.id) + ' » : dérivé « ' + field + ' » manquant, image ignorée.');
+    }
+  }
+  return false;
+}
+
 function isVisible(el) {
   var u = ui();
   if (u) return u.isVisible(el);
@@ -165,11 +182,13 @@ function buildMobileFeed() {
     grid.className = 'mobile-cards-grid';
 
     serie.works.forEach(function(work) {
+      /* Sans vignette, la carte ne peut pas s'afficher correctement. */
+      if (!hasDerivative(work, 'srcThumb')) return;
       /* Carte = véritable bouton : clavier (Entrée, Espace) natif. */
       var card = document.createElement('button');
       card.type = 'button';
       card.className = 'mobile-card';
-      card.dataset.workSrc = work.src;
+      card.dataset.workId = work.id;
       card.dataset.i18nAltTitle     = work.titleKey;
       card.dataset.i18nAltTechnique = work.techniqueKey;
       card.setAttribute('aria-label', workLabel(work));
@@ -179,7 +198,7 @@ function buildMobileFeed() {
       imgWrap.className = 'mobile-card-image';
 
       var img = document.createElement('img');
-      img.src = work.srcThumb || work.src;
+      img.src = work.srcThumb;
       if (work.thumbWidth && work.thumbHeight) {
         img.setAttribute('width', work.thumbWidth);
         img.setAttribute('height', work.thumbHeight);
@@ -218,7 +237,7 @@ function buildMobileFeed() {
       card.appendChild(info);
 
       /* Lightbox au tap / clic / clavier sur la carte mobile */
-      card.addEventListener('click', function() { openLightbox(work.src, card); });
+      card.addEventListener('click', function() { openLightbox(work.id, card); });
 
       grid.appendChild(card);
     });
@@ -244,18 +263,19 @@ function buildDesktopGrids() {
     grid.innerHTML = '';
 
     sd.works.forEach(function(work) {
+      if (!hasDerivative(work, 'srcThumb')) return;
       var item = document.createElement('div');
       item.className = 'serie-grid-item';
 
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'serie-grid-btn';
-      btn.dataset.workSrc = work.src;
+      btn.dataset.workId = work.id;
       btn.dataset.i18nAltTitle     = work.titleKey;
       btn.dataset.i18nAltTechnique = work.techniqueKey;
 
       var img = document.createElement('img');
-      img.src = work.srcThumb || work.src;
+      img.src = work.srcThumb;
       if (work.thumbWidth && work.thumbHeight) {
         img.setAttribute('width', work.thumbWidth);
         img.setAttribute('height', work.thumbHeight);
@@ -284,7 +304,7 @@ function buildDesktopGrids() {
       info.appendChild(cardTitle);
       info.appendChild(details);
       btn.appendChild(info);
-      btn.addEventListener('click', function() { openLightbox(work.src, btn); });
+      btn.addEventListener('click', function() { openLightbox(work.id, btn); });
       item.appendChild(btn);
       grid.appendChild(item);
     });
@@ -320,11 +340,14 @@ function clearLightboxTimers() {
   lightboxTimers = [];
 }
 
-function findWorkBySrc(src) {
+function findWorkById(id) {
   for (var i = 0; i < series.length; i++) {
     for (var j = 0; j < series[i].works.length; j++) {
-      if (series[i].works[j].src === src) {
-        return { serieWorks: series[i].works, index: j };
+      if (series[i].works[j].id === id) {
+        /* La lightbox ne parcourt que les œuvres dotées d'une image. */
+        var works = series[i].works.filter(function (w) { return hasDerivative(w, 'srcLightbox'); });
+        var index = works.indexOf(series[i].works[j]);
+        return index === -1 ? null : { serieWorks: works, index: index };
       }
     }
   }
@@ -376,7 +399,7 @@ function showLightboxImage(index) {
   var img = ensureLightboxImage();
   if (!work || !img) return;
   var t    = translations[currentLang];
-  var lightboxSrc = work.srcLightbox || work.srcMur || work.src;
+  var lightboxSrc = work.srcLightbox;
   var token = ++lightboxLoadToken;
   img.alt = (t[work.titleKey] || '') + ', ' + (t[work.techniqueKey] || '').toLowerCase();
   if (img.getAttribute('src') !== lightboxSrc) {
@@ -426,15 +449,15 @@ function resetLightboxStyles() {
   if (img) { img.style.transform = ''; img.style.transition = ''; }
 }
 
-function openLightbox(src, trigger) {
+function openLightbox(id, trigger) {
   var overlay = document.getElementById('lightbox-overlay');
   if (!overlay || lightboxOpen) return;
-  var result = findWorkBySrc(src);
+  var result = findWorkById(id);
   if (!result) return;
   lightboxWorks = result.serieWorks;
   lightboxIndex = result.index;
   lightboxTrigger = trigger || document.activeElement;
-  lightboxTriggerSrc = src;
+  lightboxTriggerId = id;
 
   clearLightboxTimers();
   resetLightboxStyles();
@@ -461,13 +484,13 @@ function openLightbox(src, trigger) {
    entre-temps (changement de langue), sur la carte de la même œuvre. */
 function restoreLightboxFocus() {
   var target = lightboxTrigger;
-  var src = lightboxTriggerSrc;
+  var id = lightboxTriggerId;
   lightboxTrigger = null;
   if (!target || !isVisible(target)) {
     target = null;
-    var candidates = document.querySelectorAll('[data-work-src]');
+    var candidates = document.querySelectorAll('[data-work-id]');
     for (var i = 0; i < candidates.length; i++) {
-      if (candidates[i].dataset.workSrc === src && isVisible(candidates[i])) {
+      if (candidates[i].dataset.workId === id && isVisible(candidates[i])) {
         target = candidates[i];
         break;
       }

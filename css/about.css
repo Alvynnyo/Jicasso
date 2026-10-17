@@ -55,8 +55,6 @@
   filter: saturate(.82);
 }
 
-.about-image--portrait img { object-position: center 25%; }
-
 /* Portrait officiel — hero À propos. Proportions naturelles, sans recadrage. */
 .about-portrait {
   margin: 0;

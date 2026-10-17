@@ -129,6 +129,47 @@ const translations = {
     meta_medium:     "Technique",
     meta_dimensions: "Dimensions",
     meta_availability: "Disponibilité",
+
+    // Accessibilité — noms accessibles et navigation clavier
+    skip_link:          "Aller au contenu",
+    nav_main_label:     "Navigation principale",
+    nav_mobile_label:   "Menu mobile",
+    nav_footer_label:   "Liens de pied de page",
+    social_label:       "Réseau social",
+    lang_switch_label:  "Langue du site",
+    menu_toggle:        "Menu",
+    menu_close:         "Fermer le menu",
+    lightbox_close:     "Fermer la vue agrandie",
+    lightbox_prev:      "Œuvre précédente",
+    lightbox_next:      "Œuvre suivante",
+    lightbox_goto:      "Voir l’œuvre {n}",
+    lightbox_position:  "Œuvre {n} sur {total} : {title}",
+    immersive_label:    "Parcours immersif",
+    immersive_start:    "Défiler : commencer la visite",
+    contact_required_note: "Les champs marqués d’un astérisque (*) sont obligatoires.",
+
+    // Fragments d'un geste — annonce de la nouvelle œuvre
+    fragments_title:    "Fragments d’un geste",
+    fragment1_title:    "Le geste",
+    fragment1_line1:    "Tout commence par un mouvement.",
+    fragment1_line2:    "Une intuition, une trace, une présence encore invisible.",
+    fragment2_title:    "La matière",
+    fragment2_line1:    "Couleur après couleur, la forme cherche sa place.",
+    fragment2_line2:    "L’œuvre se construit, puis se révèle.",
+    fragment3_title:    "La révélation",
+    fragment3_line1:    "Une nouvelle œuvre d’Indirah rejoindra bientôt la collection.",
+    upcoming_eyebrow:   "À venir",
+    upcoming_title:     "Une nouvelle œuvre prend forme.",
+    upcoming_link:      "Suivre le geste",
+    jeffrey_film_title: "Jeffrey — film d’annonce",
+    jeffrey_film_desc:  "Une évocation visuelle de la naissance de Jeffrey, jusqu’à sa révélation.",
+    jeffrey_film_meta:  "15 secondes, avec son.",
+    jeffrey_film_play:  "Voir le geste",
+    jeffrey_film_pause: "Pause",
+    jeffrey_film_replay: "Revoir",
+    jeffrey_film_fallback: "Votre navigateur ne peut pas lire cette vidéo.",
+    jeffrey_film_error: "Le film ne peut pas être lu pour le moment.",
+    jeffrey_film_download: "Télécharger le film (MP4, 4 Mo)",
   },
 
   en: {
@@ -256,6 +297,47 @@ const translations = {
     meta_medium:     "Medium",
     meta_dimensions: "Dimensions",
     meta_availability: "Availability",
+
+    // Accessibility — accessible names and keyboard navigation
+    skip_link:          "Skip to content",
+    nav_main_label:     "Main navigation",
+    nav_mobile_label:   "Mobile menu",
+    nav_footer_label:   "Footer links",
+    social_label:       "Social network",
+    lang_switch_label:  "Site language",
+    menu_toggle:        "Menu",
+    menu_close:         "Close menu",
+    lightbox_close:     "Close enlarged view",
+    lightbox_prev:      "Previous work",
+    lightbox_next:      "Next work",
+    lightbox_goto:      "View work {n}",
+    lightbox_position:  "Work {n} of {total}: {title}",
+    immersive_label:    "Immersive tour",
+    immersive_start:    "Scroll: start the tour",
+    contact_required_note: "Fields marked with an asterisk (*) are required.",
+
+    // Fragments of a gesture — new work announcement
+    fragments_title:    "Fragments of a Gesture",
+    fragment1_title:    "The gesture",
+    fragment1_line1:    "Everything begins with a movement.",
+    fragment1_line2:    "An intuition, a trace, a presence still unseen.",
+    fragment2_title:    "The matter",
+    fragment2_line1:    "Colour after colour, form begins to find its place.",
+    fragment2_line2:    "The work takes shape, then reveals itself.",
+    fragment3_title:    "The reveal",
+    fragment3_line1:    "A new work by Indirah will soon join the collection.",
+    upcoming_eyebrow:   "Upcoming",
+    upcoming_title:     "A new work is taking shape.",
+    upcoming_link:      "Follow the gesture",
+    jeffrey_film_title: "Jeffrey — announcement film",
+    jeffrey_film_desc:  "A visual evocation of Jeffrey taking shape, culminating in its final reveal.",
+    jeffrey_film_meta:  "15 seconds, with sound.",
+    jeffrey_film_play:  "Watch the gesture",
+    jeffrey_film_pause: "Pause",
+    jeffrey_film_replay: "Replay",
+    jeffrey_film_fallback: "Your browser cannot play this video.",
+    jeffrey_film_error: "The film cannot be played right now.",
+    jeffrey_film_download: "Download the film (MP4, 4 MB)",
   }
 };
 
@@ -265,9 +347,26 @@ window.IndirahI18n = (function () {
   'use strict';
 
   var STORAGE_KEY = 'indirah-lang';
+  /* Repli en mémoire : localStorage peut lever une exception (navigation
+     privée stricte, stockage désactivé, iframe sandboxée…). */
+  var memoryLang = null;
+
+  function readStoredLanguage() {
+    try {
+      var value = window.localStorage.getItem(STORAGE_KEY);
+      return translations[value] ? value : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function storeLanguage(lang) {
+    memoryLang = lang;
+    try { window.localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+  }
 
   function getLanguage() {
-    return localStorage.getItem(STORAGE_KEY) || document.documentElement.lang || 'fr';
+    return readStoredLanguage() || memoryLang || 'fr';
   }
 
   function getText(lang, key) {
@@ -279,7 +378,7 @@ window.IndirahI18n = (function () {
     options = options || {};
     if (!translations[lang]) return null;
 
-    localStorage.setItem(STORAGE_KEY, lang);
+    storeLanguage(lang);
     document.documentElement.lang = lang;
 
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
@@ -305,8 +404,16 @@ window.IndirahI18n = (function () {
       else el.setAttribute('aria-label', label);
     });
 
+    /* Noms accessibles localisés (aria-label des contrôles et repères). */
+    document.querySelectorAll('[data-i18n-aria-label]').forEach(function (el) {
+      var text = translations[lang][el.dataset.i18nAriaLabel];
+      if (text !== undefined) el.setAttribute('aria-label', text);
+    });
+
     document.querySelectorAll('.lang-option').forEach(function (btn) {
-      btn.classList.toggle('active', btn.dataset.lang === lang);
+      var isActive = btn.dataset.lang === lang;
+      btn.classList.toggle('active', isActive);
+      if (btn.tagName === 'BUTTON') btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
 
     if (typeof options.afterApply === 'function') options.afterApply(lang);

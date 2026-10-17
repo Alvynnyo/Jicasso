@@ -309,10 +309,14 @@
     root.className = 'mory';
 
     /* ── Panneau de conversation ── */
+    /* Panneau non modal : la page reste utilisable pendant la conversation
+       (pas d'aria-modal), masqué aux technologies d'assistance s'il est fermé. */
     panel = document.createElement('div');
     panel.className = 'mory-panel';
+    panel.id = 'mory-panel';
     panel.setAttribute('role', 'dialog');
-    panel.setAttribute('aria-label', 'Mory');
+    panel.setAttribute('aria-labelledby', 'mory-panel-title');
+    panel.hidden = true;
 
     var head = document.createElement('div');
     head.className = 'mory-panel-head';
@@ -328,6 +332,7 @@
 
     headerTitle = document.createElement('span');
     headerTitle.className = 'mory-panel-title';
+    headerTitle.id = 'mory-panel-title';
     headerTitle.textContent = 'Mory';
 
     panelClose = document.createElement('button');
@@ -342,6 +347,8 @@
     messagesEl = document.createElement('div');
     messagesEl.className = 'mory-messages';
     messagesEl.setAttribute('aria-live', 'polite');
+    /* Cible stable du focus pendant le remplacement des options. */
+    messagesEl.setAttribute('tabindex', '-1');
 
     optionsEl = document.createElement('div');
     optionsEl.className = 'mory-options';
@@ -370,6 +377,8 @@
     figure = document.createElement('button');
     figure.type = 'button';
     figure.className = 'mory-figure';
+    figure.setAttribute('aria-controls', 'mory-panel');
+    figure.setAttribute('aria-expanded', 'false');
     for (var i = 0; i < 2; i++) {
       var img = document.createElement('img');
       img.className = 'mory-img' + (i === 0 ? ' is-active' : '');
@@ -423,6 +432,8 @@
     minBtn.addEventListener('click', function (e) {
       e.stopPropagation();
       collapse();
+      /* Le bouton réduire disparaît : le focus passe à la pastille. */
+      figure.focus();
     });
 
     panelClose.addEventListener('click', function (e) {
@@ -449,11 +460,24 @@
       openPanel();
     });
 
+    /* Échap depuis Mory : ferme le panneau et rend le focus au déclencheur,
+       sans fermer l'interface située derrière (parcours immersif…). */
+    root.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || !root.classList.contains('is-open')) return;
+      e.preventDefault();
+      closePanel();
+    });
+
+    /* Échap ailleurs dans la page : ferme le panneau sans déplacer le focus,
+       sauf si une interface prioritaire a déjà traité la touche. */
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && root.classList.contains('is-open')) closePanel();
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      if (!root.classList.contains('is-open') || hasActiveOverlay()) return;
+      closePanel({ restoreFocus: false });
     });
 
     window.addEventListener('indirah:languagechange', onLanguageChange);
+    window.addEventListener('indirah:overlaychange', updateOverlayState);
     window.addEventListener('resize', updateOverlayState);
   }
 
@@ -524,6 +548,15 @@
       var uEntry = { role: 'user', label: userLabel };
       thread.push(uEntry);
       appendUserBubble(uEntry);
+    }
+
+    /* Le bouton activé va disparaître : le focus est d'abord placé sur une
+       cible stable du panneau (la zone de messages, juste avant les
+       options), jamais laissé sur <body> ni sur un élément retiré. Les
+       nouvelles options suivent dans l'ordre de tabulation, sans saut de
+       focus forcé ; la réponse est annoncée par la région live existante. */
+    if (optionsEl.contains(document.activeElement)) {
+      messagesEl.focus({ preventScroll: true });
     }
 
     /* Efface les boutons pendant que Mory « écrit » */
@@ -604,6 +637,7 @@
     var row = document.createElement('div');
     row.className = 'mory-msg mory-msg--mory mory-msg--in';
     row.id = 'mory-typing';
+    row.setAttribute('aria-hidden', 'true');
     row.innerHTML =
       '<div class="mory-chat mory-typing">' +
       '<span class="mory-dot"></span><span class="mory-dot"></span><span class="mory-dot"></span>' +
@@ -654,10 +688,17 @@
   /* ════════════════════════════════════════════════════════════════
      9. OUVERTURE / FERMETURE / RÉDUCTION
   ════════════════════════════════════════════════════════════════ */
+  /* État visible du panneau synchronisé partout (classe, hidden, aria-expanded). */
+  function setPanelState(open) {
+    root.classList.toggle('is-open', open);
+    panel.hidden = !open;
+    figure.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
   function openPanel() {
     if (root.classList.contains('is-open')) return;
     hideGreeting();
-    root.classList.add('is-open');
+    setPanelState(true);
 
     /* Nouvelle conversation à chaque ouverture : on repart du menu. */
     thread = [];
@@ -667,14 +708,18 @@
     optionsEl.innerHTML = '';
     navigate('menu', null);
 
-    window.setTimeout(function () { panelClose.focus(); }, 60);
+    panelClose.focus();
   }
 
-  function closePanel() {
+  /* options.restoreFocus : false quand Échap est pressé hors de Mory. */
+  function closePanel(options) {
     if (!root.classList.contains('is-open')) return;
+    options = options || {};
+    var focusWasInside = root.contains(document.activeElement);
     clearTimeout(typingTimer);
-    root.classList.remove('is-open');
-    figure.focus();
+    hideTyping();
+    setPanelState(false);
+    if (options.restoreFocus !== false || focusWasInside) figure.focus();
   }
 
   function isCollapsed() {
@@ -682,7 +727,8 @@
   }
   function collapse() {
     setStored(sessionStorage, COLLAPSED_KEY, 'true');
-    root.classList.remove('is-open');
+    clearTimeout(typingTimer);
+    setPanelState(false);
     root.classList.add('is-collapsed');
     hideGreeting();
     updateUiLabels();
@@ -748,27 +794,44 @@
   /* ════════════════════════════════════════════════════════════════
      11. MASQUAGE SOUS LES OVERLAYS (lightbox, séquence vidéo, etc.)
   ════════════════════════════════════════════════════════════════ */
+  /* Interfaces prioritaires qui recouvrent Mory : lightbox, popup Contact,
+     menu mobile (modal, avec voile plein écran). Le parcours immersif n'en
+     fait pas partie : Mory y reste volontairement disponible. */
   function hasActiveOverlay() {
     if (document.querySelector('#lightbox-overlay.active')) return true;
     if (document.querySelector('#seq-overlay.active')) return true;
-    if (document.querySelector('#mobile-menu.active')) return true;
-    if (document.querySelector('#mobile-menu-overlay.active')) return true;
-
+    if (window.IndirahContact && typeof window.IndirahContact.isOpen === 'function') {
+      if (window.IndirahContact.isOpen()) return true;
+    } else if (document.querySelector('#contact-popup.is-open')) {
+      return true;
+    }
+    if (window.IndirahNav && typeof window.IndirahNav.isMenuOpen === 'function') {
+      if (window.IndirahNav.isMenuOpen()) return true;
+    } else if (document.querySelector('#mobile-menu.active')) {
+      return true;
+    }
     return false;
   }
 
+  /* Mise à jour explicite (événement indirah:overlaychange émis par chaque
+     interface) : Mory est masqué ET retiré de l'interaction (inert). */
+  var releaseSuppression = null;
+
   function updateOverlayState() {
     if (!root) return;
-    root.classList.toggle('is-suppressed', hasActiveOverlay());
-  }
-
-  function observeOverlayState() {
-    var observer = new MutationObserver(updateOverlayState);
-    observer.observe(document.body, {
-      attributes: true, childList: true, subtree: true,
-      attributeFilter: ['class', 'style', 'hidden']
-    });
-    updateOverlayState();
+    var suppressed = hasActiveOverlay();
+    root.classList.toggle('is-suppressed', suppressed);
+    if (suppressed && !releaseSuppression) {
+      if (window.IndirahUI) {
+        releaseSuppression = window.IndirahUI.holdInert([root]);
+      } else {
+        root.setAttribute('inert', '');
+        releaseSuppression = function () { root.removeAttribute('inert'); };
+      }
+    } else if (!suppressed && releaseSuppression) {
+      releaseSuppression();
+      releaseSuppression = null;
+    }
   }
 
   /* ════════════════════════════════════════════════════════════════
@@ -826,7 +889,7 @@
   function init() {
     buildDom();
     scheduleExpressionPrefetch();
-    observeOverlayState();
+    updateOverlayState();
     scheduleGreeting();
   }
 

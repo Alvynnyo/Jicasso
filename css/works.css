@@ -182,13 +182,114 @@
 
 
 /* ═══════════════════════════════════════════════════════════
+   ANNONCE « À VENIR » — carte éditoriale indépendante des séries
+   (aucune donnée d'œuvre, aucune image ; lien HTML ordinaire)
+═══════════════════════════════════════════════════════════ */
+.upcoming-work {
+  padding: 0 48px 100px;
+}
+
+.upcoming-work-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  max-width: 760px;
+  margin-left: calc(280px + 64px); /* aligné sur la colonne des œuvres */
+  padding: clamp(30px, 4vw, 50px);
+  border: 1px solid rgba(251, 246, 240, 0.3);
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse 85% 100% at 0% 0%, rgba(39, 97, 82, 0.34), transparent 72%),
+    #082824;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.upcoming-work-light {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse 50% 70% at 100% 100%, rgba(255, 244, 225, 0.09), transparent 70%);
+}
+
+.upcoming-work-eyebrow {
+  margin: 0;
+  color: var(--sage);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.upcoming-work-title {
+  margin: 0;
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.upcoming-work-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(251, 246, 240, 0.6);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Toute la carte est cliquable, mais un seul lien est exposé. */
+.upcoming-work-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+}
+
+.upcoming-work-link:focus-visible { outline: none; }
+.upcoming-work-link:focus-visible::after {
+  outline: 2px solid var(--cream);
+  outline-offset: -5px;
+}
+
+.upcoming-work-arrow { transition: transform 0.3s ease; }
+
+@media (hover: hover) {
+  .upcoming-work-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(251, 246, 240, 0.55);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32);
+  }
+  .upcoming-work-card:hover .upcoming-work-arrow { transform: translateX(4px); }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
    MOBILE FEED
    Visible sur tablette + mobile (≤ 1024px)
    Remplace hero + séries sur ces écrans
 ═══════════════════════════════════════════════════════════ */
 .mobile-feed {
   display: none;
-  padding: 64px 0 80px;
+  padding: 64px 0 40px;
+}
+
+/* Second flux (séries « à venir ») : placé après l'annonce éditoriale. */
+.mobile-feed--after {
+  padding: 40px 0 80px;
 }
 
 /* Premier groupe : pas de séparateur */
@@ -235,9 +336,15 @@
   padding: 0 16px;
 }
 
-/* Carte */
+/* Carte — véritable <button> */
 .mobile-card {
   position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid #315d56;
@@ -262,6 +369,7 @@
 }
 
 .mobile-card-image {
+  display: block;
   aspect-ratio: 4 / 5;
   overflow: hidden;
 }
@@ -307,7 +415,7 @@
    LIGHTBOX
 ═══════════════════════════════════════════════════════════ */
 .lightbox-overlay {
-  display: none;
+  display: flex;
   position: fixed;
   inset: 0;
   z-index: 500;
@@ -317,6 +425,9 @@
   opacity: 0;
   transition: opacity 0.3s ease;
 }
+
+/* Fermée : hors rendu et hors arbre d'accessibilité (attribut hidden). */
+.lightbox-overlay[hidden] { display: none; }
 
 .lightbox-overlay.active {
   opacity: 1;
@@ -342,7 +453,8 @@
   opacity: 0.45;
 }
 
-/* Conteneur image + légende */
+/* Conteneur image + légende — borné à la hauteur de l'écran : la légende
+   défile si le texte est agrandi (zoom texte 200 %), l'image reste entière. */
 .lightbox-content {
   display: flex;
   flex-direction: column;
@@ -350,6 +462,16 @@
   gap: 20px;
   width: min(900px, 88vw);
   max-width: min(900px, 88vw);
+  max-height: calc(100vh - 32px);
+  max-height: calc(100svh - 32px);
+}
+
+.lightbox-content > .lightbox-img { flex-shrink: 0; }
+
+.lightbox-content > .lightbox-caption {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 /* Légende */
@@ -454,24 +576,41 @@
 /* Indicateur de position — mobile uniquement */
 .lightbox-position { display: none; }
 
+/* Cible tactile de 24 px ; le point visible reste discret. */
 .lightbox-position-dot {
-  width: 6px;
-  height: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border-radius: 50%;
   border: 0;
-  background: var(--sage);
-  opacity: 0.45;
-  transition: opacity 0.2s ease, background 0.2s ease;
+  background: transparent;
   flex-shrink: 0;
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
 }
 
-.lightbox-position-dot.active {
+.lightbox-position-dot::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--sage);
+  opacity: 0.45;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.lightbox-position-dot.active::before {
   opacity: 1;
   background: var(--cream);
+}
+
+.lightbox-position-dot:focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 0;
 }
 
 /* Responsive works */
@@ -494,6 +633,7 @@
     width: 100%;
     height: 100%;
     max-width: none;
+    max-height: none;
     box-sizing: border-box;
     overflow: hidden;
     justify-content: flex-start;
@@ -526,7 +666,97 @@
     z-index: 1;
   }
   .lightbox-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
-  .lightbox-position { display: flex; position: static; justify-content: center; gap: 7px; margin: 14px 0 0; }
+  .lightbox-position { display: flex; position: static; justify-content: center; gap: 2px; margin: 10px 0 0; }
+}
+
+@media (max-width: 1024px) {
+  .upcoming-work { padding: 8px 16px 0; }
+  .upcoming-work-card { max-width: none; margin-left: 0; }
+}
+
+/* ── Téléphone en paysage : image et légende côte à côte, tout reste
+   consultable (légende défilante, fermeture toujours visible). ── */
+@media (orientation: landscape) and (max-height: 540px) {
+  .lightbox-overlay { align-items: stretch; }
+  .lightbox-content {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    height: 100vh;
+    height: 100svh;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding:
+      max(10px, env(safe-area-inset-top))
+      calc(60px + env(safe-area-inset-right))
+      max(10px, env(safe-area-inset-bottom))
+      calc(60px + env(safe-area-inset-left));
+  }
+  .lightbox-img {
+    flex: 0 1 auto;
+    min-width: 0;
+    width: auto;
+    max-width: 52%;
+    max-height: calc(100vh - 20px);
+    max-height: calc(100svh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    margin: 0;
+    border-radius: 6px;
+    transform: none;
+  }
+  .lightbox-overlay.active .lightbox-img { transform: none; }
+  .lightbox-caption {
+    position: static;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 420px;
+    max-height: calc(100vh - 20px);
+    max-height: calc(100svh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px 6px 8px;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    gap: 4px;
+  }
+  .lightbox-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; margin-top: 6px; }
+  .lightbox-story { margin-top: 8px; font-size: 0.84rem; }
+  .lightbox-close {
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
+    width: 40px;
+    height: 40px;
+    z-index: 3;
+  }
+  .lightbox-arrow {
+    display: flex;
+    width: 40px;
+    height: 40px;
+  }
+  .lightbox-arrow--prev { left: max(8px, env(safe-area-inset-left)); }
+  .lightbox-arrow--next { right: max(8px, env(safe-area-inset-right)); }
+  .lightbox-position { display: flex; justify-content: flex-start; gap: 2px; margin: 8px 0 0; }
+}
+
+/* ── Mouvement réduit : ouverture et fermeture immédiates, sans zoom ── */
+@media (prefers-reduced-motion: reduce) {
+  .lightbox-overlay,
+  .lightbox-img,
+  .lightbox-position-dot::before,
+  .mobile-card,
+  .serie-grid-item,
+  .serie-grid-item img,
+  .upcoming-work-card,
+  .upcoming-work-arrow,
+  .immersive-enter { transition: none; }
+  .lightbox-img,
+  .lightbox-overlay.active .lightbox-img { transform: none; }
+  .mobile-card:active { transform: none; }
 }
 
 @media (max-width: 480px) {

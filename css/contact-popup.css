@@ -158,6 +158,32 @@
   border-bottom-color: #dfa5a5;
 }
 
+/* Champs obligatoires : astérisque visuel (le caractère obligatoire est
+   annoncé par l'attribut required) et note explicative en tête. */
+.contact-popup-required {
+  margin-left: 0.15em;
+  color: var(--sage, #b9d2ca);
+  font-style: normal;
+}
+
+.contact-popup-required-note {
+  margin: -8px 0 0;
+  color: var(--sage, #b9d2ca);
+  font: 0.82rem/1.45 var(--font-body, "EB Garamond", Georgia, serif);
+  letter-spacing: 0.02em;
+}
+
+.contact-popup-form[aria-busy="true"] .contact-popup-field {
+  opacity: 0.8;
+}
+
+.contact-popup-state:focus { outline: none; }
+.contact-popup-state:focus-visible {
+  outline: 2px solid rgba(251, 246, 240, 0.86);
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
 .contact-popup-error {
   min-height: 1.15em;
   margin: 0;
@@ -274,10 +300,31 @@ body.contact-popup-open {
   }
 }
 
+/* Téléphone en paysage : carte défilante, marges réduites. */
+@media (max-height: 480px) {
+  .contact-popup { padding: max(8px, env(safe-area-inset-top)) 12px max(8px, env(safe-area-inset-bottom)); }
+  .contact-popup-card {
+    max-height: calc(100svh - 16px);
+    padding: 20px 22px;
+  }
+  .contact-popup-head { margin-bottom: 14px; }
+  .contact-popup-form { gap: 12px; }
+  .contact-popup-close { top: 10px; right: 10px; }
+}
+
+/* Popup fermée : jamais atteignable pendant le fondu de sortie. */
+.contact-popup[inert] { pointer-events: none; }
+
 @media (prefers-reduced-motion: reduce) {
+  /* Ouverture et fermeture immédiates : interface exploitable sans attendre. */
+  .contact-popup,
+  .contact-popup.is-open {
+    transition: none;
+  }
+
   .contact-popup-card {
     transform: none;
-    transition: opacity 0.2s ease;
+    transition: none;
   }
 
   .contact-popup.is-open .contact-popup-card {

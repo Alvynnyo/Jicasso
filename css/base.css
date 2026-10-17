@@ -25,8 +25,13 @@
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: 16px;
+}
+
+/* Défilement doux seulement si l'utilisateur n'a pas demandé à réduire
+   les animations (ancres, lien d'évitement, indicateurs de défilement). */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body {
@@ -54,6 +59,60 @@ button {
 img {
   display: block;
   max-width: 100%;
+}
+
+
+/* ── Accessibilité transversale ── */
+
+/* Focus clavier visible et contrasté sur le fond teal. Spécificité nulle
+   (:where) : un composant peut affiner son propre indicateur. */
+:where(a[href], button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--cream);
+  outline-offset: 3px;
+}
+
+/* Contenu réservé aux technologies d'assistance. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Lien d'évitement : hors écran jusqu'au focus clavier. */
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 4000;
+  padding: 12px 18px;
+  border: 1px solid var(--cream);
+  border-radius: 999px;
+  background: var(--deep);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  transform: translateY(-160%);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: none;
+  outline: 2px solid var(--cream);
+  outline-offset: 3px;
+}
+
+/* Verrou de défilement partagé (menu, lightbox, parcours, popup). */
+body.scroll-locked { overflow: hidden; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .skip-link { transition: transform 0.18s ease; }
 }
 
 

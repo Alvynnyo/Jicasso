@@ -2,9 +2,9 @@ name: Pages
 
 on:
   pull_request:
-    branches: [main]
+    branches: [dev, main]
   push:
-    branches: [main]
+    branches: [dev, main]
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # Une PR n'annule que ses propres builds, jamais un run de main.
+    # Une PR n'annule que ses propres builds, jamais un run de dev ou de main.
     concurrency:
       group: pages-build-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.ref }}
       cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -32,7 +32,7 @@ jobs:
             robots.txt sitemap.xml manifest.json
             favicon.svg favicon-32x32.png apple-touch-icon.png
           )
-          public_dirs=(css js images)
+          public_dirs=(css js images media)
 
           for item in "${root_files[@]}"; do
             [ -f "$item" ] || { echo "::error::Fichier public obligatoire absent : $item"; exit 1; }
@@ -66,8 +66,9 @@ jobs:
           path: _site
 
   deploy:
-    # Jamais sur une PR, ni sur un lancement manuel hors de main.
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    # Uniquement sur un push vers main : jamais sur une PR, un push sur dev
+    # ou un lancement manuel.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     concurrency:

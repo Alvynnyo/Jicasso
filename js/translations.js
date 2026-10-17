@@ -8,21 +8,18 @@ const translations = {
     // Navigation
     nav_accueil:    "Accueil",
     nav_oeuvres:    "Œuvres",
-    nav_apropos:    "A propos",
+    nav_apropos:    "À propos",
     nav_contact:    "Contact",
 
     // SEO
     meta_home_title:       "Indirah - Artiste Peintre",
-    meta_home_desc:        "Indirah, artiste peintre : figures, émotions et œuvres à découvrir.",
+    meta_home_desc:        "Indirah, artiste peintre : figures, émotions et œuvres à découvrir.",
     meta_oeuvres_title:    "Œuvres - Indirah",
     meta_oeuvres_desc:     "Explorez les series de peintures d'Indirah, avec une galerie visuelle et une lightbox immersive.",
     meta_contact_title:    "Contact - Indirah",
     meta_contact_desc:     "Contactez Indirah pour un projet artistique, une question ou une collaboration.",
-    meta_apropos_title:    "A propos - Indirah",
+    meta_apropos_title:    "À propos - Indirah",
     meta_apropos_desc:     "Découvrez Indirah, sa démarche artistique et sa vision de la peinture.",
-
-    // Hero
-    hero_scroll:    "Défiler",
 
     // Accueil
     home_hook:         "Peindre ce que les mots taisent.",
@@ -40,7 +37,7 @@ const translations = {
     home_artist_eyebrow: "L'artiste",
     home_artist_phrase: "Ses figures donnent une présence à ce qui reste sans voix.",
     home_social_prompt: "Suivre le travail",
-    home_closing_title: "Une œuvre vous parle ?",
+    home_closing_title: "Une œuvre vous parle ?",
 
     // A propos
     apropos_eyebrow: "L'artiste",
@@ -49,10 +46,8 @@ const translations = {
     apropos_quote: "Peindre, c'est raconter ce que les mots ne savent pas dire.",
     apropos_vision_eyebrow: "Démarche",
     apropos_vision_title: "Entre la main et le silence",
-    apropos_vision_p1: "Chaque toile naît comme une conversation entre sa main et son silence.",
     apropos_vision_p2: "Son travail explore ce qui la traverse et cherche le point de rencontre entre ce que l'on voit et ce que l'on ressent.",
     apropos_personal_eyebrow: "Une présence",
-    apropos_personal_title: "Des histoires à ressentir",
     apropos_personal_p1: "Ses figures ne livrent pas tout. Elles invitent le regard à s'approcher, à s'arrêter et à inventer sa propre lecture.",
     apropos_cta: "Découvrir les œuvres",
 
@@ -72,13 +67,9 @@ const translations = {
     immersive_intro_line2: "Parcours",
     immersive_intro_desc: "Avancez d'une œuvre à l'autre. Chaque toile s'éclaire à votre approche — laissez-vous porter.",
 
-    // Navigation supplémentaire
-    nav_home: "Accueil",
-
     // Footer
-    footer_instagram: "Instagram",
     footer_contact:   "Contact",
-    footer_copy:      "© 2024 Indirah. Tous droits réservés.",
+    footer_copy:      "© 2026 Indirah. Tous droits réservés.",
 
     // Page de contact — questions
     contact_q1:  "Comment puis-je vous appeler ?",
@@ -88,7 +79,7 @@ const translations = {
     // Placeholders
     contact_ph1: "Votre nom",
     contact_ph2: "votre@email.com",
-    contact_q4:  "Un numéro pour vous joindre plus vite ? (facultatif)",
+    contact_q4:  "Un numéro pour vous joindre plus vite ? (facultatif)",
     contact_ph4: "(555) 123-4567",
     contact_ph3: "Décrivez votre projet…",
 
@@ -134,7 +125,6 @@ const translations = {
     nav_main_label:     "Navigation principale",
     nav_mobile_label:   "Menu mobile",
     nav_footer_label:   "Liens de pied de page",
-    social_label:       "Réseau social",
     lang_switch_label:  "Langue du site",
     menu_toggle:        "Menu",
     menu_close:         "Fermer le menu",
@@ -142,9 +132,14 @@ const translations = {
     lightbox_prev:      "Œuvre précédente",
     lightbox_next:      "Œuvre suivante",
     lightbox_goto:      "Voir l’œuvre {n}",
-    lightbox_position:  "Œuvre {n} sur {total} : {title}",
+    lightbox_position:  "Œuvre {n} sur {total} : {title}",
     immersive_label:    "Parcours immersif",
-    immersive_start:    "Défiler : commencer la visite",
+    immersive_start:    "Défiler : commencer la visite",
+    instagram_soon:     "Instagram — bientôt",
+    home_artist_link:   "Sa démarche",
+    alt_portrait:       "Portrait d'Indirah",
+    alt_hands:          "Mains d'artiste tenant un pinceau",
+    contact_page_button: "Ouvrir le formulaire",
     contact_required_note: "Les champs marqués d’un astérisque (*) sont obligatoires.",
 
     // Fragments d'un geste — annonce de la nouvelle œuvre
@@ -188,9 +183,6 @@ const translations = {
     meta_apropos_title:    "About - Indirah",
     meta_apropos_desc:     "Discover Indirah, her artistic approach and her vision of painting.",
 
-    // Hero
-    hero_scroll:    "Scroll",
-
     // Home
     home_hook:         "Painting what words leave unsaid.",
     home_identity:     "Indirah — painter, figures & emotions.",
@@ -216,10 +208,8 @@ const translations = {
     apropos_quote: "Painting is telling what words cannot say.",
     apropos_vision_eyebrow: "Approach",
     apropos_vision_title: "Between hand and silence",
-    apropos_vision_p1: "Each canvas begins as a conversation between her hand and her silence.",
     apropos_vision_p2: "Her work explores what moves through her and searches for the meeting point between what we see and what we feel.",
     apropos_personal_eyebrow: "A presence",
-    apropos_personal_title: "Stories to be felt",
     apropos_personal_p1: "Her figures never reveal everything. They invite the eye to come closer, pause and imagine its own reading.",
     apropos_cta: "Discover the works",
 
@@ -239,13 +229,9 @@ const translations = {
     immersive_intro_line2: "Tour",
     immersive_intro_desc: "Move from one work to the next. Each canvas lights up as you approach — let yourself drift.",
 
-    // Additional navigation
-    nav_home: "Home",
-
     // Footer
-    footer_instagram: "Instagram",
     footer_contact:   "Contact",
-    footer_copy:      "© 2024 Indirah. All rights reserved.",
+    footer_copy:      "© 2026 Indirah. All rights reserved.",
 
     // Contact page — questions
     contact_q1:  "How may I call you?",
@@ -301,7 +287,6 @@ const translations = {
     nav_main_label:     "Main navigation",
     nav_mobile_label:   "Mobile menu",
     nav_footer_label:   "Footer links",
-    social_label:       "Social network",
     lang_switch_label:  "Site language",
     menu_toggle:        "Menu",
     menu_close:         "Close menu",
@@ -312,6 +297,11 @@ const translations = {
     lightbox_position:  "Work {n} of {total}: {title}",
     immersive_label:    "Immersive tour",
     immersive_start:    "Scroll: start the tour",
+    instagram_soon:     "Instagram — coming soon",
+    home_artist_link:   "Her approach",
+    alt_portrait:       "Portrait of Indirah",
+    alt_hands:          "An artist's hands holding a brush",
+    contact_page_button: "Open the form",
     contact_required_note: "Fields marked with an asterisk (*) are required.",
 
     // Fragments of a gesture — new work announcement

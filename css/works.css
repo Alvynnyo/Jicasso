@@ -89,16 +89,6 @@
   border-color: var(--cream);
 }
 
-.serie-link--disabled,
-.serie-link--disabled:hover {
-  opacity: 0.45;
-  cursor: default;
-  pointer-events: none;
-  color: var(--sage);
-  border-color: var(--forest);
-}
-
-.serie-status { display: inline-block; color: var(--sage); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; }
 .serie-teaser,
 .mobile-series-teaser {
   display: grid;
@@ -615,7 +605,6 @@
 
 /* Responsive works */
 @media (max-width: 1024px) {
-  .hero { display: none; }
   .serie { display: none; }
   .mobile-feed { display: block; }
   .works-intro { padding: 8px 24px 24px; }

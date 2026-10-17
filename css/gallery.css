@@ -2,19 +2,11 @@
    GALLERY — parcours immersif lancé depuis oeuvres.html.
    Chaque œuvre occupe une « salle » plein écran ; un spotlight
    s'allume à l'entrée dans le viewport (classe .is-lit posée par
-   js/gallery.js via GSAP ScrollTrigger, avec repli IntersectionObserver).
+   js/gallery.js via IntersectionObserver).
 ════════════════════════════════════════════════════════════════ */
 
 :root {
   --room-bg: #0D3A35;
-}
-
-/* Fond « salle » : teinte pilotée par gallery.js, transition douce
-   pour passer d'une salle à l'autre sans rupture. */
-body.parcours {
-  background-color: var(--room-bg);
-  transition: background-color 0.9s ease;
-  overflow-x: hidden;
 }
 
 body.immersive-open { overflow: hidden; }
@@ -405,7 +397,6 @@ body.immersive-open { overflow: hidden; }
    MOUVEMENT RÉDUIT — pas de zoom ni d'atténuation, tout reste lisible
 ════════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  body.parcours,
   .immersive-experience { transition: none; }
   .scroll-cue { animation: none; }
   .room-entry-inner,

@@ -257,13 +257,13 @@
 .home-work figcaption { margin-top: 14px; color: rgba(251, 246, 240, .78); font-family: var(--font-display); font-size: 1.1rem; font-style: italic; }
 .home-text-link { display: inline-block; margin-top: 42px; padding-bottom: 6px; border-bottom: 1px solid rgba(251, 246, 240, .7); color: var(--cream); font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; }
 
-.home-artist { display: grid; grid-template-columns: minmax(0, 720px); justify-content: center; padding: clamp(72px, 8vw, 110px) clamp(24px, 8vw, 130px); background: rgba(255, 255, 255, .025); text-align: center; }
+.home-artist { display: grid; grid-template-columns: minmax(0, 720px); justify-content: center; padding: clamp(60px, 6.5vw, 92px) clamp(24px, 8vw, 130px); background: rgba(255, 255, 255, .025); text-align: center; }
 .home-artist-copy h2 { max-width: 640px; margin-inline: auto; font-size: clamp(2.4rem, 4.6vw, 4.4rem); font-style: italic; line-height: 1.03; }
 
-.home-social { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 12px; padding: 34px 24px; border-top: 1px solid rgba(159, 181, 173, .12); border-bottom: 1px solid rgba(159, 181, 173, .12); color: var(--sage); font-size: .82rem; letter-spacing: .08em; }
-.home-social a { color: var(--cream); border-bottom: 1px solid rgba(251, 246, 240, .5); }
 
-.home-closing { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: clamp(28px, 6vw, 80px); padding: clamp(70px, 8vw, 108px) 24px; text-align: center; }
+.home-closing { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: clamp(28px, 6vw, 80px); padding: clamp(70px, 8vw, 108px) 24px; border-top: 1px solid rgba(159, 181, 173, .12); text-align: center; }
+/* Information secondaire : Instagram annoncé, sans lien tant que l'URL officielle n'existe pas. */
+.home-closing-social { display: flex; flex-basis: 100%; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; margin: 0; color: var(--sage); font-size: .8rem; letter-spacing: .08em; }
 .home-closing h2 { font-size: clamp(2.7rem, 5vw, 4.8rem); font-style: italic; }
 .home-footer { position: static; background: var(--deep); }
 
@@ -285,10 +285,10 @@
   .home-work img,
   .home-work:nth-child(2) img { height: min(72vw, 330px); }
   .home-work:nth-child(2) img { object-position: center 42%; }
-  .home-artist { padding: 64px 20px; }
+  .home-artist { padding: 52px 20px; }
   .home-artist-copy h2 { font-size: clamp(2rem, 9vw, 3.3rem); }
   .home-artist .home-text-link { margin-top: 26px; font-size: .72rem; }
-  .home-closing { align-items: center; flex-direction: column; padding: 66px 20px; }
+  .home-closing { align-items: center; flex-direction: column; gap: 24px; padding: 48px 20px; }
 }
 
 @media (max-width: 480px) {

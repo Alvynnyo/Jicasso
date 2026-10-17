@@ -33,6 +33,13 @@ jobs:
             favicon.svg favicon-32x32.png apple-touch-icon.png
           )
           public_dirs=(css js images media)
+          # Sources conservées dans le dépôt mais jamais chargées par le site :
+          # retirées de l'artefact public.
+          excluded_files=(
+            images/serie-1/maria.webp
+            images/serie-1/mory.webp
+            images/serie-1/stepout.webp
+          )
 
           for item in "${root_files[@]}"; do
             [ -f "$item" ] || { echo "::error::Fichier public obligatoire absent : $item"; exit 1; }
@@ -45,6 +52,9 @@ jobs:
           mkdir _site
           cp -- "${root_files[@]}" _site/
           cp -R -- "${public_dirs[@]}" _site/
+          for item in "${excluded_files[@]}"; do
+            rm -f -- "_site/$item"
+          done
 
           for forbidden in .git .github .gitignore README.md .htaccess _redirects vercel.json originals docs administratif Youtube node_modules .venv venv .cache; do
             if [ -e "_site/$forbidden" ]; then

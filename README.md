@@ -93,12 +93,38 @@ Les URLs SEO utilisent l'URL publique actuelle `https://alvynnyo.github.io/Jicas
 Etat hosting actuel :
 
 - Le deploiement cible GitHub Pages : `https://alvynnyo.github.io/Jicasso/`.
-- `.github/workflows/pages.yml` construit un dossier `_site` a partir d'une liste publique explicite, puis le deploie uniquement depuis `main`. Sur une Pull Request, l'artefact est construit et valide sans deploiement.
+- `.github/workflows/pages.yml` construit un dossier `_site` a partir d'une liste publique explicite.
+- Les Pull Requests vers `dev` et vers `main` construisent et valident l'artefact sans le deployer.
+- Un push sur `dev` construit l'artefact sans le deployer.
+- Seul un push sur `main` deploie le site. Un lancement manuel (`workflow_dispatch`) construit seulement l'artefact.
 - Liste publique : `index.html`, `oeuvres.html`, `apropos.html`, `contact.html`, `atelier.html`, `musee.html`, `robots.txt`, `sitemap.xml`, `manifest.json`, `favicon.svg`, `favicon-32x32.png`, `apple-touch-icon.png`, et les dossiers `css/`, `js/`, `images/`.
 - `originals/`, `docs/`, ce README et les fichiers techniques (`.github/`, `.gitignore`) ne font pas partie de l'artefact du site.
 - Les anciennes routes sont conservees par `atelier.html` (vers `oeuvres.html`) et `musee.html` (vers `oeuvres.html#parcours-immersif`).
-- A l'activation du workflow, la source de GitHub Pages doit etre configuree sur « GitHub Actions » (Settings > Pages).
+- La source de GitHub Pages est configuree sur « GitHub Actions » (Settings > Pages).
 - Les images d'œuvres ont trois usages distincts : `*-thumb.webp` (vignettes des cartes, de l'accueil et de Mory), `*-mur.webp` (lightbox) et `*-spotlight.webp` (parcours immersif). Les fichiers `maria.webp`, `mory.webp` et `stepout.webp` restent les sources identifiantes dans `js/oeuvres-data.js`.
+
+## Flux Git
+
+- `dev` est la branche d'integration et la branche par defaut du depot.
+- `main` est la branche stable de production.
+- Les branches de travail `feat/*`, `fix/*`, `perf/*` et `chore/*` partent de `dev`, et leurs Pull Requests ciblent `dev`.
+- Une Pull Request `dev` → `main` n'est ouverte qu'a la fin d'un cycle coherent.
+- Seul un push resultant d'une fusion sur `main` deploie GitHub Pages. Un push sur `dev` ne deploie jamais le site public.
+- Les hotfixes urgents partent exceptionnellement de `main` et y sont fusionnes, puis doivent etre reintegres dans `dev`.
+
+```text
+branche de travail
+        |
+        v
+       dev
+        |
+        | PR finale de release
+        v
+       main
+        |
+        v
+GitHub Pages production
+```
 
 ## Migration React En Pause
 

@@ -30,7 +30,10 @@ Une migration React/Next.js a ete etudiee pour de futurs composants 3D et une ar
 |   |-- gallery.js      # Parcours immersif : salles, activation, commentaires Mory
 |   |-- contact-popup.js # Popup partage, validation et Web3Forms
 |   |-- jeffrey-video.js # Commande bilingue des films Jeffrey (accueil, carte « À venir » d'Œuvres)
+|   |-- mory-greeting.js # Message d'accueil de Mory propre a l'Accueil, A propos et Contact
+|   |-- legacy-redirect.js # Redirection des pages-relais atelier.html et musee.html
 |   `-- mory.js         # Assistant/guide anime
+|-- fonts/              # Cormorant Garamond et EB Garamond auto-hebergees (WOFF2 latin) + licences OFL
 |-- images/
 |   |-- hero-accueil-texture.webp
 |   |-- hero-parcours-journal.webp
@@ -51,6 +54,7 @@ Une migration React/Next.js a ete etudiee pour de futurs composants 3D et une ar
 |-- manifest.json
 |-- atelier.html        # Page-relais de l'ancienne route Atelier (vers oeuvres.html)
 |-- musee.html          # Page-relais de l'ancienne route Musee (vers oeuvres.html#parcours-immersif)
+|-- tools/check_security.py # Controles de securite pre-deploiement (non publie)
 `-- .github/workflows/pages.yml  # Build et deploiement GitHub Pages
 ```
 
@@ -69,7 +73,8 @@ Le menu actif est : `Accueil / Œuvres / À propos / Contact`.
 - **Mory** : assistant de conversation scripte dans `js/mory.js`. Les expressions sont dans `images/mascotte/`. Mory peut ouvrir le popup de contact partage depuis son option `Ecrire a Indirah`.
 - **Œuvres** : `js/oeuvres-data.js` est la source de verite des series, titres, techniques, recits, disponibilites et chemins d'images. `js/main.js` genere les grilles desktop et le feed mobile, puis pilote la lightbox.
 - **Parcours immersif** : `js/gallery.js` genere les salles depuis `oeuvres-data.js` dans `oeuvres.html`. Les salles s'allument via IntersectionObserver (aucune bibliotheque externe, GSAP n'est pas charge), avec chargement progressif des images.
-- **Contact partage** : `js/contact-popup.js` et `css/contact-popup.css` construisent un popup unique, ouvrable depuis les navigations, le menu mobile, l'Accueil, la page Contact, le parcours immersif et Mory. Le popup gere validation locale, etats de succes/erreur, focus, fermeture clavier et envoi Web3Forms.
+- **Contact partage** : `js/contact-popup.js` et `css/contact-popup.css` construisent un popup unique, ouvrable depuis les navigations, le menu mobile, l'Accueil, la page Contact, le parcours immersif et Mory. Le popup gere validation locale (longueurs maximales : nom 100, e-mail 254, telephone 30, message 5 000 caracteres ; `maxlength` empeche le navigateur d'accepter une saisie plus longue, si bien qu'un texte colle au-dela de la limite peut etre coupe par le navigateur, et la validation JavaScript refuse en plus une valeur trop longue injectee ou modifiee dans le DOM ; un compteur de caracteres accessible reste une amelioration possible, non ajoutee), honeypot anti-spam `botcheck` de Web3Forms (case cochee : aucun envoi ; case non cochee : `botcheck` absent des donnees envoyees), etats de succes/erreur, focus, fermeture clavier et envoi Web3Forms.
+- **Securite** : chaque page declare une Content-Security-Policy (`<meta http-equiv>`) limitee au site lui-meme et a `https://api.web3forms.com` pour l'envoi du formulaire, ainsi que `referrer` `strict-origin-when-cross-origin`. Aucun script ni style inline : tout passe par des fichiers locaux. Les polices sont servies depuis `fonts/`.
 
 ## Assets
 
@@ -103,9 +108,11 @@ Etat hosting actuel :
 - Les Pull Requests vers `dev` et vers `main` construisent et valident l'artefact sans le deployer.
 - Un push sur `dev` construit l'artefact sans le deployer.
 - Seul un push sur `main` deploie le site. Un lancement manuel (`workflow_dispatch`) construit seulement l'artefact.
-- Liste publique : `index.html`, `oeuvres.html`, `apropos.html`, `contact.html`, `atelier.html`, `musee.html`, `robots.txt`, `sitemap.xml`, `manifest.json`, `favicon.svg`, `favicon-32x32.png`, `apple-touch-icon.png`, les dossiers `css/`, `js/`, `images/`, et les medias listes un par un dans `public_media` (films Jeffrey, leurs affiches et les sous-titres de la presentation Serie 2) ; le dossier `media/` n'est jamais copie en entier.
+- Liste publique : `index.html`, `oeuvres.html`, `apropos.html`, `contact.html`, `atelier.html`, `musee.html`, `robots.txt`, `sitemap.xml`, `manifest.json`, `favicon.svg`, `favicon-32x32.png`, `apple-touch-icon.png`, les dossiers `css/`, `js/`, `images/`, `fonts/`, et les medias listes un par un dans `public_media` (films Jeffrey, leurs affiches et les sous-titres de la presentation Serie 2) ; le dossier `media/` n'est jamais copie en entier.
 - Exclusions explicites de l'artefact (`excluded_files` dans le workflow) : `images/serie-1/maria.webp`, `mory.webp` et `stepout.webp`. Ces sources pleine resolution restent dans le depot mais ne sont jamais chargees par le site.
-- `originals/`, `docs/`, `Youtube/`, `administratif/`, ce README et les fichiers techniques (`.github/`, `.gitignore`) ne font pas partie de l'artefact du site.
+- `originals/`, `docs/`, `tools/`, `Youtube/`, `administratif/`, ce README et les fichiers techniques (`.github/`, `.gitignore`) ne font pas partie de l'artefact du site. `Youtube/` et `administratif/` sont ignores par Git.
+- Les actions GitHub du workflow sont epinglees par SHA complet (version en commentaire).
+- `tools/check_security.py` (Python, bibliotheque standard) est execute par le workflow apres la construction : Content-Security-Policy et politique de referent de chaque page, polices locales sans Google Fonts, honeypot et limites du formulaire, epinglage des actions et liste blanche stricte de `_site`. Un echec bloque l'artefact. En local : `python tools/check_security.py --site _site`.
 - Les anciennes routes sont conservees par `atelier.html` (vers `oeuvres.html`) et `musee.html` (vers `oeuvres.html#parcours-immersif`).
 - La source de GitHub Pages est configuree sur « GitHub Actions » (Settings > Pages).
 - Les images d'œuvres ont trois usages distincts : `*-thumb.webp` (vignettes des cartes, de l'accueil et de Mory), `*-mur.webp` (lightbox) et `*-spotlight.webp` (parcours immersif). Les œuvres sont identifiees par leur `id` dans `js/oeuvres-data.js` ; les fichiers pleine resolution n'y sont plus references.

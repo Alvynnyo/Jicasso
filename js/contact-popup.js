@@ -6,6 +6,13 @@
   var DEFAULT_SUBJECT = 'Nouveau message du site Indirah';
   /* Astérisque purement visuel : l'obligation est portée par required. */
   var REQUIRED_MARK = '<span class="contact-popup-required" aria-hidden="true">*</span>';
+  /* Longueurs maximales (caractères). maxlength empêche le navigateur
+     d'accepter une saisie plus longue : un texte collé au-delà de la limite
+     peut donc être coupé par le navigateur. La validation JavaScript refuse en
+     plus toute valeur plus longue injectée ou modifiée dans le DOM (maxlength
+     ne s'applique qu'à la saisie). Un compteur de caractères accessible
+     resterait une amélioration possible ; il n'est pas ajouté ici. */
+  var LIMITS = { name: 100, email: 254, phone: 30, message: 5000 };
   var root;
   var dialog;
   var form;
@@ -21,6 +28,7 @@
   var emailInput;
   var messageInput;
   var phoneInput;
+  var botInput;
   var activeTrigger;
   var isOpen = false;
   var releaseInert = null;
@@ -68,12 +76,15 @@
           '<form class="contact-popup-form" id="contact-popup-form" novalidate aria-busy="false">' +
             '<p class="contact-popup-required-note" data-i18n="contact_required_note"></p>' +
             '<input type="hidden" id="contact-popup-subject" name="subject">' +
+            /* Honeypot Web3Forms (« botcheck ») : hors écran, hors tabulation et
+               masqué des technologies d'assistance ; seul un robot le coche. */
+            '<div class="contact-popup-hp" aria-hidden="true"><input type="checkbox" name="botcheck" id="contact-popup-botcheck" tabindex="-1" autocomplete="off"></div>' +
             fieldMarkup('name', 'text', 'contact_q1', 'contact_ph1', 'name', true) +
             fieldMarkup('email', 'email', 'contact_q2', 'contact_ph2', 'email', true) +
             fieldMarkup('phone', 'tel', 'contact_q4', 'contact_ph4', 'tel', false) +
             '<div class="contact-popup-field">' +
               '<label for="contact-popup-message"><span data-i18n="contact_q3"></span>' + REQUIRED_MARK + '</label>' +
-              '<textarea id="contact-popup-message" name="message" rows="3" required aria-required="true" data-i18n-placeholder="contact_ph3" aria-describedby="contact-popup-error-message"></textarea>' +
+              '<textarea id="contact-popup-message" name="message" rows="3" maxlength="' + LIMITS.message + '" required aria-required="true" data-i18n-placeholder="contact_ph3" aria-describedby="contact-popup-error-message"></textarea>' +
               '<p class="contact-popup-error" id="contact-popup-error-message" aria-live="polite"></p>' +
             '</div>' +
             '<button class="contact-popup-submit" type="submit"><span class="contact-popup-spinner" aria-hidden="true" hidden></span><span class="contact-popup-submit-label" data-i18n="contact_send"></span></button>' +
@@ -105,6 +116,7 @@
     emailInput = root.querySelector('#contact-popup-email');
     messageInput = root.querySelector('#contact-popup-message');
     phoneInput = root.querySelector('#contact-popup-phone');
+    botInput = root.querySelector('#contact-popup-botcheck');
 
     closeButton.addEventListener('click', close);
     /* Clic sur le fond : seulement si le geste a commencé sur le fond, et
@@ -133,7 +145,7 @@
   function fieldMarkup(id, type, labelKey, placeholderKey, autocomplete, required) {
     return '<div class="contact-popup-field">' +
       '<label for="contact-popup-' + id + '"><span data-i18n="' + labelKey + '"></span>' + (required ? REQUIRED_MARK : '') + '</label>' +
-      '<input id="contact-popup-' + id + '" name="' + id + '" type="' + type + '" autocomplete="' + autocomplete + '"' +
+      '<input id="contact-popup-' + id + '" name="' + id + '" type="' + type + '" autocomplete="' + autocomplete + '" maxlength="' + LIMITS[id] + '"' +
         (required ? ' required aria-required="true"' : '') +
         (id === 'email' ? ' inputmode="email"' : id === 'phone' ? ' inputmode="tel"' : '') + ' data-i18n-placeholder="' + placeholderKey + '" aria-describedby="contact-popup-error-' + id + '">' +
       '<p class="contact-popup-error" id="contact-popup-error-' + id + '" aria-live="polite"></p>' +
@@ -303,18 +315,29 @@
     var name = nameInput.value.trim();
     var email = emailInput.value.trim();
     var message = messageInput.value.trim();
+    /* Valeur plus longue que la limite (injectée ou modifiée dans le DOM) :
+       refusée avec un message, aucun envoi. */
     if (!name) {
       setError(nameInput, 'contact_err_empty');
+      invalid.push(nameInput);
+    } else if (name.length > LIMITS.name) {
+      setError(nameInput, 'contact_err_max_name');
       invalid.push(nameInput);
     }
     if (!email) {
       setError(emailInput, 'contact_err_empty');
       invalid.push(emailInput);
+    } else if (email.length > LIMITS.email) {
+      setError(emailInput, 'contact_err_max_email');
+      invalid.push(emailInput);
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError(emailInput, 'contact_err_email');
       invalid.push(emailInput);
     }
-    if (!message || message.length < 10) {
+    if (message.length > LIMITS.message) {
+      setError(messageInput, 'contact_err_max_message');
+      invalid.push(messageInput);
+    } else if (!message || message.length < 10) {
       setError(messageInput, 'contact_err_min');
       invalid.push(messageInput);
     }
@@ -322,7 +345,10 @@
        façon souple (rejette surtout les valeurs manifestement invalides —
        lettres, ou moins de 6 chiffres — sans bloquer les formats internationaux). */
     var phone = phoneInput.value.trim();
-    if (phone && (/[a-zA-Z]/.test(phone) || phone.replace(/\D/g, '').length < 6)) {
+    if (phone.length > LIMITS.phone) {
+      setError(phoneInput, 'contact_err_max_phone');
+      invalid.push(phoneInput);
+    } else if (phone && (/[a-zA-Z]/.test(phone) || phone.replace(/\D/g, '').length < 6)) {
       setError(phoneInput, 'contact_err_phone');
       invalid.push(phoneInput);
     }
@@ -356,6 +382,14 @@
     if (!validate()) return;
     cancelRequest();
     var token = requestToken;
+    /* Honeypot coché : robot. Aucun appel réseau ; l'état de succès habituel ne
+       lui indique pas qu'il a été détecté. Un visiteur ne peut pas l'atteindre.
+       Case non cochée : « botcheck » est absent du JSON, comme le ferait
+       FormData pour une case non cochée. */
+    if (botInput.checked) {
+      finish('success', token);
+      return;
+    }
     setSending(true);
     var payload = {
       access_key: WEB3FORMS_KEY,

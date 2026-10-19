@@ -184,6 +184,17 @@
   border-radius: 12px;
 }
 
+/* Honeypot anti-spam : hors écran plutôt que display:none (que certains robots
+   savent ignorer) ; aria-hidden et tabindex="-1" le retirent déjà de la
+   lecture et de la tabulation. */
+.contact-popup-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .contact-popup-error {
   min-height: 1.15em;
   margin: 0;

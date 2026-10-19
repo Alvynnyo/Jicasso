@@ -106,6 +106,10 @@ const translations = {
     contact_err_phone: "Ce numéro semble incomplet ou invalide.",
     contact_err_email: "L’adresse e-mail n’est pas valide.",
     contact_err_min:   "Votre message doit contenir au moins 10 caractères.",
+    contact_err_max_name:    "Le nom ne doit pas dépasser 100 caractères.",
+    contact_err_max_email:   "L’adresse e-mail ne doit pas dépasser 254 caractères.",
+    contact_err_max_phone:   "Le numéro ne doit pas dépasser 30 caractères.",
+    contact_err_max_message: "Votre message ne doit pas dépasser 5 000 caractères.",
 
     // Œuvres individuelles — titre et technique
     // Série I
@@ -272,6 +276,10 @@ const translations = {
     contact_err_phone: "This phone number looks incomplete or invalid.",
     contact_err_email: "Please enter a valid email address.",
     contact_err_min:   "Your message must be at least 10 characters long.",
+    contact_err_max_name:    "Your name must not exceed 100 characters.",
+    contact_err_max_email:   "The email address must not exceed 254 characters.",
+    contact_err_max_phone:   "The phone number must not exceed 30 characters.",
+    contact_err_max_message: "Your message must not exceed 5,000 characters.",
 
     // Individual works — title and technique
     // Series I

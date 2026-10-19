@@ -1,6 +1,9 @@
 # Documents administratifs prives
 administratif/
 
+# Sources video privees (jamais versionnees ni publiees)
+Youtube/
+
 # Fichiers systeme
 .DS_Store
 Thumbs.db

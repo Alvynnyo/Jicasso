@@ -19,7 +19,7 @@ jobs:
       cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build _site from the explicit public list
         shell: bash
@@ -32,7 +32,7 @@ jobs:
             robots.txt sitemap.xml manifest.json
             favicon.svg favicon-32x32.png apple-touch-icon.png
           )
-          public_dirs=(css js images)
+          public_dirs=(css js images fonts)
           # Médias publiés un par un (jamais tout le dossier media/).
           public_media=(
             media/jeffrey_v2_web.mp4
@@ -69,7 +69,7 @@ jobs:
             rm -f -- "_site/$item"
           done
 
-          for forbidden in .git .github .gitignore README.md .htaccess _redirects vercel.json originals docs administratif Youtube node_modules .venv venv .cache; do
+          for forbidden in .git .github .gitignore README.md .htaccess _redirects vercel.json originals docs administratif Youtube tools .env node_modules .venv venv .cache; do
             if [ -e "_site/$forbidden" ]; then
               echo "::error::Chemin interdit present dans _site : $forbidden"
               exit 1
@@ -83,8 +83,14 @@ jobs:
           echo "Contenu de _site :"
           find _site -maxdepth 1 -mindepth 1 | sort
 
+      # Contrôles de sécurité (bibliothèque standard Python, aucune dépendance) :
+      # CSP, politique de référent, polices locales, formulaire, épinglage des
+      # actions et liste blanche stricte de l'artefact. Échec = pas de déploiement.
+      - name: Security checks
+        run: python3 tools/check_security.py --site _site
+
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
 
@@ -106,4 +112,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
